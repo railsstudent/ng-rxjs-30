@@ -13,25 +13,25 @@
           "strict": true
         }
       },
-      "root": "projects/day1-java-script-drum-kit",
-      "sourceRoot": "projects/day1-java-script-drum-kit/src",
+      "root": "projects/day1-javascript-drum-kit",
+      "sourceRoot": "projects/day1-javascript-drum-kit/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/day1-java-script-drum-kit",
-            "index": "projects/day1-java-script-drum-kit/src/index.html",
-            "main": "projects/day1-java-script-drum-kit/src/main.ts",
-            "polyfills": "projects/day1-java-script-drum-kit/src/polyfills.ts",
-            "tsConfig": "projects/day1-java-script-drum-kit/tsconfig.app.json",
+            "outputPath": "dist/day1-javascript-drum-kit",
+            "index": "projects/day1-javascript-drum-kit/src/index.html",
+            "main": "projects/day1-javascript-drum-kit/src/main.ts",
+            "polyfills": "projects/day1-javascript-drum-kit/src/polyfills.ts",
+            "tsConfig": "projects/day1-javascript-drum-kit/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "projects/day1-java-script-drum-kit/src/favicon.ico",
-              "projects/day1-java-script-drum-kit/src/assets"
+              "projects/day1-javascript-drum-kit/src/favicon.ico",
+              "projects/day1-javascript-drum-kit/src/assets"
             ],
             "styles": [
-              "projects/day1-java-script-drum-kit/src/styles.scss"
+              "projects/day1-javascript-drum-kit/src/styles.scss"
             ],
             "scripts": []
           },
@@ -51,8 +51,8 @@
               ],
               "fileReplacements": [
                 {
-                  "replace": "projects/day1-java-script-drum-kit/src/environments/environment.ts",
-                  "with": "projects/day1-java-script-drum-kit/src/environments/environment.prod.ts"
+                  "replace": "projects/day1-javascript-drum-kit/src/environments/environment.ts",
+                  "with": "projects/day1-javascript-drum-kit/src/environments/environment.prod.ts"
                 }
               ],
               "outputHashing": "all"
@@ -89,17 +89,17 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/day1-java-script-drum-kit/src/test.ts",
-            "polyfills": "projects/day1-java-script-drum-kit/src/polyfills.ts",
-            "tsConfig": "projects/day1-java-script-drum-kit/tsconfig.spec.json",
-            "karmaConfig": "projects/day1-java-script-drum-kit/karma.conf.js",
+            "main": "projects/day1-javascript-drum-kit/src/test.ts",
+            "polyfills": "projects/day1-javascript-drum-kit/src/polyfills.ts",
+            "tsConfig": "projects/day1-javascript-drum-kit/tsconfig.spec.json",
+            "karmaConfig": "projects/day1-javascript-drum-kit/karma.conf.js",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "projects/day1-java-script-drum-kit/src/favicon.ico",
-              "projects/day1-java-script-drum-kit/src/assets"
+              "projects/day1-javascript-drum-kit/src/favicon.ico",
+              "projects/day1-javascript-drum-kit/src/assets"
             ],
             "styles": [
-              "projects/day1-java-script-drum-kit/src/styles.scss"
+              "projects/day1-javascript-drum-kit/src/styles.scss"
             ],
             "scripts": []
           }

@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { filter, fromEvent, map, Subscription, tap } from 'rxjs';
 
 @Component({
   selector: 'app-drum',
   templateUrl: './drum.component.html',
-  styleUrls: ['./drum.component.scss']
+  styleUrls: ['./drum.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DrumComponent implements OnInit, OnDestroy {
   subscription!: Subscription;
