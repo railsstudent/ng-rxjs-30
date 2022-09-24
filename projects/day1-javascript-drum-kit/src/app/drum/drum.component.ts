@@ -1,10 +1,17 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { filter, fromEvent, map, Subscription, tap } from 'rxjs';
 import { Key } from '../interfaces';
+import { DrumService } from '../services';
 
 @Component({
   selector: 'app-drum',
-  templateUrl: './drum.component.html',
+  template: `
+    <div class="keys">
+      <ng-container *ngFor="let entry of entries">
+          <app-drum-key [entry]="entry" class="key"></app-drum-key>
+      </ng-container>
+    </div>
+  `,
   styleUrls: ['./drum.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -49,6 +56,8 @@ export class DrumComponent implements OnInit, OnDestroy {
     }
   ]
 
+  constructor(private drumService: DrumService) {}
+
   ngOnInit(): void {
     const allowedKeys = this.entries.map(entry => entry.key)
     this.subscription = fromEvent(window, 'keydown')
@@ -56,7 +65,9 @@ export class DrumComponent implements OnInit, OnDestroy {
         filter(evt => evt instanceof KeyboardEvent),
         map(evt => evt as KeyboardEvent),
         filter(({ key }) => allowedKeys.includes(key.toUpperCase())),
-        tap(value => console.log(value)))
+        map(({ key }) => key.toUpperCase()),
+        tap(key => this.drumService.playSound(key))
+      )
       .subscribe();
   }
 
@@ -65,5 +76,4 @@ export class DrumComponent implements OnInit, OnDestroy {
       this.subscription.unsubscribe();
     }
   }
-
 }
