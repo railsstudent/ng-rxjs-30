@@ -11,5 +11,4 @@ export class DrumService {
   playSound(key: string) {
     this.playDrumKey.next(key);
   }
-
 }

@@ -8,7 +8,7 @@ import { DrumService } from '../services';
   template: `
     <div class="keys">
       <ng-container *ngFor="let entry of entries">
-          <app-drum-key [entry]="entry" class="key"></app-drum-key>
+        <app-drum-key [entry]="entry" class="key"></app-drum-key>
       </ng-container>
     </div>
   `,

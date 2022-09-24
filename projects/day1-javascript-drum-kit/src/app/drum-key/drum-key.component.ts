@@ -33,7 +33,7 @@ export class DrumKeyComponent implements OnInit, OnDestroy {
       filter(key => key === this.entry.key),
       tap(() => this.playSound())
     )
-    .subscribe()
+    .subscribe();
   }
 
   playSound() {
