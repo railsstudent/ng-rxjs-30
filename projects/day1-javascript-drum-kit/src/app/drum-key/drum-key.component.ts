@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ViewChild, ElementRef, HostBinding, ChangeDetectorRef, HostListener } from '@angular/core';
 import { filter, Subscription, tap } from 'rxjs';
 import { Key } from '../interfaces';
 import { DrumService } from '../services';
@@ -21,15 +21,17 @@ export class DrumKeyComponent implements OnInit, OnDestroy {
 
   @ViewChild('audio', { static: true })
   audio: ElementRef<HTMLAudioElement> | undefined;
+  
+  @HostBinding('class.playing') isPlaying = false;
 
-  subscription!: Subscription
+  subscription!: Subscription;
 
-  constructor(private drumService: DrumService) {}
+  constructor(private drumService: DrumService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.subscription = this.drumService.playDrumKey$.pipe(
       filter(key => key === this.entry.key),
-      tap(key => this.playSound())
+      tap(() => this.playSound())
     )
     .subscribe()
   }
@@ -42,6 +44,16 @@ export class DrumKeyComponent implements OnInit, OnDestroy {
     const nativeElement = this.audio.nativeElement;
     nativeElement.currentTime = 0;
     nativeElement.play();
+    this.isPlaying = true;
+    this.cdr.markForCheck();
+  }
+
+  @HostListener('transitionend', ['$event'])
+  onTransitionEnd(evt: any) {
+    if (evt.propertyName !== 'transform') {
+      return;
+    }
+    this.isPlaying = false;
   }
 
   ngOnDestroy(): void {
