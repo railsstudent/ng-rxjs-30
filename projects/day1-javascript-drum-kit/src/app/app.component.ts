@@ -4,7 +4,12 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-root',
   template: '<app-drum></app-drum>',
-  styleUrls: ['./app.component.scss']
+  styles: [`
+    :host {
+      display: block;
+      height: 100vh;
+    }
+  `]
 })
 export class AppComponent {
   title = 'RxJS Drum Kit';

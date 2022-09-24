@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { filter, fromEvent, map, Subscription, tap } from 'rxjs';
+import { Key } from '../interfaces';
 
 @Component({
   selector: 'app-drum',
@@ -9,14 +10,52 @@ import { filter, fromEvent, map, Subscription, tap } from 'rxjs';
 })
 export class DrumComponent implements OnInit, OnDestroy {
   subscription!: Subscription;
-  allowedKeys = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'];
+  entries: Key[] = [
+    {
+      key: 'A',
+      description: 'clap'
+    },
+    {
+      key: 'S',
+      description: 'hihat'
+    },
+    {
+      key: 'D',
+      description: 'kick'
+    },
+    {
+      key: 'F',
+      description: 'openhat'
+    },
+    {
+      key: 'G',
+      description: 'boom'
+    },
+    {
+      key: 'H',
+      description: 'ride'
+    },
+    {
+      key: 'J',
+      description: 'snare'
+    },
+    {
+      key: 'K',
+      description: 'tom'
+    },
+    {
+      key: 'L',
+      description: 'tink'
+    }
+  ]
 
   ngOnInit(): void {
+    const allowedKeys = this.entries.map(entry => entry.key)
     this.subscription = fromEvent(window, 'keydown')
       .pipe(
         filter(evt => evt instanceof KeyboardEvent),
         map(evt => evt as KeyboardEvent),
-        filter(({ key }) => ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'].includes(key.toUpperCase())),
+        filter(({ key }) => allowedKeys.includes(key.toUpperCase())),
         tap(value => console.log(value)))
       .subscribe();
   }

@@ -1,8 +1,19 @@
 :host {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     height: 100%;
 
-    font-size: 10px;
     background: url('/assets/images/background.jpg') bottom center;
     background-size: cover;
  }
+
+div.keys {
+    max-width: 100%;
+    display: inline-flex;
+
+    .key {
+        flex: 1;
+    }
+}

@@ -3,11 +3,13 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { DrumComponent } from './drum';
+import { DrumKeyComponent } from './drum-key';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DrumComponent
+    DrumComponent,
+    DrumKeyComponent,
   ],
   imports: [
     BrowserModule
