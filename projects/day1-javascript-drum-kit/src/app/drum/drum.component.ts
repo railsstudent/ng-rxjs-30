@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { APP_BASE_HREF } from '@angular/common';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { filter, fromEvent, map, Subscription, tap } from 'rxjs';
 import { Key } from '../interfaces';
 import { DrumService } from '../services';
@@ -6,10 +8,12 @@ import { DrumService } from '../services';
 @Component({
   selector: 'app-drum',
   template: `
-    <div class="keys">
-      <ng-container *ngFor="let entry of entries">
-        <app-drum-key [entry]="entry" class="key"></app-drum-key>
-      </ng-container>
+    <div class="container" [ngStyle]="{ 'background-image': imageUrl }">
+      <div class="keys">
+        <ng-container *ngFor="let entry of entries">
+          <app-drum-key [entry]="entry" class="key"></app-drum-key>
+        </ng-container>
+      </div>
     </div>
   `,
   styleUrls: ['./drum.component.scss'],
@@ -56,7 +60,7 @@ export class DrumComponent implements OnInit, OnDestroy {
     }
   ]
 
-  constructor(private drumService: DrumService) {}
+  constructor(private drumService: DrumService, @Inject(APP_BASE_HREF) private baseHref: string) {}
 
   ngOnInit(): void {
     const allowedKeys = this.entries.map(entry => entry.key)
@@ -69,6 +73,12 @@ export class DrumComponent implements OnInit, OnDestroy {
         tap(key => this.drumService.playSound(key))
       )
       .subscribe();
+  }
+
+  get imageUrl() {
+    const isEndWithSlash = this.baseHref.endsWith('/');
+    const image =  `${this.baseHref}${ isEndWithSlash ? '' : '/' }assets/images/background.jpg`; 
+    return `url('${image}')`;
   }
 
   ngOnDestroy(): void {

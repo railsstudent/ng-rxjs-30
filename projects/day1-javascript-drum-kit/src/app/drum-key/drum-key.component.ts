@@ -1,4 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ViewChild, ElementRef, HostBinding, ChangeDetectorRef, HostListener } from '@angular/core';
+import { APP_BASE_HREF } from '@angular/common';
+import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ViewChild, ElementRef, HostBinding, ChangeDetectorRef, HostListener, Inject } from '@angular/core';
 import { filter, Subscription, tap } from 'rxjs';
 import { Key } from '../interfaces';
 import { DrumService } from '../services';
@@ -9,7 +10,7 @@ import { DrumService } from '../services';
     <ng-container>
       <kbd>{{ entry.key }}</kbd>
       <span class="sound">{{ entry.description }}</span>
-      <audio src="/assets/sounds/{{entry.description}}.wav" #audio></audio>
+      <audio [src]="soundFile" #audio></audio>
     </ng-container>
   `,
   styleUrls: ['./drum-key.component.scss'],
@@ -26,7 +27,7 @@ export class DrumKeyComponent implements OnInit, OnDestroy {
 
   subscription!: Subscription;
 
-  constructor(private drumService: DrumService, private cdr: ChangeDetectorRef) {}
+  constructor(private drumService: DrumService, private cdr: ChangeDetectorRef, @Inject(APP_BASE_HREF) private baseHref: string) {}
 
   ngOnInit(): void {
     this.subscription = this.drumService.playDrumKey$.pipe(
@@ -34,6 +35,11 @@ export class DrumKeyComponent implements OnInit, OnDestroy {
       tap(() => this.playSound())
     )
     .subscribe();
+  }
+
+  get soundFile() {
+    const isEndWithSlash = this.baseHref.endsWith('/');
+    return `${this.baseHref}${ isEndWithSlash ? '' : '/' }assets/sounds/${this.entry.description}.wav`;
   }
 
   playSound() {

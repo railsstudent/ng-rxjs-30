@@ -28,6 +28,12 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
  ng g c src/app/drumkey --change-detection=OnPush --project=Day1-JavaScript-Drum-Kit --module=src/app/app.module 
 ```
 
+## Deploy to Github page
+
+```bash
+ng deploy --project=Day1-JavaScript-Drum-Kit
+```
+
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
