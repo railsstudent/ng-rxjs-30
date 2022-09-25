@@ -1,6 +1,5 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { filter, fromEvent, map, Subscription, tap } from 'rxjs';
 import { Key } from '../interfaces';
 import { DrumService } from '../services';
@@ -20,7 +19,7 @@ import { DrumService } from '../services';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DrumComponent implements OnInit, OnDestroy {
-  subscription!: Subscription;
+  subscription: Subscription | undefined;
   entries: Key[] = [
     {
       key: 'A',
@@ -68,8 +67,8 @@ export class DrumComponent implements OnInit, OnDestroy {
       .pipe(
         filter(evt => evt instanceof KeyboardEvent),
         map(evt => evt as KeyboardEvent),
-        filter(({ key }) => allowedKeys.includes(key.toUpperCase())),
         map(({ key }) => key.toUpperCase()),
+        filter(key => allowedKeys.includes(key)),
         tap(key => this.drumService.playSound(key))
       )
       .subscribe();
