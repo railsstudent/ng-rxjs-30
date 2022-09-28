@@ -1,14 +1,15 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import {  map, Observable, take, tap, timer } from 'rxjs';
+import {  map, Observable, timer } from 'rxjs';
+import { HandTransformations } from './clock.interface';
 
 @Component({
   selector: 'app-clock',
   template: `
     <div class="clock" *ngIf="clockHandsTransform$ | async as clockHandsTransform">
       <div class="clock-face">
-        <div class="hand hour-hand" [ngStyle]="{ 'transform': clockHandsTransform.hourHandTransform }"></div>
-        <div class="hand min-hand" [ngStyle]="{ 'transform': clockHandsTransform.minuteHandTransform }"></div>
-        <div class="hand second-hand" [ngStyle]="{ 'transform': clockHandsTransform.secondHandTransform }"></div>
+        <div class="hand hour-hand" [style.transform]="clockHandsTransform.hourHandTransform"></div>
+        <div class="hand min-hand" [style.transform]="clockHandsTransform.minuteHandTransform"></div>
+        <div class="hand second-hand" [style.transform]="clockHandsTransform.secondHandTransform"></div>
       </div>
     </div>
   `,
@@ -16,20 +17,13 @@ import {  map, Observable, take, tap, timer } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClockComponent implements OnInit {
-  clockHandsTransform$!: Observable<{
-    secondHandTransform: string;
-    minuteHandTransform: string;
-    hourHandTransform: string;
-  }>
+  clockHandsTransform$!: Observable<HandTransformations>;
   
   ngOnInit(): void {
     const oneSecond = 1000;
 
     const currentTime$ = timer(0, oneSecond)
-      .pipe(
-        map(() => new Date()),
-        tap((time) => console.log('currentTime fired', time)),
-      );
+      .pipe(map(() => new Date()));
 
     const timeParts$ = currentTime$
       .pipe(
