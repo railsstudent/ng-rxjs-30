@@ -34,7 +34,9 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
  - switch to gh-pages branch
  - merge main to gh-pages branch
  - update angular.json to add baseHref property 
-ng build --output-path docs/<project folder>
+ - copy index.html to 404.html
+ng build --project=<project folder> --output-path docs/<project folder>
+git add .
 git push
 ```
 
