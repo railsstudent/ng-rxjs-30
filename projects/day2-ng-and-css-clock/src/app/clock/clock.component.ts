@@ -6,9 +6,9 @@ import {  map, Observable, take, tap, timer } from 'rxjs';
   template: `
     <div class="clock" *ngIf="clockHandsTransform$ | async as clockHandsTransform">
       <div class="clock-face">
-        <div class="hand hour-hand">{{ clockHandsTransform.secondHandTransform }}</div>
-        <div class="hand min-hand">{{ clockHandsTransform.minuteHandTransform }}</div>
-        <div class="hand second-hand">{{ clockHandsTransform.hourHandTransform }}</div>
+        <div class="hand hour-hand" [ngStyle]="{ 'transform': clockHandsTransform.hourHandTransform }"></div>
+        <div class="hand min-hand" [ngStyle]="{ 'transform': clockHandsTransform.minuteHandTransform }"></div>
+        <div class="hand second-hand" [ngStyle]="{ 'transform': clockHandsTransform.secondHandTransform }"></div>
       </div>
     </div>
   `,
