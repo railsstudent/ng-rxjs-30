@@ -4,7 +4,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Run `ng serve --project=<project name>` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 
@@ -31,7 +31,11 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Deploy to Github page
 
 ```bash
-ng deploy --project=Day1-JavaScript-Drum-Kit
+ - switch to gh-pages branch
+ - merge main to gh-pages branch
+ - update angular.json to add baseHref property 
+ng build --output-path docs/<project folder>
+git push
 ```
 
 ## Further help
