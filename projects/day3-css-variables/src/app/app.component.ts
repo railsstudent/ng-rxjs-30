@@ -1,10 +1,20 @@
 import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  template: `<app-dynamic-css></app-dynamic-css>`,
+  styles: [
+    `
+    :host {
+      display: block;
+    }
+    `
+  ]
 })
 export class AppComponent {
-  title = 'day3-css-variables';
+  title = 'Day 3 CSS Variables';
+  constructor (titleService: Title) {
+    titleService.setTitle(this.title);
+  }
 }
