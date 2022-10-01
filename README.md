@@ -25,7 +25,8 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Generate component in projects
 
 ```bash
- ng g c src/app/drumkey --change-detection=OnPush --project=Day1-JavaScript-Drum-Kit --module=src/app/app.module 
+ - change to project directory
+ ng g c <component name> --change-detection=OnPush --project=<project name> --module=src/app/app.module 
 ```
 
 ## Deploy to Github page
