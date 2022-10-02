@@ -1,18 +1,14 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit } from '@angular/core';
 import { filter, fromEvent, map, Subscription, tap } from 'rxjs';
-import { Key } from '../interfaces';
 import { DrumService } from '../services';
+import { ENTRIES } from './drum.constant';
 
 @Component({
   selector: 'app-drum',
   template: `
-    <div class="container" [ngStyle]="{ 'background-image': imageUrl }">
-      <div class="keys">
-        <ng-container *ngFor="let entry of entries">
-          <app-drum-key [entry]="entry" class="key"></app-drum-key>
-        </ng-container>
-      </div>
+    <div class="keys">
+      <app-drum-key *ngFor="let entry of entries" [entry]="entry" class="key"></app-drum-key>
     </div>
   `,
   styleUrls: ['./drum.component.scss'],
@@ -20,46 +16,9 @@ import { DrumService } from '../services';
 })
 export class DrumComponent implements OnInit, OnDestroy {
   subscription: Subscription | undefined;
-  entries: Key[] = [
-    {
-      key: 'A',
-      description: 'clap'
-    },
-    {
-      key: 'S',
-      description: 'hihat'
-    },
-    {
-      key: 'D',
-      description: 'kick'
-    },
-    {
-      key: 'F',
-      description: 'openhat'
-    },
-    {
-      key: 'G',
-      description: 'boom'
-    },
-    {
-      key: 'H',
-      description: 'ride'
-    },
-    {
-      key: 'J',
-      description: 'snare'
-    },
-    {
-      key: 'K',
-      description: 'tom'
-    },
-    {
-      key: 'L',
-      description: 'tink'
-    }
-  ]
+  entries = ENTRIES;
 
-  constructor(private drumService: DrumService, @Inject(APP_BASE_HREF) private baseHref: string) {}
+  constructor(private hostElement: ElementRef, private drumService: DrumService, @Inject(APP_BASE_HREF) private baseHref: string) {}
 
   ngOnInit(): void {
     const allowedKeys = this.entries.map(entry => entry.key)
@@ -72,6 +31,8 @@ export class DrumComponent implements OnInit, OnDestroy {
         tap(key => this.drumService.playSound(key))
       )
       .subscribe();
+
+    this.hostElement.nativeElement.style['background-image'] = this.imageUrl;
   }
 
   get imageUrl() {
