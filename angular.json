@@ -263,7 +263,8 @@
                   "with": "projects/day3-css-variables/src/environments/environment.prod.ts"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "baseHref": "https://railsstudent.github.io/ng-rxjs-30/day3-css-variables/"
             },
             "development": {
               "buildOptimizer": false,
