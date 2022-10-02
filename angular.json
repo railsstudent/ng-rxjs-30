@@ -55,7 +55,8 @@
                   "with": "projects/day1-javascript-drum-kit/src/environments/environment.prod.ts"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "baseHref": "https://railsstudent.github.io/ng-rxjs-30/day1-javascript-drum-kit/"
             },
             "development": {
               "buildOptimizer": false,
@@ -158,7 +159,8 @@
                   "with": "projects/day2-ng-and-css-clock/src/environments/environment.prod.ts"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "baseHref": "https://railsstudent.github.io/ng-rxjs-30/day2-ng-and-css-clock/"
             },
             "development": {
               "buildOptimizer": false,
@@ -261,7 +263,8 @@
                   "with": "projects/day3-css-variables/src/environments/environment.prod.ts"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "baseHref": "https://railsstudent.github.io/ng-rxjs-30/day3-css-variables/"
             },
             "development": {
               "buildOptimizer": false,
