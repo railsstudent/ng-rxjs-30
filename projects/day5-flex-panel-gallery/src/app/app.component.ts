@@ -1,10 +1,21 @@
 import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  template: `<app-panels></app-panels>`,
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `
+  ]
 })
 export class AppComponent {
-  title = 'day5-flex-panel-gallery';
+  title = 'Flex Panels';
+
+  constructor(titleService: Title) {
+    titleService.setTitle(this.title);
+  }
 }

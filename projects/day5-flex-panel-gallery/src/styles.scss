@@ -1,1 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+html {
+    box-sizing: border-box;
+    background: #ffc600;
+    font-family: 'helvetica neue';
+    font-size: 20px;
+    font-weight: 200;
+}
+  
+body {
+    margin: 0;
+    width: 100vw;
+    min-height: 100vh;
+}
+  
+*, *:before, *:after {
+    box-sizing: inherit;
+}
