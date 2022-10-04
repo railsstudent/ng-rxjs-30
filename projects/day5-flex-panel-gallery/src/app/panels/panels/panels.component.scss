@@ -1,41 +1,5 @@
-:host {
-    display: block;
-}
-
 .panels {
     min-height: 100vh;
     overflow: hidden;
     display: flex;
-}
-
-app-panel > * {
-    margin: 0;
-    width: 100%;
-    transition: transform 0.5s;
-    flex: 1 0 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-app-panel > *:first-child { transform: translateY(-100%); }
-app-panel.open-active > *:first-child { transform: translateY(0); }
-app-panel > *:last-child { transform: translateY(100%); }
-app-panel.open-active > *:last-child { transform: translateY(0); }
-
-app-panel p {
-    text-transform: uppercase;
-    font-family: 'Amatic SC', cursive;
-    text-shadow: 0 0 4px rgba(0, 0, 0, 0.72), 0 0 14px rgba(0, 0, 0, 0.45);
-    font-size: 2em;
-}
-
-app-panel p:nth-child(2) {
-    font-size: 4em;
-}
-        
-@media only screen and (max-width: 600px) {
-    app-panel p {
-    font-size: 1em;
-    }
 }

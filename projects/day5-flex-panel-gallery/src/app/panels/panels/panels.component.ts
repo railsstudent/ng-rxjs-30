@@ -1,20 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { PanelData } from './interfaces';
+import { Component } from '@angular/core';
+import { PanelData } from '../panel/interfaces';
 
 @Component({
   selector: 'app-panels',
   template: `
     <div class="panels">
-      <app-panel *ngFor="let panelData of data" [backgroundImage]="panelData.backgroundImage">
-        <p>{{ panelData.headline1 }}</p>
-        <p>{{ panelData.headline2 }}</p>
-        <p>{{ panelData.headline3 }}</p>
-      </app-panel>
+      <app-panel *ngFor="let panelData of data" [panelData]="panelData"></app-panel>
     </div>
   `,
   styleUrls: ['./panels.component.scss']
 })
-export class PanelsComponent implements OnInit {
+export class PanelsComponent {
 
   data: PanelData[] = [ 
     {
@@ -48,10 +44,4 @@ export class PanelsComponent implements OnInit {
       backgroundImage: 'https://source.unsplash.com/3MNzGlQM7qs/1500x1500',
     }
   ]
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
 }

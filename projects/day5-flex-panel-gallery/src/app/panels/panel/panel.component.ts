@@ -1,17 +1,20 @@
 import { Component, ElementRef, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { filter, fromEvent, map, Subscription, tap } from 'rxjs';
+import { PanelData } from './interfaces';
 
 @Component({
   selector: 'app-panel',
   template: `
-    <ng-content></ng-content>
+    <p>{{ panelData.headline1 }}</p>
+    <p>{{ panelData.headline2 }}</p>
+    <p>{{ panelData.headline3 }}</p>
   `,
   styleUrls: ['./panel.component.scss']
 })
 export class PanelComponent implements OnInit, OnDestroy {
   
   @Input()
-  backgroundImage!: string;
+  panelData!: PanelData
 
   @HostBinding('class.open')  isOpen = false;
 
@@ -22,7 +25,7 @@ export class PanelComponent implements OnInit, OnDestroy {
   constructor(private hostElement: ElementRef) {}
 
   ngOnInit(): void {
-    this.hostElement.nativeElement.style.setProperty('background-image', `url(${this.backgroundImage})`);
+    this.hostElement.nativeElement.style.setProperty('background-image', `url(${this.panelData.backgroundImage})`);
 
     this.subscription.add(
       fromEvent(this.hostElement.nativeElement, 'click')
