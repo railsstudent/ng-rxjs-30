@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { PanelData } from '../panel/interfaces';
 
 @Component({
@@ -8,7 +8,18 @@ import { PanelData } from '../panel/interfaces';
       <app-panel *ngFor="let panelData of data" [panelData]="panelData"></app-panel>
     </div>
   `,
-  styleUrls: ['./panels.component.scss']
+  styles: [`
+    :host {
+      display: block;
+    }
+
+    .panels {
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+    }
+  `],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PanelsComponent {
 
