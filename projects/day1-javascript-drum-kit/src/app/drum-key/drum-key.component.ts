@@ -1,6 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ViewChild, ElementRef, HostBinding, ChangeDetectorRef, HostListener, Inject } from '@angular/core';
-import { filter, Subscription, tap } from 'rxjs';
+import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ViewChild, ElementRef, HostBinding, ChangeDetectorRef, Inject } from '@angular/core';
+import { filter, fromEvent, map, Subscription, tap } from 'rxjs';
 import { Key } from '../interfaces';
 import { DrumService } from '../services';
 
@@ -25,16 +25,35 @@ export class DrumKeyComponent implements OnInit, OnDestroy {
   
   @HostBinding('class.playing') isPlaying = false;
 
-  subscription!: Subscription;
+  subscription = new Subscription();
 
-  constructor(private drumService: DrumService, private cdr: ChangeDetectorRef, @Inject(APP_BASE_HREF) private baseHref: string) {}
+  constructor(private drumService: DrumService, private cdr: ChangeDetectorRef, @Inject(APP_BASE_HREF) private baseHref: string,
+    private hostElement: ElementRef) {}
 
   ngOnInit(): void {
-    this.subscription = this.drumService.playDrumKey$.pipe(
-      filter(key => key === this.entry.key),
-      tap(() => this.playSound())
+    this.subscription.add(
+      this.drumService.playDrumKey$.pipe(
+        filter(key => key === this.entry.key),
+        tap(() => this.playSound())
+      )
+      .subscribe()
+    );
+
+    this.subscription.add(
+      fromEvent(this.hostElement.nativeElement, 'transitionend')
+        .pipe(
+          filter(evt => evt instanceof TransitionEvent),
+          map(evt => evt as TransitionEvent),
+          tap(evt => {
+            if (evt.propertyName !== 'transform') {
+              return;
+            }
+            this.isPlaying = false;
+            this.cdr.markForCheck();
+          })
+        )
+        .subscribe()
     )
-    .subscribe();
   }
 
   get soundFile() {
@@ -52,14 +71,6 @@ export class DrumKeyComponent implements OnInit, OnDestroy {
     nativeElement.play();
     this.isPlaying = true;
     this.cdr.markForCheck();
-  }
-
-  @HostListener('transitionend', ['$event'])
-  onTransitionEnd(evt: any) {
-    if (evt.propertyName !== 'transform') {
-      return;
-    }
-    this.isPlaying = false;
   }
 
   ngOnDestroy(): void {
