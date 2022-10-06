@@ -1,0 +1,60 @@
+:host {
+    background: #6B0F9C;
+    box-shadow: inset 0 0 0 5px rgba(255,255,255,0.1);
+    color: white;
+    text-align: center;
+    align-items: center;
+
+    /* Safari transitionend event.propertyName === flex */
+    /* Chrome + FF transitionend event.propertyName === flex-grow */
+    transition:
+      font-size 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
+      flex 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
+      background 0.2s;
+    font-size: 20px;
+    background-size: cover;
+    background-position: center;
+
+    flex: 1;
+    justify-content: center;
+
+    display: flex;
+    flex-direction: column;
+}
+
+:host > * {
+  margin: 0;
+  width: 100%;
+  transition: transform 0.5s;
+  flex: 1 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:host > *:first-child { transform: translateY(-100%); }
+:host.open-active > *:first-child { transform: translateY(0); }
+:host > *:last-child { transform: translateY(100%); }
+:host.open-active > *:last-child { transform: translateY(0); }
+
+:host p {
+  text-transform: uppercase;
+  font-family: 'Amatic SC', cursive;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.72), 0 0 14px rgba(0, 0, 0, 0.45);
+  font-size: 2rem;
+}
+
+:host p:nth-child(2) {
+  font-size: 4rem;
+}
+
+:host.open {
+  flex: 5;  
+  font-size: 40px;
+}
+      
+@media only screen and (max-width: 600px) {
+  :host p {
+    font-size: 1em;
+  }
+}
