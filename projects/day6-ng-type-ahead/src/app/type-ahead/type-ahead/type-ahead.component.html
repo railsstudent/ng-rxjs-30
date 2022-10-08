@@ -1,7 +1,17 @@
 <form class="search-form" #searchForm="ngForm">
     <input type="text" class="search" placeholder="City or State" [(ngModel)]="searchValue" name="searchValue">
-    <ul class="suggestions">
-      <li>Filter for a city</li>
-      <li>or a state</li>
+    <ul class="suggestions" *ngIf="suggestions$ | async as suggestions">
+      <ng-container *ngTemplateOutlet="suggestions?.length ? hasSuggestions : promptFilter; context: { suggestions, searchValue }"></ng-container>
     </ul>
 </form>
+
+<ng-template #promptFilter>
+  <li>Filter for a city</li>
+  <li>or a state</li>
+</ng-template>
+
+<ng-template #hasSuggestions let-suggestions="suggestions" let-searchValue="searchValue">
+  <li *ngFor="let suggestion of suggestions" 
+    [innerHtml]="suggestion | highlightSuggestion:searchValue">
+  </li>
+</ng-template>
