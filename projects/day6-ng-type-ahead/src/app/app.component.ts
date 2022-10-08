@@ -1,10 +1,19 @@
 import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  template: '<app-type-ahead></app-type-ahead>',
+  styles: [`
+    :host {
+      display: block;
+    }
+  `]
 })
 export class AppComponent {
-  title = 'day6-ng-type-ahead';
+  title = 'Day 6 NG Type Ahead';
+
+  constructor(titleService: Title) {
+    titleService.setTitle(this.title);
+  }
 }

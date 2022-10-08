@@ -22,11 +22,17 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-## Generate component in projects
+## Generate module in projects
+```bash
+ - change to project directory
+ng g m src/app/<module name> --project=<project name> --module=src/app/app.module
+```
+
+## Generate component in a feature module of projects
 
 ```bash
  - change to project directory
- ng g c <component name> --change-detection=OnPush --project=<project name> --module=src/app/app.module 
+ ng g c src/app/<feature module>/<component name> --change-detection=OnPush --project=<project name> --module=src/app/<feature module>.module 
 ```
 
 ## Deploy to Github page
