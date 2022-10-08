@@ -1,1 +1,7 @@
-<p>type-ahead works!</p>
+<form class="search-form" #searchForm="ngForm">
+    <input type="text" class="search" placeholder="City or State" [(ngModel)]="searchValue" name="searchValue">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+</form>
