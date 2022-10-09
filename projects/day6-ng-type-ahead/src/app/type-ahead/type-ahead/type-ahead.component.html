@@ -11,7 +11,8 @@
 </ng-template>
 
 <ng-template #hasSuggestions let-suggestions="suggestions" let-searchValue="searchValue">
-  <li *ngFor="let suggestion of suggestions" 
-    [innerHtml]="suggestion | highlightSuggestion:searchValue">
+  <li *ngFor="let suggestion of suggestions">
+    <span [innerHtml]="suggestion | highlightSuggestion:searchValue"></span>
+    <span class="population">{{ suggestion.population | number }}</span>
   </li>
 </ng-template>

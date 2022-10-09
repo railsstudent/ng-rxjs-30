@@ -36,6 +36,11 @@ export class TypeAheadComponent implements OnInit {
 
   findMatches(formValue: { searchValue: string }, cities: City[]) {
     const wordToMatch = formValue.searchValue;
+
+    if (wordToMatch === '') {
+      return [];
+    }
+
     const regex = new RegExp(wordToMatch, 'gi');
       // here we need to figure out if the city or state matches what was searched
     return cities.filter(place => place.city.match(regex) || place.state.match(regex));
