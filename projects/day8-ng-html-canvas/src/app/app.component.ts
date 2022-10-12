@@ -1,10 +1,21 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  template: '<app-canvas></app-canvas>',
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  title = 'day7-ng-html-canvas';
+  title = 'Day 8 NG html canvas';
+  constructor(titleService: Title) {
+    titleService.setTitle(this.title);
+  }
 }
