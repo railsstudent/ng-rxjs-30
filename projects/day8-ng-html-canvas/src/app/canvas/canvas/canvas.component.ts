@@ -61,18 +61,17 @@ export class CanvasComponent implements OnInit, OnDestroy {
             skip(1),
           ),
         ),
-        tap((line: LineInfo) => this.draw(ctx, line)),      
+        tap(line => this.draw(ctx, line)),      
         takeUntil(this.destroy$)
       ).subscribe();
     }
   }
 
   draw(ctx: CanvasRenderingContext2D, line: LineInfo) {
-    if (!line.curr || !line.prev) {
+    const { hue, prev, curr } = line;
+    if (!curr || !prev) {
       return;
     }
-
-    const { hue, prev, curr } = line;
     
     ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
     ctx.beginPath();
@@ -86,11 +85,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
       this.direction = !this.direction;
     }
 
-    if (this.direction) {
-      ctx.lineWidth = ctx.lineWidth + 1;
-    } else {
-      ctx.lineWidth = ctx.lineWidth - 1;
-    }
+    ctx.lineWidth = ctx.lineWidth + (this.direction ? 1 : -1);
   }
 
   ngOnDestroy(): void {
