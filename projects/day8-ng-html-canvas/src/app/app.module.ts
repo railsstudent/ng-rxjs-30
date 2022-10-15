@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { CanvasModule } from './canvas';
+import { CoreModule } from './core';
 
 @NgModule({
   declarations: [
@@ -10,7 +11,8 @@ import { CanvasModule } from './canvas';
   ],
   imports: [
     BrowserModule,
-    CanvasModule
+    CanvasModule,
+    CoreModule
   ],
   providers: [],
   bootstrap: [AppComponent]

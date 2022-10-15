@@ -1,5 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef, OnDestroy, Inject } from '@angular/core';
 import { concatMap, filter, fromEvent, map, merge, scan, skip, Subject, takeUntil, tap } from 'rxjs';
+import { WINDOW } from '../../core';
 import { LineInfo } from '../interfaces';
 
 @Component({
@@ -20,6 +21,8 @@ export class CanvasComponent implements OnInit, OnDestroy {
   direction = true;
   destroy$ = new Subject<void>();
 
+  constructor(@Inject(WINDOW) private window: Window) {}
+
   ngOnInit(): void {
     if (this.canvas && this.canvas.nativeElement) {
       const nativeCanvas = this.canvas.nativeElement
@@ -28,8 +31,8 @@ export class CanvasComponent implements OnInit, OnDestroy {
         return;
       }
 
-      nativeCanvas.width = window.innerWidth;
-      nativeCanvas.height = window.innerHeight;
+      nativeCanvas.width = this.window.innerWidth;
+      nativeCanvas.height = this.window.innerHeight;
       ctx.strokeStyle = '#BADA55';
       ctx.lineJoin = 'round';
       ctx.lineCap = 'round';
@@ -83,7 +86,11 @@ export class CanvasComponent implements OnInit, OnDestroy {
       this.direction = !this.direction;
     }
 
-    ctx.lineWidth = ctx.lineWidth + (this.direction ? 1 : -1) 
+    if (this.direction) {
+      ctx.lineWidth = ctx.lineWidth + 1;
+    } else {
+      ctx.lineWidth = ctx.lineWidth - 1;
+    }
   }
 
   ngOnDestroy(): void {
