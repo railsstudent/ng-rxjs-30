@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Message } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
-  getMessages(): Observable<Message[]> {
-    const items: Message[] = [
+  messagesSub = new BehaviorSubject<Message[]>(
+    [
       {
         description: 'This is an inbox layout.',
         isChecked: false,
@@ -44,7 +44,22 @@ export class MessageService {
         description: 'Don\'t forget to tweet your result!',
         isChecked: false,
       }
-    ];    
-    return of<Message[]>(items);
+    ]
+  );
+  messages$ = this.messagesSub.asObservable();
+
+  updateMessageState(description: string, isChecked: boolean) {
+    const messages = this.messagesSub.getValue();
+    const mutatedMessages = messages.map(message => {
+      if (message.description === description) {
+        return {
+          ...message,
+          isChecked,
+        }
+      }
+      return message;
+    })
+
+    this.messagesSub.next(mutatedMessages);
   }
 }

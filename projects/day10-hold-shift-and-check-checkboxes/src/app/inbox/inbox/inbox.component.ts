@@ -27,7 +27,7 @@ import { MessageService } from '../services';
 })
 export class InboxComponent implements OnInit {
 
-  messages$ = this.messageService.getMessages();
+  messages$ = this.messageService.messages$;
 
   constructor(private messageService: MessageService) { }
 
