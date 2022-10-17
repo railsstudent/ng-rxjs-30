@@ -1,18 +1,19 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, EventEmitter, Input, Output } from '@angular/core';
 import { Message } from '../interfaces';
+import { CheckboxClickState } from '../interfaces/checkbox-click-state.interface';
 
 @Component({
   selector: 'app-inbox-item',
   template: `
     <div class="item" [class.hide]="isLast">
-      <input type="checkbox" [checked]="data.isChecked">
+      <input type="checkbox" [checked]="data.isChecked" (click)="onClicked($event, myCheckbox.checked)" #myCheckbox>
       <p>{{ data.description }}</p>
     </div>
   `,
   styleUrls: ['./inbox-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InboxItemComponent implements OnInit {
+export class InboxItemComponent {
 
   @Input()
   data!: Message;
@@ -20,9 +21,14 @@ export class InboxItemComponent implements OnInit {
   @Input()
   isLast!: boolean;
 
-  constructor() { }
+  @Output()
+  checkboxClicked = new EventEmitter<CheckboxClickState>();
 
-  ngOnInit(): void {
+  onClicked(event$: MouseEvent, isChecked: boolean) {
+    this.checkboxClicked.emit({
+      isShiftKeyPressed: event$.shiftKey,
+      isChecked,
+      currentItem: this.data.id,
+    });
   }
-
 }
