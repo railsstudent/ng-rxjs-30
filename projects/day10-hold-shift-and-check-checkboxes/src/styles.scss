@@ -1,1 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
+*::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100vw;
+    min-height: 100vh;
+
+    font-family: sans-serif;
+    background: #ffc600;
+}
