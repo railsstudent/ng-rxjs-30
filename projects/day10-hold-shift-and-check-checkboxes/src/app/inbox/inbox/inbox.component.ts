@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, ViewChildren } from '@angular/core';
-import { BehaviorSubject, Subject, startWith, map } from 'rxjs';
+import { Subject, startWith, map } from 'rxjs';
 import { InboxItemComponent } from '../inbox-item/inbox-item.component';
 import { CheckboxClickState } from '../interfaces/checkbox-click-state.interface';
 import { MessageService } from '../services';
@@ -34,14 +34,14 @@ export class InboxComponent {
   @ViewChildren(InboxItemComponent)
   inboxItems!: InboxItemComponent[];
 
-  lastCheckSub$ = new BehaviorSubject<number | undefined>(undefined);
+  lastCheck: number | undefined = undefined;
   checkboxClickedSub$ = new Subject<CheckboxClickState>();
   messages$ = this.checkboxClickedSub$
     .pipe(
       map(({ currentItem, isShiftKeyPressed, isChecked }) => {
         this.messageService.updateMessageState(currentItem, isChecked);
         this.checkBetweenBoxes(currentItem, isShiftKeyPressed, isChecked);
-        this.lastCheckSub$.next(currentItem);
+        this.lastCheck = currentItem;
         return this.messageService.getMessages();
       }),
       startWith(this.messageService.getMessages())
@@ -54,7 +54,7 @@ export class InboxComponent {
       let inBetween = false;
       this.inboxItems.forEach(inboxItem => {
         const id = inboxItem.data.id;
-        if (id === currentItem || id === this.lastCheckSub$.value) {
+        if (id === currentItem || id === this.lastCheck) {
           inBetween = !inBetween;
         }
         
