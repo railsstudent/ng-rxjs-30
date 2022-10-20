@@ -1,10 +1,19 @@
 import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styles: [`
+    :host {
+      display: block;
+    }
+  `]
 })
 export class AppComponent {
-  title = 'day11-custom-video-player';
+  title = 'Day11 HTML Video Player';
+
+  constructor(titleService: Title) {
+    titleService.setTitle(this.title);
+  }
 }
