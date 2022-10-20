@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
+import { VideoPlayerModule } from './video-player';
 
 function getBaseHref(platformLocation: PlatformLocation): string {
   return platformLocation.getBaseHrefFromDOM();
@@ -13,7 +14,8 @@ function getBaseHref(platformLocation: PlatformLocation): string {
     AppComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    VideoPlayerModule
   ],
   providers: [
     {
