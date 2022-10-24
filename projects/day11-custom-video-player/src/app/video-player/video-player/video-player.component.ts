@@ -1,11 +1,13 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Inject, ViewChild, ElementRef } from '@angular/core';
+import { fromEvent, map, merge, Observable, startWith, tap } from 'rxjs';
+import { VideoPlayerService } from '../services';
 
 @Component({
   selector: 'app-video-player',
   template: `
     <div class="player">
-      <video class="player__video viewer" currentTime="10">
+      <video class="player__video viewer" currentTime="10" #videoPlayer>
         <source [src]="videoSrc" type="video/mp4">
       </video>
       <app-video-player-controls></app-video-player-controls>

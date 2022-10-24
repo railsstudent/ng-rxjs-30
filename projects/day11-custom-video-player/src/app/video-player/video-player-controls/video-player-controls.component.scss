@@ -34,11 +34,11 @@
     height: 30px;
 }
 
-.player:hover .player__controls {
+:host-context(.player:hover) .player__controls {
     transform: translateY(0);
 }
 
-.player:hover .progress {
+:host-context(.player:hover) .player__controls .progress {
     height: 15px;
 }
   
@@ -46,7 +46,7 @@
     flex: 1;
 }
   
-.progress {
+.player__controls .progress {
     flex: 10;
     position: relative;
     display: flex;
