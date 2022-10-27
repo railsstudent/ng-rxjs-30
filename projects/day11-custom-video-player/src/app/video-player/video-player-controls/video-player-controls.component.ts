@@ -52,6 +52,21 @@ export class VideoPlayerControlsComponent implements OnInit, OnDestroy {
         .subscribe()
     );
 
+    this.subscription.add(
+      fromEvent([this.backward.nativeElement, this.forward.nativeElement], 'click')
+        .pipe(
+          map(({ target }) => {
+            const buttonElement = target as HTMLButtonElement
+            return buttonElement.dataset['skip']
+          }),
+          tap((value) => { 
+            if (value) {
+              this.videoPlayerService.skipVideo(+value)
+            }
+          })
+        ).subscribe()
+    );
+
     const ranges$ = ['change', 'mousemove'].map(eventName => {
       return fromEvent([this.volume.nativeElement, this.playback.nativeElement], eventName)
       .pipe(

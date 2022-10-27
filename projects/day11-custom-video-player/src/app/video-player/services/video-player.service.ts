@@ -9,11 +9,13 @@ export class VideoPlayerService {
   private readonly videoProgressBarSub = new Subject<string>();
   private readonly toggleButtonClickedSub = new Subject<void>();
   private readonly rangeUpdatedSub = new Subject<{ name: string; value: number; }>();
+  private readonly skipVideoSub = new Subject<number>();
 
   readonly videoButtonIcon$ = this.videoButtonIconSub.asObservable();
   readonly videoProgressBar$ = this.videoProgressBarSub.asObservable();
   readonly toggleButtonClicked$ = this.toggleButtonClickedSub.asObservable();
   readonly rangeUpdated$ = this.rangeUpdatedSub.asObservable();
+  readonly skipVideo$ = this.skipVideoSub.asObservable();
 
   updateVideoButtonIcon(icon: string) {
     this.videoButtonIconSub.next(icon);
@@ -29,5 +31,9 @@ export class VideoPlayerService {
 
   updateRange(result: { name: string; value: number; }): void {
     this.rangeUpdatedSub.next(result);
+  }
+
+  skipVideo(value: number): void {
+    this.skipVideoSub.next(value);
   }
 }

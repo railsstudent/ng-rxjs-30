@@ -100,7 +100,12 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
             videoNativeElement.playbackRate = result.value;
           }
         })
-    );    
+    );
+    
+    this.subscription.add(
+      this.videoService.skipVideo$
+        .subscribe(result => videoNativeElement.currentTime = videoNativeElement.currentTime + result) 
+    );
   }
 
   get videoSrc(): string {
