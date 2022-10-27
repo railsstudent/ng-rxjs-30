@@ -62,10 +62,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const videoNativeElement = this.video.nativeElement;
     this.subscription.add(
-      merge(
-        fromEvent(videoNativeElement, 'click'),
-        this.videoService.toggleButtonClicked$
-      )
+      merge(fromEvent(videoNativeElement, 'click'), this.videoService.toggleButtonClicked$)
         .pipe(map(() => videoNativeElement.paused ? 'play' : 'pause'))
       .subscribe(methodName => videoNativeElement[methodName]())
     );
@@ -93,13 +90,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
 
     this.subscription.add(
       this.videoService.rangeUpdated$
-        .subscribe(result => { 
-          if (result.name === 'volume') {
-            videoNativeElement.volume = result.value;
-          } else if (result.name === 'playbackRate') {
-            videoNativeElement.playbackRate = result.value;
-          }
-        })
+        .subscribe(result => videoNativeElement[result.name] = result.value)
     );
     
     this.subscription.add(

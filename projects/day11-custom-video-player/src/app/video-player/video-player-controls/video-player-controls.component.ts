@@ -36,8 +36,7 @@ export class VideoPlayerControlsComponent implements OnInit, OnDestroy {
   @ViewChild('playback', { static: true })
   playback!: ElementRef<HTMLInputElement>;
 
-  videoButtonIcon$ = this.videoPlayerService.videoButtonIcon$
-    .pipe(startWith('►'));
+  videoButtonIcon$ = this.videoPlayerService.videoButtonIcon$.pipe(startWith('►'));
 
   videoProgressBar$ = this.videoPlayerService.videoProgressBar$;
 
@@ -73,15 +72,14 @@ export class VideoPlayerControlsComponent implements OnInit, OnDestroy {
         map(({ target }) => {
           const { name, value } = target as HTMLInputElement;
           return {
-            name,
+            name: name as "volume" | "playbackRate",
             value: +value            
           }
         })
       )
     })
 
-    this.subscription.add(
-      merge(...ranges$)
+    this.subscription.add(merge(...ranges$)
       .pipe(tap(result => this.videoPlayerService.updateRange(result)))
       .subscribe()
     );

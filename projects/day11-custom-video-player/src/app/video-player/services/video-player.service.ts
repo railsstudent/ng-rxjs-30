@@ -8,7 +8,7 @@ export class VideoPlayerService {
   private readonly videoButtonIconSub = new Subject<string>();
   private readonly videoProgressBarSub = new Subject<string>();
   private readonly toggleButtonClickedSub = new Subject<void>();
-  private readonly rangeUpdatedSub = new Subject<{ name: string; value: number; }>();
+  private readonly rangeUpdatedSub = new Subject<{ name: "volume" | "playbackRate"; value: number; }>();
   private readonly skipVideoSub = new Subject<number>();
 
   readonly videoButtonIcon$ = this.videoButtonIconSub.asObservable();
@@ -29,7 +29,7 @@ export class VideoPlayerService {
     this.toggleButtonClickedSub.next();
   }
 
-  updateRange(result: { name: string; value: number; }): void {
+  updateRange(result: { name: "volume" | "playbackRate"; value: number; }): void {
     this.rangeUpdatedSub.next(result);
   }
 
