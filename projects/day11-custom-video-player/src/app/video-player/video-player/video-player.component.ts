@@ -62,7 +62,10 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const videoNativeElement = this.video.nativeElement;
     this.subscription.add(
-      fromEvent(videoNativeElement, 'click')
+      merge(
+        fromEvent(videoNativeElement, 'click'),
+        this.videoService.toggleButtonClicked$
+      )
         .pipe(map(() => videoNativeElement.paused ? 'play' : 'pause'))
       .subscribe(methodName => videoNativeElement[methodName]())
     );
