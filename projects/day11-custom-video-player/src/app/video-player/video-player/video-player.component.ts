@@ -13,7 +13,41 @@ import { VideoPlayerService } from '../services';
       <app-video-player-controls></app-video-player-controls>
     </div>
   `,
-  styleUrls: ['video-player.component.scss'],
+  styles: [`
+    :host {
+      display: flex;
+      background: #7A419B;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #7c1599 0%,#921099 48%,#7e4ae8 100%);
+      background-size: cover;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .player {
+        max-width: 750px;
+        border: 5px solid rgba(0,0,0,0.2);
+        box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        position: relative;
+        font-size: 0;
+        overflow: hidden;
+    }
+      
+    /* This css is only applied when fullscreen is active. */
+    .player:fullscreen {
+        max-width: none;
+        width: 100%;
+    }
+      
+    .player:-webkit-full-screen {
+        max-width: none;
+        width: 100%;
+    }
+      
+    .player__video {
+        width: 100%;
+    }
+  `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VideoPlayerComponent implements OnInit {
@@ -27,23 +61,28 @@ export class VideoPlayerComponent implements OnInit {
 
   ngOnInit(): void {
     const videoNativeElement = this.video.nativeElement;
-    const videoClicked$ = fromEvent(videoNativeElement, 'click')
-      .pipe(map(() => videoNativeElement.paused ? 'play' : 'pause'));
+    this.subscription.add(
+      fromEvent(videoNativeElement, 'click')
+        .pipe(
+          map(() => videoNativeElement.paused ? 'play' : 'pause'),
+          tap((methodName) => this.videoService.updateVideoClicked(methodName))
+        )
+      .subscribe()
+    );
 
-    const videoButtonIcon$ = 
+    this.subscription.add(
       merge(
         fromEvent(videoNativeElement, 'play').pipe(map(() => '►')), 
         fromEvent(videoNativeElement, 'pause').pipe(map(() => '❚ ❚')),
-      )
+      ).subscribe()
+    );
 
-    const videoProgress$ = fromEvent(videoNativeElement, 'timeupdate')
-      .pipe(map(() => (videoNativeElement.currentTime / videoNativeElement.duration) * 100));
-        
-        
-      //   .pipe(map(() => false));  
-
-    // this.videoService.isPlayerHover$ = merge(hover$, notHover$).pipe(startWith(true));
-
+    this.subscription.add(
+      fromEvent(videoNativeElement, 'timeupdate')
+        .pipe(map(() => (videoNativeElement.currentTime / videoNativeElement.duration) * 100))
+        .subscribe()
+    );
+    
     // this.videoPlayer.nativeElement.play();
   }
 
