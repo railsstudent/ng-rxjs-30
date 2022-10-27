@@ -6,7 +6,7 @@ import { VideoPlayerService } from '../services';
   selector: 'app-video-player-controls',
   template: `
     <div class="player__controls">
-      <div class="progress">
+      <div class="progress" #progress>
         <div class="progress__filled" [style.flexBasis]="videoProgressBar$ | async"></div>
       </div>
       <button class="player__button toggle" title="Toggle Play" [textContent]="videoButtonIcon$ | async" #toggle>►</button>
@@ -35,6 +35,9 @@ export class VideoPlayerControlsComponent implements OnInit, OnDestroy {
 
   @ViewChild('playback', { static: true })
   playback!: ElementRef<HTMLInputElement>;
+
+  @ViewChild('progress', { static: true })
+  progress!: ElementRef<HTMLDivElement>;
 
   videoButtonIcon$ = this.videoPlayerService.videoButtonIcon$.pipe(startWith('►'));
 
