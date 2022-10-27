@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import { fromEvent, startWith, Subscription, tap } from 'rxjs';
+import { fromEvent, map, merge, startWith, Subscription, tap } from 'rxjs';
 import { VideoPlayerService } from '../services';
 
 @Component({
@@ -10,8 +10,8 @@ import { VideoPlayerService } from '../services';
         <div class="progress__filled" [style.flexBasis]="videoProgressBar$ | async"></div>
       </div>
       <button class="player__button toggle" title="Toggle Play" [textContent]="videoButtonIcon$ | async" #toggle>►</button>
-      <input type="range" name="volume" class="player__slider" min="0" max="1" step="0.05" value="1">
-      <input type="range" name="playbackRate" class="player__slider" min="0.5" max="2" step="0.1" value="1">
+      <input type="range" name="volume" class="player__slider" min="0" max="1" step="0.05" value="1" #volume>
+      <input type="range" name="playbackRate" class="player__slider" min="0.5" max="2" step="0.1" value="1" #playback>
       <button data-skip="-10" class="player__button" #backward>« 10s</button>
       <button data-skip="25" class="player__button" #forward>25s »</button>
     </div>
@@ -23,6 +23,18 @@ export class VideoPlayerControlsComponent implements OnInit, OnDestroy {
 
   @ViewChild('toggle', { static: true })
   toggleButton!: ElementRef<HTMLButtonElement>;
+
+  @ViewChild('backward', { static: true })
+  backward!: ElementRef<HTMLButtonElement>;
+
+  @ViewChild('forward', { static: true })
+  forward!: ElementRef<HTMLButtonElement>;
+
+  @ViewChild('volume', { static: true })
+  volume!: ElementRef<HTMLInputElement>;
+
+  @ViewChild('playback', { static: true })
+  playback!: ElementRef<HTMLInputElement>;
 
   videoButtonIcon$ = this.videoPlayerService.videoButtonIcon$
     .pipe(startWith('►'));
@@ -38,6 +50,25 @@ export class VideoPlayerControlsComponent implements OnInit, OnDestroy {
       fromEvent(this.toggleButton.nativeElement, 'click')
         .pipe(tap(() => this.videoPlayerService.clickToggleButton()))
         .subscribe()
+    );
+
+    const ranges$ = ['change', 'mousemove'].map(eventName => {
+      return fromEvent([this.volume.nativeElement, this.playback.nativeElement], eventName)
+      .pipe(
+        map(({ target }) => {
+          const { name, value } = target as HTMLInputElement;
+          return {
+            name,
+            value: +value            
+          }
+        })
+      )
+    })
+
+    this.subscription.add(
+      merge(...ranges$)
+      .pipe(tap(result => this.videoPlayerService.updateRange(result)))
+      .subscribe()
     );
   }
 

@@ -90,6 +90,17 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
         )
         .subscribe()
     );
+
+    this.subscription.add(
+      this.videoService.rangeUpdated$
+        .subscribe(result => { 
+          if (result.name === 'volume') {
+            videoNativeElement.volume = result.value;
+          } else if (result.name === 'playbackRate') {
+            videoNativeElement.playbackRate = result.value;
+          }
+        })
+    );    
   }
 
   get videoSrc(): string {
