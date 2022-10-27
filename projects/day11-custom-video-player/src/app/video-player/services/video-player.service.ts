@@ -6,12 +6,17 @@ import { Subject } from 'rxjs';
 })
 export class VideoPlayerService {
 
-  private readonly videoClickedSub = new Subject<string>();
-  videoClicked$ = this.videoClickedSub.asObservable();
+  private readonly videoButtonIconSub = new Subject<string>();
+  private readonly videoProgressBarSub = new Subject<string>();
 
-  constructor() { }
+  readonly videoButtonIcon$ = this.videoButtonIconSub.asObservable();
+  readonly videoProgressBar$ = this.videoProgressBarSub.asObservable();
 
-  updateVideoClicked(methodName: string) {
-    this.videoClickedSub.next(methodName);
+  updateVideoButtonIcon(icon: string) {
+    this.videoButtonIconSub.next(icon);
+  }
+
+  updateVideoProgressTime(flexBasis: string) {
+    this.videoProgressBarSub.next(flexBasis);
   }
 }

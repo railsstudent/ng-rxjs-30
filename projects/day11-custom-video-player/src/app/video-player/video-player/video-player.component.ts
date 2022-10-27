@@ -1,6 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { Component, OnInit, ChangeDetectionStrategy, Inject, ViewChild, ElementRef } from '@angular/core';
-import { fromEvent, map, merge, Observable, startWith, Subscription, tap } from 'rxjs';
+import { Component, OnInit, ChangeDetectionStrategy, Inject, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { fromEvent, map, merge, Subscription, tap } from 'rxjs';
 import { VideoPlayerService } from '../services';
 
 @Component({
@@ -50,7 +50,7 @@ import { VideoPlayerService } from '../services';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class VideoPlayerComponent implements OnInit {
+export class VideoPlayerComponent implements OnInit, OnDestroy {
 
   @ViewChild('video', { static: true })
   video!: ElementRef<HTMLVideoElement>;
@@ -63,31 +63,38 @@ export class VideoPlayerComponent implements OnInit {
     const videoNativeElement = this.video.nativeElement;
     this.subscription.add(
       fromEvent(videoNativeElement, 'click')
-        .pipe(
-          map(() => videoNativeElement.paused ? 'play' : 'pause'),
-          tap((methodName) => this.videoService.updateVideoClicked(methodName))
-        )
-      .subscribe()
+        .pipe(map(() => videoNativeElement.paused ? 'play' : 'pause'))
+      .subscribe(methodName => videoNativeElement[methodName]())
     );
 
     this.subscription.add(
       merge(
-        fromEvent(videoNativeElement, 'play').pipe(map(() => '►')), 
-        fromEvent(videoNativeElement, 'pause').pipe(map(() => '❚ ❚')),
-      ).subscribe()
+        fromEvent(videoNativeElement, 'pause').pipe(map(() => '►')), 
+        fromEvent(videoNativeElement, 'play').pipe(map(() => '❚ ❚')),
+      )
+        .pipe(tap(icon => this.videoService.updateVideoButtonIcon(icon)))
+        .subscribe()
     );
 
     this.subscription.add(
       fromEvent(videoNativeElement, 'timeupdate')
-        .pipe(map(() => (videoNativeElement.currentTime / videoNativeElement.duration) * 100))
+        .pipe(
+          map(() => { 
+            const progressTime = (videoNativeElement.currentTime / videoNativeElement.duration) * 100;
+            return `${progressTime}%`;
+          }),
+          tap(flexBasis => this.videoService.updateVideoProgressTime(flexBasis))
+        )
         .subscribe()
     );
-    
-    // this.videoPlayer.nativeElement.play();
   }
 
   get videoSrc(): string {
     const isEndWithSlash = this.baseHref.endsWith('/');
     return `${this.baseHref}${isEndWithSlash ? '' : '/'}assets/652333414.mp4`;
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

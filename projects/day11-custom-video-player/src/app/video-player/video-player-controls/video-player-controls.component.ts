@@ -1,13 +1,15 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { startWith } from 'rxjs';
+import { VideoPlayerService } from '../services';
 
 @Component({
   selector: 'app-video-player-controls',
   template: `
     <div class="player__controls">
       <div class="progress">
-        <div class="progress__filled"></div>
+        <div class="progress__filled" [style.flexBasis]="videoProgressBar$ | async"></div>
       </div>
-      <button class="player__button toggle" title="Toggle Play">►</button>
+      <button class="player__button toggle" title="Toggle Play" [textContent]="videoButtonIcon$ | async">►</button>
       <input type="range" name="volume" class="player__slider" min="0" max="1" step="0.05" value="1">
       <input type="range" name="playbackRate" class="player__slider" min="0.5" max="2" step="0.1" value="1">
       <button data-skip="-10" class="player__button">« 10s</button>
@@ -19,9 +21,12 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 })
 export class VideoPlayerControlsComponent implements OnInit {
 
-  constructor() { }
+  videoButtonIcon$ = this.videoPlayerService.videoButtonIcon$
+    .pipe(startWith('►'));
 
-  ngOnInit(): void {
-  }
+    videoProgressBar$ = this.videoPlayerService.videoProgressBar$;
 
+  constructor(private videoPlayerService: VideoPlayerService) { }
+
+  ngOnInit(): void {}
 }
