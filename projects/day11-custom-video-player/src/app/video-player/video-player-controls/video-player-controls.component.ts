@@ -1,7 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef, OnDestroy, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { fromEvent, map, merge, Observable, startWith, Subscription, tap } from 'rxjs';
+import { VideoActionEnum } from '../enums/video-actions.enum';
+import { VideoAction, VideoPlayerRangeInput } from '../interfaces';
 import { VideoPlayerService } from '../services';
-import { VideoPlayerControlInput } from '../types';
 
 @Component({
   selector: 'app-video-player-controls',
@@ -55,33 +56,36 @@ export class VideoPlayerControlsComponent implements OnInit, OnDestroy, AfterVie
       const clickEvent$ = fromEvent(skipButton.nativeElement, 'click').pipe(
         map(({ target }) => {
           const strSeconds = (target as HTMLButtonElement).dataset['skip'];
-          return strSeconds ? +strSeconds : 0;
+          const seconds = strSeconds ? +strSeconds : 0;
+          return {
+            action: VideoActionEnum.SKIP_BUTTON_CLICKED,
+            arg: seconds
+          }
         }),
-        tap(addedSeconds => this.videoPlayerService.skipVideo(addedSeconds))
       )
 
       return acc.concat(clickEvent$);
-    }, [] as Observable<number>[])
-
-    this.subscription.add(merge(...skipButtonEvents$).subscribe());
+    }, [] as Observable<VideoAction>[])
 
     const rangeInputEvents$ = this.rangeInputs.reduce((acc, rangeInput) => 
       acc.concat(this.addRangeUpdateEvent(rangeInput, 'change'), this.addRangeUpdateEvent(rangeInput, 'mousemove'))
-    , [] as Observable<VideoPlayerControlInput>[]);
+    , [] as Observable<VideoAction>[]);
 
-    this.subscription.add(merge(...rangeInputEvents$)
-      .pipe(tap(result => this.videoPlayerService.updateRange(result)))
-      .subscribe()
-    );
+    this.subscription.add(merge(...skipButtonEvents$, ...rangeInputEvents$)
+      .pipe(tap(nextAction => this.videoPlayerService.updateVideoAction(nextAction)))
+      .subscribe());
   }
 
-  private addRangeUpdateEvent(rangeInput: ElementRef<HTMLInputElement>, eventName: string): Observable<VideoPlayerControlInput> {
+  private addRangeUpdateEvent(rangeInput: ElementRef<HTMLInputElement>, eventName: string): Observable<VideoAction> {
     return fromEvent(rangeInput.nativeElement, eventName).pipe(
       map(({ target }) => {
         const { name, value } = target as HTMLInputElement;
         return {
-          name: name as "volume" | "playbackRate",
-          value: +value
+          action: VideoActionEnum.RANGE_UPDATED,
+          arg: {
+            name: name as "volume" | "playbackRate",
+            value: +value
+          }
         }
       })
     );

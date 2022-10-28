@@ -1,6 +1,8 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { Component, OnInit, ChangeDetectionStrategy, Inject, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { fromEvent, map, merge, Subscription, tap } from 'rxjs';
+import { VideoActionEnum } from '../enums/video-actions.enum';
+import { VideoAction, VideoPlayerRangeInput } from '../interfaces';
 import { VideoPlayerService } from '../services';
 
 @Component({
@@ -87,16 +89,21 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
         )
         .subscribe()
     );
-
-    this.subscription.add(
-      this.videoService.rangeUpdated$
-        .subscribe(result => videoNativeElement[result.name] = result.value)
-    );
     
     this.subscription.add(
-      this.videoService.skipVideo$
-        .subscribe(result => videoNativeElement.currentTime = videoNativeElement.currentTime + result) 
+      this.videoService.videoAction$
+        .subscribe(nextAction => this.processAction(videoNativeElement, nextAction))
     );
+  }
+
+  private processAction(videoNativeElement: HTMLVideoElement, nextAction: VideoAction): void {
+    if (nextAction.action === VideoActionEnum.SKIP_BUTTON_CLICKED) {
+      const seconds = nextAction.arg as number;
+      videoNativeElement.currentTime = videoNativeElement.currentTime + seconds
+    } else if (nextAction.action === VideoActionEnum.RANGE_UPDATED) {
+      const rangeInput = nextAction.arg as VideoPlayerRangeInput;
+      videoNativeElement[rangeInput.name] = rangeInput.value
+    }
   }
 
   get videoSrc(): string {
