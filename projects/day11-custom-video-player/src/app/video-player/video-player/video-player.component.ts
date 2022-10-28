@@ -110,8 +110,8 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
       const methodName = videoNativeElement.paused ? 'play' : 'pause';
       videoNativeElement[methodName]();
     } else if (nextAction.action === VideoActionEnum.PROGESS_BAR_CLICKED) {
-      const newCurrentTime = nextAction.arg as number;
-      videoNativeElement.currentTime = newCurrentTime
+      const proportion = nextAction.arg as number;
+      videoNativeElement.currentTime = proportion * videoNativeElement.duration;
     }
   }
 

@@ -52,6 +52,16 @@ export class VideoPlayerControlsComponent implements OnInit, OnDestroy, AfterVie
         )
         .subscribe()
     );
+
+    this.subscription.add(
+      fromEvent(this.progress.nativeElement, 'click')
+        .pipe(
+          map(event => event as PointerEvent),
+          map(({ offsetX }) => ({ action: VideoActionEnum.PROGESS_BAR_CLICKED, arg: offsetX / this.progress.nativeElement.offsetWidth })),
+          tap(nextAction => this.videoPlayerService.updateVideoAction(nextAction))
+        )
+        .subscribe()
+    )
   }
 
   ngAfterViewInit(): void {
