@@ -1,6 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import { fromEvent, map, merge, startWith, Subscription, tap } from 'rxjs';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef, OnDestroy, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
+import { fromEvent, map, merge, Observable, startWith, Subscription, tap } from 'rxjs';
 import { VideoPlayerService } from '../services';
+import { VideoPlayerControlInput } from '../types';
 
 @Component({
   selector: 'app-video-player-controls',
@@ -10,31 +11,25 @@ import { VideoPlayerService } from '../services';
         <div class="progress__filled" [style.flexBasis]="videoProgressBar$ | async"></div>
       </div>
       <button class="player__button toggle" title="Toggle Play" [textContent]="videoButtonIcon$ | async" #toggle>►</button>
-      <input type="range" name="volume" class="player__slider" min="0" max="1" step="0.05" value="1" #volume>
-      <input type="range" name="playbackRate" class="player__slider" min="0.5" max="2" step="0.1" value="1" #playback>
-      <button data-skip="-10" class="player__button" #backward>« 10s</button>
-      <button data-skip="25" class="player__button" #forward>25s »</button>
+      <input type="range" name="volume" class="player__slider" min="0" max="1" step="0.05" value="1" #range>
+      <input type="range" name="playbackRate" class="player__slider" min="0.5" max="2" step="0.1" value="1" #range>
+      <button data-skip="-10" class="player__button" #skip>« 10s</button>
+      <button data-skip="25" class="player__button" #skip>25s »</button>
     </div>
   `,
   styleUrls: ['./video-player-controls.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class VideoPlayerControlsComponent implements OnInit, OnDestroy {
+export class VideoPlayerControlsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('toggle', { static: true })
   toggleButton!: ElementRef<HTMLButtonElement>;
 
-  @ViewChild('backward', { static: true })
-  backward!: ElementRef<HTMLButtonElement>;
+  @ViewChildren('skip', { read: ElementRef })
+  skipButtons!: QueryList<ElementRef<HTMLButtonElement>>;
 
-  @ViewChild('forward', { static: true })
-  forward!: ElementRef<HTMLButtonElement>;
-
-  @ViewChild('volume', { static: true })
-  volume!: ElementRef<HTMLInputElement>;
-
-  @ViewChild('playback', { static: true })
-  playback!: ElementRef<HTMLInputElement>;
+  @ViewChildren('range', { read: ElementRef })
+  rangeInputs!: QueryList<ElementRef<HTMLInputElement>>;
 
   @ViewChild('progress', { static: true })
   progress!: ElementRef<HTMLDivElement>;
@@ -53,38 +48,42 @@ export class VideoPlayerControlsComponent implements OnInit, OnDestroy {
         .pipe(tap(() => this.videoPlayerService.clickToggleButton()))
         .subscribe()
     );
+  }
 
-    this.subscription.add(
-      fromEvent([this.backward.nativeElement, this.forward.nativeElement], 'click')
-        .pipe(
-          map(({ target }) => {
-            const buttonElement = target as HTMLButtonElement
-            return buttonElement.dataset['skip']
-          }),
-          tap((value) => { 
-            if (value) {
-              this.videoPlayerService.skipVideo(+value)
-            }
-          })
-        ).subscribe()
-    );
-
-    const ranges$ = ['change', 'mousemove'].map(eventName => {
-      return fromEvent([this.volume.nativeElement, this.playback.nativeElement], eventName)
-      .pipe(
+  ngAfterViewInit(): void {
+    const skipButtonEvents$ = this.skipButtons.reduce((acc, skipButton) => {
+      const clickEvent$ = fromEvent(skipButton.nativeElement, 'click').pipe(
         map(({ target }) => {
-          const { name, value } = target as HTMLInputElement;
-          return {
-            name: name as "volume" | "playbackRate",
-            value: +value            
-          }
-        })
+          const strSeconds = (target as HTMLButtonElement).dataset['skip'];
+          return strSeconds ? +strSeconds : 0;
+        }),
+        tap(addedSeconds => this.videoPlayerService.skipVideo(addedSeconds))
       )
-    })
 
-    this.subscription.add(merge(...ranges$)
+      return acc.concat(clickEvent$);
+    }, [] as Observable<number>[])
+
+    this.subscription.add(merge(...skipButtonEvents$).subscribe());
+
+    const rangeInputEvents$ = this.rangeInputs.reduce((acc, rangeInput) => 
+      acc.concat(this.addRangeUpdateEvent(rangeInput, 'change'), this.addRangeUpdateEvent(rangeInput, 'mousemove'))
+    , [] as Observable<VideoPlayerControlInput>[]);
+
+    this.subscription.add(merge(...rangeInputEvents$)
       .pipe(tap(result => this.videoPlayerService.updateRange(result)))
       .subscribe()
+    );
+  }
+
+  private addRangeUpdateEvent(rangeInput: ElementRef<HTMLInputElement>, eventName: string): Observable<VideoPlayerControlInput> {
+    return fromEvent(rangeInput.nativeElement, eventName).pipe(
+      map(({ target }) => {
+        const { name, value } = target as HTMLInputElement;
+        return {
+          name: name as "volume" | "playbackRate",
+          value: +value
+        }
+      })
     );
   }
 

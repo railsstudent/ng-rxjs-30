@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
+import { VideoPlayerControlInput } from '../types';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ export class VideoPlayerService {
   private readonly videoButtonIconSub = new Subject<string>();
   private readonly videoProgressBarSub = new Subject<string>();
   private readonly toggleButtonClickedSub = new Subject<void>();
-  private readonly rangeUpdatedSub = new Subject<{ name: "volume" | "playbackRate"; value: number; }>();
+  private readonly rangeUpdatedSub = new Subject<VideoPlayerControlInput>();
   private readonly skipVideoSub = new Subject<number>();
 
   readonly videoButtonIcon$ = this.videoButtonIconSub.asObservable();
@@ -29,7 +30,7 @@ export class VideoPlayerService {
     this.toggleButtonClickedSub.next();
   }
 
-  updateRange(result: { name: "volume" | "playbackRate"; value: number; }): void {
+  updateRange(result: VideoPlayerControlInput): void {
     this.rangeUpdatedSub.next(result);
   }
 
