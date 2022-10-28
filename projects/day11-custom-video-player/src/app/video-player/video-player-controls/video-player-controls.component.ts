@@ -46,7 +46,10 @@ export class VideoPlayerControlsComponent implements OnInit, OnDestroy, AfterVie
   ngOnInit(): void {
     this.subscription.add(
       fromEvent(this.toggleButton.nativeElement, 'click')
-        .pipe(tap(() => this.videoPlayerService.clickToggleButton()))
+        .pipe(
+          map(() => ({ action: VideoActionEnum.TOGGLE_PLAY, arg: undefined })),
+          tap(nextAction => this.videoPlayerService.updateVideoAction(nextAction))
+        )
         .subscribe()
     );
   }

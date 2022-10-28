@@ -64,9 +64,12 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const videoNativeElement = this.video.nativeElement;
     this.subscription.add(
-      merge(fromEvent(videoNativeElement, 'click'), this.videoService.toggleButtonClicked$)
-        .pipe(map(() => videoNativeElement.paused ? 'play' : 'pause'))
-      .subscribe(methodName => videoNativeElement[methodName]())
+      fromEvent(videoNativeElement, 'click')
+        .pipe(
+          map(() => ({ action: VideoActionEnum.TOGGLE_PLAY, arg: undefined })),
+          tap(nextAction => this.videoService.updateVideoAction(nextAction))
+        )
+        .subscribe()
     );
 
     this.subscription.add(
@@ -103,6 +106,12 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
     } else if (nextAction.action === VideoActionEnum.RANGE_UPDATED) {
       const rangeInput = nextAction.arg as VideoPlayerRangeInput;
       videoNativeElement[rangeInput.name] = rangeInput.value
+    } else if (nextAction.action === VideoActionEnum.TOGGLE_PLAY) {
+      const methodName = videoNativeElement.paused ? 'play' : 'pause';
+      videoNativeElement[methodName]();
+    } else if (nextAction.action === VideoActionEnum.PROGESS_BAR_CLICKED) {
+      const newCurrentTime = nextAction.arg as number;
+      videoNativeElement.currentTime = newCurrentTime
     }
   }
 
