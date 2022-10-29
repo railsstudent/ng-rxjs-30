@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { fromEvent, map, merge, Observable, startWith, Subscription, tap } from 'rxjs';
-import { VideoActionEnum } from '../enums/video-actions.enum';
-import { VideoAction, VideoPlayerRangeInput } from '../interfaces';
+import { map, merge, Observable, startWith, Subscription, tap, takeUntil, concatMap, fromEvent, filter } from 'rxjs';
+import { VideoActionEnum } from '../enums';
+import { VideoAction } from '../interfaces';
 import { VideoPlayerService } from '../services';
 
 @Component({
@@ -49,19 +49,40 @@ export class VideoPlayerControlsComponent implements OnInit, OnDestroy, AfterVie
         .pipe(
           map(() => ({ action: VideoActionEnum.TOGGLE_PLAY, arg: undefined })),
           tap(nextAction => this.videoPlayerService.updateVideoAction(nextAction))
-        )
-        .subscribe()
+        ).subscribe()
+    );
+
+    const progressNativeElement = this.progress.nativeElement;
+    this.subscription.add(
+      fromEvent(progressNativeElement, 'click')
+        .pipe(
+          filter(event => event instanceof PointerEvent),
+          map(event => event as PointerEvent),
+          map(({ offsetX }) => this.createProgressBarAction(VideoActionEnum.PROGESS_BAR_CLICKED, offsetX)),
+          tap(nextAction => this.videoPlayerService.updateVideoAction(nextAction))
+        ).subscribe()
+    );
+
+    const mouseDown$ = fromEvent(progressNativeElement, 'mousedown');
+    const drag$ = fromEvent(progressNativeElement, 'mousemove').pipe(
+      takeUntil(fromEvent(progressNativeElement, 'mouseup'))
     );
 
     this.subscription.add(
-      fromEvent(this.progress.nativeElement, 'click')
+      mouseDown$
         .pipe(
-          map(event => event as PointerEvent),
-          map(({ offsetX }) => ({ action: VideoActionEnum.PROGESS_BAR_CLICKED, arg: offsetX / this.progress.nativeElement.offsetWidth })),
-          tap(nextAction => this.videoPlayerService.updateVideoAction(nextAction))
-        )
-        .subscribe()
+          concatMap(() => drag$.pipe(
+            filter(event => event instanceof MouseEvent),
+            map(event => event as MouseEvent),
+            map(({ offsetX }) => this.createProgressBarAction(VideoActionEnum.PROGRESS_BAR_DRAGGED, offsetX))
+          )),
+          tap(nextAction => this.videoPlayerService.updateVideoAction(nextAction))        
+        ).subscribe()
     )
+  }
+
+  private createProgressBarAction(action: VideoActionEnum, offsetX: number): VideoAction {
+    return { action, arg: offsetX / this.progress.nativeElement.offsetWidth };
   }
 
   ngAfterViewInit(): void {

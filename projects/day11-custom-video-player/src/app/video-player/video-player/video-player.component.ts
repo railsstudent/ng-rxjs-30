@@ -1,7 +1,7 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { Component, OnInit, ChangeDetectionStrategy, Inject, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { fromEvent, map, merge, Subscription, tap } from 'rxjs';
-import { VideoActionEnum } from '../enums/video-actions.enum';
+import { VideoActionEnum } from '../enums';
 import { VideoAction, VideoPlayerRangeInput } from '../interfaces';
 import { VideoPlayerService } from '../services';
 
@@ -109,7 +109,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
     } else if (nextAction.action === VideoActionEnum.TOGGLE_PLAY) {
       const methodName = videoNativeElement.paused ? 'play' : 'pause';
       videoNativeElement[methodName]();
-    } else if (nextAction.action === VideoActionEnum.PROGESS_BAR_CLICKED) {
+    } else if ([VideoActionEnum.PROGESS_BAR_CLICKED, VideoActionEnum.PROGRESS_BAR_DRAGGED].includes(nextAction.action)) {
       const proportion = nextAction.arg as number;
       videoNativeElement.currentTime = proportion * videoNativeElement.duration;
     }
