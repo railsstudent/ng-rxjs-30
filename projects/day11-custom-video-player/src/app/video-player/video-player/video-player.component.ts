@@ -59,7 +59,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
 
   subscription = new Subscription();
 
-  constructor(@Inject(APP_BASE_HREF) private baseHref: string, private videoService: VideoPlayerService) { }
+  constructor(@Inject(APP_BASE_HREF) private baseHref: string, private videoPlayerService: VideoPlayerService) { }
 
   ngOnInit(): void {
     const videoNativeElement = this.video.nativeElement;
@@ -67,7 +67,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
       fromEvent(videoNativeElement, 'click')
         .pipe(
           map(() => ({ action: VideoActionEnum.TOGGLE_PLAY, arg: undefined })),
-          tap(nextAction => this.videoService.updateVideoAction(nextAction))
+          tap(nextAction => this.videoPlayerService.updateVideoAction(nextAction))
         )
         .subscribe()
     );
@@ -77,7 +77,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
         fromEvent(videoNativeElement, 'pause').pipe(map(() => '►')), 
         fromEvent(videoNativeElement, 'play').pipe(map(() => '❚ ❚')),
       )
-        .pipe(tap(icon => this.videoService.updateVideoButtonIcon(icon)))
+        .pipe(tap(icon => this.videoPlayerService.updateVideoButtonIcon(icon)))
         .subscribe()
     );
 
@@ -88,13 +88,13 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
             const progressTime = (videoNativeElement.currentTime / videoNativeElement.duration) * 100;
             return `${progressTime}%`;
           }),
-          tap(flexBasis => this.videoService.updateVideoProgressTime(flexBasis))
+          tap(flexBasis => this.videoPlayerService.updateVideoProgressTime(flexBasis))
         )
         .subscribe()
     );
     
     this.subscription.add(
-      this.videoService.videoAction$
+      this.videoPlayerService.videoAction$
         .subscribe(nextAction => this.processAction(videoNativeElement, nextAction))
     );
   }
