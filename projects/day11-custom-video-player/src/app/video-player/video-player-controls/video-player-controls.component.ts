@@ -78,7 +78,7 @@ export class VideoPlayerControlsComponent implements OnInit, OnDestroy, AfterVie
           )),
           tap(nextAction => this.videoPlayerService.updateVideoAction(nextAction))        
         ).subscribe()
-    )
+    );
   }
 
   private createProgressBarAction(action: VideoActionEnum, offsetX: number): VideoAction {
