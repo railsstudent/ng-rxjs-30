@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { VideoAction, VideoPlayerRangeInput } from '../interfaces';
+import { VideoAction } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
