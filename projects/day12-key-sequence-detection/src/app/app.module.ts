@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { KeySequenceDetectionModule } from './key-sequence-detection';
+import { CoreModule } from './core';
 
 @NgModule({
   declarations: [
@@ -10,7 +11,8 @@ import { KeySequenceDetectionModule } from './key-sequence-detection';
   ],
   imports: [
     BrowserModule,
-    KeySequenceDetectionModule
+    KeySequenceDetectionModule,
+    CoreModule
   ],
   providers: [],
   bootstrap: [AppComponent]
