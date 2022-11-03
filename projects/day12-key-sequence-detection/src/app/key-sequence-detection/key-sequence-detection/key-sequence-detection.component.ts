@@ -2,6 +2,9 @@ import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@
 import { filter, fromEvent, map, scan, Subject, takeUntil, tap } from 'rxjs';
 import { WINDOW } from '../../core';
 
+// https://www.thepolyglotdeveloper.com/2016/01/include-external-javascript-libraries-in-an-angular-2-typescript-project/
+declare var cornify_add: any;
+
 @Component({
   selector: 'app-key-sequence-detection',
   template: `
@@ -39,7 +42,7 @@ export class KeySequenceDetectionComponent implements OnInit, OnDestroy {
       )
       .subscribe(() => {
         console.log('ding dong');
-        // cornify_add();
+        cornify_add();
       });
   }
 
