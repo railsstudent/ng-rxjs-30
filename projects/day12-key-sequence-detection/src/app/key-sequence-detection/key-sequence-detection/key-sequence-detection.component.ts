@@ -36,14 +36,10 @@ export class KeySequenceDetectionComponent implements OnInit, OnDestroy {
           return acc;
         }, [] as string[]),
         map(acc => acc.join('')),
-        tap(acc => console.log(acc)),
         filter(inputtedCode => inputtedCode.includes(this.secretCode)),
         takeUntil(this.destroy$)
       )
-      .subscribe(() => {
-        console.log('ding dong');
-        cornify_add();
-      });
+      .subscribe(() => cornify_add());
   }
 
   ngOnDestroy(): void {
