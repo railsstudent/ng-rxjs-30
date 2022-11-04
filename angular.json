@@ -938,6 +938,110 @@
           }
         }
       }
+    },
+    "day13-slide-in-on-scroll": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        },
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
+      "root": "projects/day13-slide-in-on-scroll",
+      "sourceRoot": "projects/day13-slide-in-on-scroll/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/day13-slide-in-on-scroll",
+            "index": "projects/day13-slide-in-on-scroll/src/index.html",
+            "main": "projects/day13-slide-in-on-scroll/src/main.ts",
+            "polyfills": "projects/day13-slide-in-on-scroll/src/polyfills.ts",
+            "tsConfig": "projects/day13-slide-in-on-scroll/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/day13-slide-in-on-scroll/src/favicon.ico",
+              "projects/day13-slide-in-on-scroll/src/assets"
+            ],
+            "styles": [
+              "projects/day13-slide-in-on-scroll/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/day13-slide-in-on-scroll/src/environments/environment.ts",
+                  "with": "projects/day13-slide-in-on-scroll/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all",
+              "baseHref": "https://railsstudent.github.io/ng-rxjs-30/day13-slide-in-on-scroll/"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "day13-slide-in-on-scroll:build:production"
+            },
+            "development": {
+              "browserTarget": "day13-slide-in-on-scroll:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "day13-slide-in-on-scroll:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/day13-slide-in-on-scroll/src/test.ts",
+            "polyfills": "projects/day13-slide-in-on-scroll/src/polyfills.ts",
+            "tsConfig": "projects/day13-slide-in-on-scroll/tsconfig.spec.json",
+            "karmaConfig": "projects/day13-slide-in-on-scroll/karma.conf.js",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/day13-slide-in-on-scroll/src/favicon.ico",
+              "projects/day13-slide-in-on-scroll/src/assets"
+            ],
+            "styles": [
+              "projects/day13-slide-in-on-scroll/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        }
+      }
     }
   },
   "defaultProject": "Day1-JavaScript-Drum-Kit"
