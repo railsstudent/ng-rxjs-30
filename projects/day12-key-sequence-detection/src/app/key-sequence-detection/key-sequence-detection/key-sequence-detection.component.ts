@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { filter, fromEvent, map, scan, Subject, takeUntil, tap } from 'rxjs';
+import { filter, fromEvent, map, scan, Subject, takeUntil } from 'rxjs';
 import { WINDOW } from '../../core';
 
 // https://www.thepolyglotdeveloper.com/2016/01/include-external-javascript-libraries-in-an-angular-2-typescript-project/
