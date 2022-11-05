@@ -1,10 +1,19 @@
 import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  template: '<app-scroll></app-scroll>',
+  styles: [`
+    :host {
+      display: block;
+    }
+  `]
 })
 export class AppComponent {
-  title = 'day13-slide-in-on-scroll';
+  title = 'Day 13 Slide in on Scroll';
+
+  constructor(titleService: Title) {
+    titleService.setTitle(this.title);
+  }
 }
