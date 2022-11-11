@@ -6,6 +6,10 @@ import { WINDOW } from '../../core';
   selector: 'app-scroll',
   templateUrl: './scroll.component.html',
   styles: [`
+    :host {
+      display: block;
+    }
+
     .site-wrap {
       max-width: 700px;
       margin: 100px auto;
