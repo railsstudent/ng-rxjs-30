@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, ViewChildren, QueryList, Inject, ElementRef } from '@angular/core';
-import { debounceTime, fromEvent, of, mergeMap, startWith } from 'rxjs';
+import { debounceTime, fromEvent, map, startWith } from 'rxjs';
 import { WINDOW } from '../../core';
 
 @Component({
@@ -52,7 +52,7 @@ export class ScrollComponent {
   isSlideIn$ = fromEvent(this.window, 'scroll')
     .pipe(
       debounceTime(20),
-      mergeMap(() => {
+      map(() => {
         const { scrollY, innerHeight } = this.window;
         const isShowSliders = this.sliderImages.map(({ nativeElement: sliderImage }) => {
           // half way through the image
@@ -63,7 +63,7 @@ export class ScrollComponent {
           const isNotScrolledPast = scrollY < imageBottom;
           return isHalfShown && isNotScrolledPast;
         })
-        return of(isShowSliders);
+        return isShowSliders;
       }),
       startWith([false, false, false, false, false])
     );
