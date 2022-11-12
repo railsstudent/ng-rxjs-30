@@ -1,11 +1,15 @@
 import { Component, ChangeDetectionStrategy, ViewChildren, QueryList, Inject, ElementRef } from '@angular/core';
-import { debounceTime, fromEvent, of, mergeMap, startWith } from 'rxjs';
+import { debounceTime, fromEvent, map, startWith } from 'rxjs';
 import { WINDOW } from '../../core';
 
 @Component({
   selector: 'app-scroll',
   templateUrl: './scroll.component.html',
   styles: [`
+    :host {
+      display: block;
+    }
+
     .site-wrap {
       max-width: 700px;
       margin: 100px auto;
@@ -52,21 +56,22 @@ export class ScrollComponent {
   isSlideIn$ = fromEvent(this.window, 'scroll')
     .pipe(
       debounceTime(20),
-      mergeMap(() => {
-        const { scrollY, innerHeight } = this.window;
-        const isShowSliders = this.sliderImages.map(({ nativeElement: sliderImage }) => {
-          // half way through the image
-          const slideInAt = (scrollY + innerHeight) - sliderImage.height / 2;
-          // bottom of the image
-          const imageBottom = sliderImage.offsetTop + sliderImage.height;
-          const isHalfShown = slideInAt > sliderImage.offsetTop;
-          const isNotScrolledPast = scrollY < imageBottom;
-          return isHalfShown && isNotScrolledPast;
-        })
-        return of(isShowSliders);
-      }),
+      map(() => this.slideImages()),
       startWith([false, false, false, false, false])
     );
 
   constructor(@Inject(WINDOW) private window: Window) { }
+
+  private slideImages() {
+    const { scrollY, innerHeight } = this.window;
+    return this.sliderImages.map(({ nativeElement: sliderImage }) => {
+      // half way through the image
+      const slideInAt = (scrollY + innerHeight) - sliderImage.height / 2;
+      // bottom of the image
+      const imageBottom = sliderImage.offsetTop + sliderImage.height;
+      const isHalfShown = slideInAt > sliderImage.offsetTop;
+      const isNotScrolledPast = scrollY < imageBottom;
+      return isHalfShown && isNotScrolledPast;
+    });
+  }
 }
