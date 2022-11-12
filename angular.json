@@ -1095,7 +1095,8 @@
                   "with": "projects/day15-local-storage/src/environments/environment.prod.ts"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "baseHref": "https://railsstudent.github.io/ng-rxjs-30/day15-local-storage/"
             },
             "development": {
               "buildOptimizer": false,
