@@ -56,21 +56,22 @@ export class ScrollComponent {
   isSlideIn$ = fromEvent(this.window, 'scroll')
     .pipe(
       debounceTime(20),
-      map(() => {
-        const { scrollY, innerHeight } = this.window;
-        const isShowSliders = this.sliderImages.map(({ nativeElement: sliderImage }) => {
-          // half way through the image
-          const slideInAt = (scrollY + innerHeight) - sliderImage.height / 2;
-          // bottom of the image
-          const imageBottom = sliderImage.offsetTop + sliderImage.height;
-          const isHalfShown = slideInAt > sliderImage.offsetTop;
-          const isNotScrolledPast = scrollY < imageBottom;
-          return isHalfShown && isNotScrolledPast;
-        })
-        return isShowSliders;
-      }),
+      map(() => this.slideImages()),
       startWith([false, false, false, false, false])
     );
 
   constructor(@Inject(WINDOW) private window: Window) { }
+
+  private slideImages() {
+    const { scrollY, innerHeight } = this.window;
+    return this.sliderImages.map(({ nativeElement: sliderImage }) => {
+      // half way through the image
+      const slideInAt = (scrollY + innerHeight) - sliderImage.height / 2;
+      // bottom of the image
+      const imageBottom = sliderImage.offsetTop + sliderImage.height;
+      const isHalfShown = slideInAt > sliderImage.offsetTop;
+      const isNotScrolledPast = scrollY < imageBottom;
+      return isHalfShown && isNotScrolledPast;
+    });
+  }
 }
