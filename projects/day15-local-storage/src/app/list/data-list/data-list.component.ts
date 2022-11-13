@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { filter, fromEvent, map, Subject, takeUntil } from 'rxjs';
 import { Item } from '../interfaces/item.interface';
+import { ToggleItem } from '../interfaces/toggle-item.interface';
 
 @Component({
   selector: 'app-data-list',
@@ -57,16 +58,7 @@ export class DataListComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<void>();
 
   @Output()
-  toggleDone = new EventEmitter<{ index: number; done: boolean }>();
-  // toggleDone = fromEvent(this.plates.nativeElement, 'click')
-  //   .pipe(
-  //     filter(e => (e.target as any).matches('input')),
-  //     map((e: Event) => { 
-  //       const index = (e.target as any).dataset.index as number;
-  //       const done = !this.itemList[index].done;
-  //       return { index, done };
-  //     }),
-  //   )
+  toggleDone = new EventEmitter<ToggleItem>();
 
   ngOnInit(): void {
     fromEvent(this.plates.nativeElement, 'click')
@@ -74,8 +66,8 @@ export class DataListComponent implements OnInit, OnDestroy {
         filter(e => (e.target as any).matches('input')),
         map((e: Event) => { 
           const index = (e.target as any).dataset.index as number;
-          const nextDone = !this.itemList[index].done;
-          return { index, done: nextDone };
+          const done = !this.itemList[index].done;
+          return { index, done };
         }),
         takeUntil(this.destroy$),
       )

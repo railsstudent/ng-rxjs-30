@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { scan, startWith, Subject, tap, withLatestFrom } from 'rxjs';
+import { scan, startWith, Subject, tap } from 'rxjs';
 import { Item } from '../interfaces/item.interface';
 
 @Component({
@@ -11,7 +11,7 @@ import { Item } from '../interfaces/item.interface';
     <ng-container *ngIf="itemList$ | async as itemList">
       <app-data-list [itemList]="itemList" (toggleDone)="updateStorage($event)"></app-data-list>
     </ng-container>
-    <form class="add-items" (ngSubmit)="submit$.next()">
+    <form class="add-items" (ngSubmit)="submit$.next({ text: newItem, done: false })">
       <input type="text" name="item" placeholder="Item Name" [required]="true" name="newItem" [(ngModel)]="newItem">
       <input type="submit" value="+ Add Item">
     </form>
@@ -50,14 +50,17 @@ import { Item } from '../interfaces/item.interface';
 export class ListContainerComponent {
 
   newItem = '';
-  submit$ = new Subject<void>();
+  submit$ = new Subject<Item>();
+
+  storedItems = JSON.parse(localStorage.getItem('items') || JSON.stringify([])) as Item[];
+
   itemList$ = this.submit$.pipe(
-    scan((acc, _) => acc.concat({ text: this.newItem, done: false }), [] as Item[]),
+    scan((acc, value) => acc.concat(value), this.storedItems),
     tap((items) => { 
       localStorage.setItem('items', JSON.stringify(items));
       this.newItem = '';
     }),
-    startWith(JSON.parse(localStorage.getItem('items') || JSON.stringify([])) as Item[])
+    startWith(this.storedItems)
   );
 
   updateStorage(item: { index: number; done: boolean } ) {    
