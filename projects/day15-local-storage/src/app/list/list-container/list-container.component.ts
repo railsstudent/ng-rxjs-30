@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { scan, startWith, Subject, tap } from 'rxjs';
+import { scan, startWith, Subject, tap, withLatestFrom } from 'rxjs';
 import { Item } from '../interfaces/item.interface';
 
 @Component({
@@ -9,7 +9,7 @@ import { Item } from '../interfaces/item.interface';
     <h2>LOCAL TAPAS</h2>
     <p></p>
     <ng-container *ngIf="itemList$ | async as itemList">
-      <app-data-list [itemList]="itemList"></app-data-list>
+      <app-data-list [itemList]="itemList" (toggleDone)="updateStorage($event)"></app-data-list>
     </ng-container>
     <form class="add-items" (ngSubmit)="submit$.next()">
       <input type="text" name="item" placeholder="Item Name" [required]="true" name="newItem" [(ngModel)]="newItem">
@@ -59,4 +59,10 @@ export class ListContainerComponent {
     }),
     startWith(JSON.parse(localStorage.getItem('items') || JSON.stringify([])) as Item[])
   );
+
+  updateStorage(item: { index: number; done: boolean } ) {    
+    const items = JSON.parse(localStorage.getItem('items') || JSON.stringify([]));
+    items[item.index].done = item.done;
+    localStorage.setItem('items', JSON.stringify(items));
+  }
 }

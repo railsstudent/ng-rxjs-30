@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { filter, fromEvent, map, Subject, takeUntil } from 'rxjs';
 import { Item } from '../interfaces/item.interface';
 
 @Component({
   selector: 'app-data-list',
   template: `
-    <ul class="plates">
+    <ul class="plates" #plates>
       <li *ngFor="let plate of itemList; index as i">
         <input type="checkbox" [attr.data-index]="i" id="item{{i}}" [checked]="plate.done" />
         <label for="item{{i}}">{{plate.text}}</label>
@@ -46,12 +47,46 @@ import { Item } from '../interfaces/item.interface';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DataListComponent implements OnInit {
+export class DataListComponent implements OnInit, OnDestroy {
+  @ViewChild('plates', { static: true })
+  plates!: ElementRef<HTMLUListElement>;
 
   @Input()
   itemList!: Item[];
 
-  constructor() { }
+  destroy$ = new Subject<void>();
 
-  ngOnInit(): void {}
+  @Output()
+  toggleDone = new EventEmitter<{ index: number; done: boolean }>();
+  // toggleDone = fromEvent(this.plates.nativeElement, 'click')
+  //   .pipe(
+  //     filter(e => (e.target as any).matches('input')),
+  //     map((e: Event) => { 
+  //       const index = (e.target as any).dataset.index as number;
+  //       const done = !this.itemList[index].done;
+  //       return { index, done };
+  //     }),
+  //   )
+
+  ngOnInit(): void {
+    fromEvent(this.plates.nativeElement, 'click')
+      .pipe(
+        filter(e => (e.target as any).matches('input')),
+        map((e: Event) => { 
+          const index = (e.target as any).dataset.index as number;
+          const nextDone = !this.itemList[index].done;
+          return { index, done: nextDone };
+        }),
+        takeUntil(this.destroy$),
+      )
+      .subscribe((value) => { 
+        console.log(value);
+        this.toggleDone.emit(value);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
