@@ -57,6 +57,6 @@ export class ListContainerComponent {
       localStorage.setItem('items', JSON.stringify(items));
       this.newItem = '';
     }),
-    startWith([] as Item[])
+    startWith(JSON.parse(localStorage.getItem('items') || JSON.stringify([])) as Item[])
   );
 }
