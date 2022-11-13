@@ -65,7 +65,7 @@ export class DataListComponent implements OnInit, OnDestroy {
       .pipe(
         filter(e => (e.target as any).matches('input')),
         map((e: Event) => { 
-          const index = (e.target as any).dataset.index as number;
+          const index = +(e.target as any).dataset.index;
           const done = !this.itemList[index].done;
           return { index, done };
         }),

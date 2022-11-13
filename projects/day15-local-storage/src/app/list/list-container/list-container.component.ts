@@ -1,6 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { scan, startWith, Subject, tap } from 'rxjs';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { merge, scan, startWith, Subject, tap } from 'rxjs';
 import { Item } from '../interfaces/item.interface';
+import { ToggleItem } from '../interfaces/toggle-item.interface';
+import { isItem, isToggleItem } from './type-guard';
 
 @Component({
   selector: 'app-list-container',
@@ -9,7 +11,7 @@ import { Item } from '../interfaces/item.interface';
     <h2>LOCAL TAPAS</h2>
     <p></p>
     <ng-container *ngIf="itemList$ | async as itemList">
-      <app-data-list [itemList]="itemList" (toggleDone)="updateStorage($event)"></app-data-list>
+      <app-data-list [itemList]="itemList" (toggleDone)="toggleDone$.next($event)"></app-data-list>
     </ng-container>
     <form class="add-items" (ngSubmit)="submit$.next({ text: newItem, done: false })">
       <input type="text" name="item" placeholder="Item Name" [required]="true" name="newItem" [(ngModel)]="newItem">
@@ -51,21 +53,25 @@ export class ListContainerComponent {
 
   newItem = '';
   submit$ = new Subject<Item>();
+  toggleDone$ = new Subject<ToggleItem>();
 
   storedItems = JSON.parse(localStorage.getItem('items') || JSON.stringify([])) as Item[];
 
-  itemList$ = this.submit$.pipe(
-    scan((acc, value) => acc.concat(value), this.storedItems),
-    tap((items) => { 
-      localStorage.setItem('items', JSON.stringify(items));
-      this.newItem = '';
-    }),
-    startWith(this.storedItems)
-  );
+  itemList$ = merge(this.submit$, this.toggleDone$)
+    .pipe(
+      scan((acc, value) => {
+        if (isItem(value)) {
+          return acc.concat(value);
+        } else if (isToggleItem(value)) {
+          return acc.map((item, i) => i !== value.index ? item : { ...item, done: value.done })
+        }
 
-  updateStorage(item: { index: number; done: boolean } ) {    
-    const items = JSON.parse(localStorage.getItem('items') || JSON.stringify([]));
-    items[item.index].done = item.done;
-    localStorage.setItem('items', JSON.stringify(items));
-  }
+        return acc;
+      }, this.storedItems),
+      tap((items) => { 
+        localStorage.setItem('items', JSON.stringify(items));
+        this.newItem = '';
+      }),
+      startWith(this.storedItems)
+    );
 }
