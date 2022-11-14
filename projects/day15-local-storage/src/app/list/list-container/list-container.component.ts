@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { merge, scan, startWith, Subject, tap } from 'rxjs';
+import { map, merge, scan, shareReplay, startWith, Subject, tap } from 'rxjs';
 import { Item } from '../interfaces/item.interface';
 import { ToggleItem } from '../interfaces/toggle-item.interface';
 import { isItem, isToggleItem } from './type-guard';
@@ -16,6 +16,7 @@ import { isItem, isToggleItem } from './type-guard';
     <form class="add-items" (ngSubmit)="submit$.next({ text: newItem, done: false })">
       <input type="text" name="item" placeholder="Item Name" [required]="true" name="newItem" [(ngModel)]="newItem">
       <input type="submit" value="+ Add Item">
+      <input type="button" [value]="btnToggleCheckText$ | async" (click)="btnCheckAllClicked$.next()">
     </form>
   </div>
   `,
@@ -54,13 +55,19 @@ export class ListContainerComponent {
   newItem = '';
   submit$ = new Subject<Item>();
   toggleDone$ = new Subject<ToggleItem>();
+  btnCheckAllClicked$ = new Subject<void>();
 
   storedItems = JSON.parse(localStorage.getItem('items') || JSON.stringify([])) as Item[];
 
-  itemList$ = merge(this.submit$, this.toggleDone$)
+  toggleCheckAll$ = this.btnCheckAllClicked$.pipe(scan((state, _) => !state, false))
+
+  itemList$ = merge(this.submit$, this.toggleDone$, this.toggleCheckAll$)
     .pipe(
       scan((acc, value) => {
-        if (isItem(value)) {
+        if (typeof value === 'boolean') {
+          const done = !acc.every(item => item.done);
+          return acc.map((item) => ({ ...item, done }));         
+        } else if (isItem(value)) {
           return acc.concat(value);
         } else if (isToggleItem(value)) {
           return acc.map((item, i) => i !== value.index ? item : { ...item, done: value.done })
@@ -68,10 +75,20 @@ export class ListContainerComponent {
 
         return acc;
       }, this.storedItems),
-      tap((items) => { 
+      tap((items) => {
         localStorage.setItem('items', JSON.stringify(items));
         this.newItem = '';
       }),
-      startWith(this.storedItems)
+      shareReplay(1),
+      startWith(this.storedItems),
+    );
+
+  btnToggleCheckText$ =  this.itemList$
+    .pipe(
+      map(items => { 
+        const isAllChecked = items.every(item => item.done);
+        return isAllChecked ? 'Uncheck all' : 'Check all'; 
+      }),
+      startWith('Check all')
     );
 }
