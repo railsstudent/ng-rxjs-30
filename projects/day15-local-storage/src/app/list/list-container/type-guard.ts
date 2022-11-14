@@ -1,5 +1,5 @@
-import { ToggleItem } from './../interfaces/toggle-item.interface';
 import { Item } from '../interfaces/item.interface';
+import { ToggleItem } from '../interfaces/toggle-item.interface';
 
 export function isItem(data: any): data is Item {
     return 'text' in data;

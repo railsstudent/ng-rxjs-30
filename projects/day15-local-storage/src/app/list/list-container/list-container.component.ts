@@ -70,7 +70,10 @@ export class ListContainerComponent {
         } else if (isItem(value)) {
           return acc.concat(value);
         } else if (isToggleItem(value)) {
-          return acc.map((item, i) => i !== value.index ? item : { ...item, done: value.done })
+          if (value.action === 'toggle') {
+            return acc.map((item, i) => i !== value.index ? item : { ...item, done: value.done });
+          }
+          return acc.filter((_, i) => i !== value.index);
         }
 
         return acc;
