@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { filter, fromEvent, map, Subject, takeUntil } from 'rxjs';
-import { Item } from '../interfaces/item.interface';
-import { ToggleItem } from '../interfaces/toggle-item.interface';
+import { ItemAction, NewItem, ToggleItem } from '../interfaces';
 
 @Component({
   selector: 'app-data-list',
@@ -54,11 +53,11 @@ import { ToggleItem } from '../interfaces/toggle-item.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DataListComponent implements OnInit, OnDestroy {
-  @ViewChild('plates', { static: true })
+  @ViewChild('plates', { static: true, read: ElementRef })
   plates!: ElementRef<HTMLUListElement>;
 
   @Input()
-  itemList!: Item[];
+  itemList!: NewItem[];
 
   destroy$ = new Subject<void>();
 
@@ -74,7 +73,7 @@ export class DataListComponent implements OnInit, OnDestroy {
           const nodeName = `${target.nodeName}`;
           const index = +target.dataset.index;
           const done = !this.itemList[index].done;
-          const action: 'toggle' | 'delete' = nodeName === 'INPUT' ? 'toggle' : 'delete';
+          const action: ItemAction = nodeName === 'INPUT' ? 'toggle' : 'delete';
           return { action, index, done };
         }),
         takeUntil(this.destroy$),

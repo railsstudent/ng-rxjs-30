@@ -1,5 +1,11 @@
+export type ItemAction = 'delete' | 'toggle';
+
+export interface ToggleItems {
+  action: 'toggleAll'
+}
+
 export interface ToggleItem {
-    action: 'delete' | 'toggle';
+    action: ItemAction;
     index: number;
     done: boolean;
 }

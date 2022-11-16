@@ -1,8 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { map, merge, scan, shareReplay, startWith, Subject, tap } from 'rxjs';
-import { Item } from '../interfaces/item.interface';
-import { ToggleItem } from '../interfaces/toggle-item.interface';
-import { isItem, isToggleItem } from './type-guard';
+import { NewItem, ToggleItem, ToggleItems } from '../interfaces';
+import { isNewItem, isToggleItem, isToggleItems } from './type-guard';
 
 @Component({
   selector: 'app-list-container',
@@ -53,21 +52,21 @@ import { isItem, isToggleItem } from './type-guard';
 export class ListContainerComponent {
 
   newItem = '';
-  submit$ = new Subject<Item>();
+  submit$ = new Subject<NewItem>();
   toggleDone$ = new Subject<ToggleItem>();
   btnCheckAllClicked$ = new Subject<void>();
 
-  storedItems = JSON.parse(localStorage.getItem('items') || JSON.stringify([])) as Item[];
+  storedItems = JSON.parse(localStorage.getItem('items') || JSON.stringify([])) as NewItem[];
 
-  toggleCheckAll$ = this.btnCheckAllClicked$.pipe(scan((state, _) => !state, false))
+  toggleCheckAll$ = this.btnCheckAllClicked$.pipe(map(() => ({ action: 'toggleAll' }) as ToggleItems));
 
   itemList$ = merge(this.submit$, this.toggleDone$, this.toggleCheckAll$)
     .pipe(
       scan((acc, value) => {
-        if (typeof value === 'boolean') {
+        if (isToggleItems(value)) {
           const done = !acc.every(item => item.done);
           return acc.map((item) => ({ ...item, done }));         
-        } else if (isItem(value)) {
+        } else if (isNewItem(value)) {
           return acc.concat(value);
         } else if (isToggleItem(value)) {
           if (value.action === 'toggle') {
@@ -79,6 +78,7 @@ export class ListContainerComponent {
         return acc;
       }, this.storedItems),
       tap((items) => {
+        console.log('Update local storage');
         localStorage.setItem('items', JSON.stringify(items));
         this.newItem = '';
       }),
@@ -92,6 +92,7 @@ export class ListContainerComponent {
         const isAllChecked = items.every(item => item.done);
         return isAllChecked ? 'Uncheck all' : 'Check all'; 
       }),
+      tap(text => console.log('button text', text)),
       startWith('Check all')
     );
 }
