@@ -5,10 +5,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { ListModule } from './list';
 
-function getBaseHref(platformLocation: PlatformLocation): string {
-  return platformLocation.getBaseHrefFromDOM();
-}
-
 @NgModule({
   declarations: [
     AppComponent
@@ -20,7 +16,7 @@ function getBaseHref(platformLocation: PlatformLocation): string {
   providers: [
     {
       provide: APP_BASE_HREF,
-      useFactory: getBaseHref,
+      useFactory: (platformLocation: PlatformLocation) => platformLocation.getBaseHrefFromDOM(),
       deps: [PlatformLocation]
     }
   ],
