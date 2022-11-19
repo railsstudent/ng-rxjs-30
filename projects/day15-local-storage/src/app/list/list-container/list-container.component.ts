@@ -90,7 +90,6 @@ export class ListContainerComponent {
         const isAllChecked = items.every(item => item.done);
         return isAllChecked ? 'Uncheck all' : 'Check all'; 
       }),
-      tap(text => console.log('button text', text)),
       startWith('Check all')
     );
 }
