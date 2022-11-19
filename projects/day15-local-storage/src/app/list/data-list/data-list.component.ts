@@ -68,20 +68,22 @@ export class DataListComponent implements OnInit, OnDestroy {
     fromEvent(this.plates.nativeElement, 'click')
       .pipe(
         filter(e => (e.target as any).matches('input') || (e.target as any).matches('button')),
-        map((e: Event) => {
-          const target = e.target as any;
-          const nodeName = `${target.nodeName}`;
-          const index = +target.dataset.index;
-          const done = !this.itemList[index].done;
-          const action: ItemAction = nodeName === 'INPUT' ? 'toggle' : 'delete';
-          return { action, index, done };
-        }),
+        map((e: Event) => this.createToggleItem(e)),
         takeUntil(this.destroy$),
       )
       .subscribe((value) => {
         console.log(value);
         this.toggleDone.emit(value);
       });
+  }
+
+  private createToggleItem(e: Event): ToggleItem {    
+    const target = e.target as any;
+    const nodeName = `${target.nodeName}`;
+    const index = +target.dataset.index;
+    const done = !this.itemList[index].done;
+    const action: ItemAction = nodeName === 'INPUT' ? 'toggle' : 'delete';
+    return { action, index, done };
   }
 
   ngOnDestroy(): void {
