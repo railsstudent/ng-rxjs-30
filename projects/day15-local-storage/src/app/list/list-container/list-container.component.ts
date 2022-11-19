@@ -15,7 +15,7 @@ import { isNewItem, isToggleItem, isToggleItems } from './type-guard';
     <form class="add-items" (ngSubmit)="submit$.next({ text: newItem, done: false })">
       <input type="text" name="item" placeholder="Item Name" [required]="true" name="newItem" [(ngModel)]="newItem">
       <input type="submit" value="+ Add Item">
-      <input type="button" [value]="btnToggleCheckText$ | async" (click)="btnCheckAllClicked$.next()">
+      <input type="button" [value]="btnToggleCheckText$ | async" (click)="btnCheckAllClicked$.next({ action: 'toggleAll' })">
     </form>
   </div>
   `,
@@ -54,13 +54,11 @@ export class ListContainerComponent {
   newItem = '';
   submit$ = new Subject<NewItem>();
   toggleDone$ = new Subject<ToggleItem>();
-  btnCheckAllClicked$ = new Subject<void>();
+  btnCheckAllClicked$ = new Subject<ToggleItems>();
 
   storedItems = JSON.parse(localStorage.getItem('items') || JSON.stringify([])) as NewItem[];
 
-  toggleCheckAll$ = this.btnCheckAllClicked$.pipe(map(() => ({ action: 'toggleAll' }) as ToggleItems));
-
-  itemList$ = merge(this.submit$, this.toggleDone$, this.toggleCheckAll$)
+  itemList$ = merge(this.submit$, this.toggleDone$, this.btnCheckAllClicked$)
     .pipe(
       scan((acc, value) => {
         if (isToggleItems(value)) {
