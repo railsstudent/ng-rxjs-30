@@ -68,10 +68,11 @@ export class ListContainerComponent {
           return acc.concat(value);
         } 
         
-        if (value.action === 'toggle') {
-          return acc.map((item, i) => i !== value.index ? item : { ...item, done: value.done });
+        const { action, index, done } = value;
+        if (action === 'toggle') {
+          return acc.map((item, i) => i !== index ? item : { ...item, done });
         }
-        return acc.filter((_, i) => i !== value.index);
+        return acc.filter((_, i) => i !== index);
       }, this.storedItems),
       tap((items) => {
         console.log('Update local storage');
