@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
+  template: '<app-mouse-move></app-mouse-move>',
   styles: [`
     :host {
       display: block;
