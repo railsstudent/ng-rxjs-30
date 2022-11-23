@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef } from '@angular/core';
 import { filter, fromEvent, map, Observable, startWith } from 'rxjs';
+import { mapXYWalk } from '../custom-operators/mapXYWalk.operator';
 
 @Component({
   selector: 'app-mouse-move',
@@ -39,27 +40,13 @@ export class MouseMoveComponent implements OnInit {
   textShadow$!: Observable<string>;
   
   ngOnInit(): void {
-    const walk = 500;
     const nativeElement = this.hero.nativeElement;
 
     this.textShadow$ = fromEvent(nativeElement, 'mousemove')
       .pipe(
         filter(e => e instanceof MouseEvent),
         map(e => e as MouseEvent),
-        map(e => {
-          const { offsetX: x, offsetY: y } = e;
-          const evtTarget = e.target as HTMLDivElement;
-          const newOffset = { x, y };
-          if (evtTarget !== nativeElement) {
-            newOffset.x = newOffset.x + evtTarget.offsetLeft;
-            newOffset.y = newOffset.y + evtTarget.offsetTop;
-          }
-
-          const { offsetWidth: width, offsetHeight: height } = nativeElement;
-          const xWalk = Math.round((x / width * walk) - (walk / 2));
-          const yWalk = Math.round((y / height * walk) - (walk / 2));
-          return { xWalk, yWalk };
-        }),
+        mapXYWalk(nativeElement),
         map(({ xWalk, yWalk }) => 
           (`
             ${xWalk}px ${yWalk}px 0 rgba(255,0,255,0.7),
