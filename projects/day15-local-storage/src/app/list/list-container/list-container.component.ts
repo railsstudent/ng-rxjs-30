@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { map, merge, scan, shareReplay, startWith, Subject, tap } from 'rxjs';
 import { NewItem, ToggleItem, ToggleItems } from '../interfaces';
-import { isNewItem, isToggleItem, isToggleItems } from './type-guard';
+import { isNewItem, isToggleItems } from './type-guard';
 
 @Component({
   selector: 'app-list-container',
@@ -66,14 +66,13 @@ export class ListContainerComponent {
           return acc.map((item) => ({ ...item, done }));         
         } else if (isNewItem(value)) {
           return acc.concat(value);
-        } else if (isToggleItem(value)) {
-          if (value.action === 'toggle') {
-            return acc.map((item, i) => i !== value.index ? item : { ...item, done: value.done });
-          }
-          return acc.filter((_, i) => i !== value.index);
+        } 
+        
+        const { action, index, done } = value;
+        if (action === 'toggle') {
+          return acc.map((item, i) => i !== index ? item : { ...item, done });
         }
-
-        return acc;
+        return acc.filter((_, i) => i !== index);
       }, this.storedItems),
       tap((items) => {
         console.log('Update local storage');
@@ -90,7 +89,6 @@ export class ListContainerComponent {
         const isAllChecked = items.every(item => item.done);
         return isAllChecked ? 'Uncheck all' : 'Check all'; 
       }),
-      tap(text => console.log('button text', text)),
       startWith('Check all')
     );
 }
