@@ -11,7 +11,6 @@ import { mapXYWalk } from '../custom-operators/mapXYWalk.operator';
       </ng-container>
     </div>
   `,
-  styleUrls: ['./mouse-move.component.scss'],
   styles: [`
     :host { 
       display: block;
