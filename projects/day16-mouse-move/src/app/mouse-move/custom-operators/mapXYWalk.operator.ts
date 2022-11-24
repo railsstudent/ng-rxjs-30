@@ -3,7 +3,7 @@ import { map } from 'rxjs/operators';
 export function mapXYWalk<T extends HTMLDivElement>(nativeElement: T, walk = 500) {
     return map((e: MouseEvent) => {
         const { offsetX: x, offsetY: y } = e;
-        const evtTarget = e.target as HTMLDivElement;
+        const evtTarget = e.target as T;
         const newOffset = { x, y };
         if (evtTarget !== nativeElement) {
             newOffset.x = newOffset.x + evtTarget.offsetLeft;
