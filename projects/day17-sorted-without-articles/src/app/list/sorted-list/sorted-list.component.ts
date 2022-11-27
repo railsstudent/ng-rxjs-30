@@ -1,11 +1,33 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { map, of } from 'rxjs';
 
 @Component({
   selector: 'app-sorted-list',
-  template: '<ul id="bands"></ul>',
+  template: `
+    <div>
+      <h1>Sort bands without articles</h1>
+      <ul id="bands">
+        <ng-container *ngIf="sortedBands$ | async as sortedBands">
+          <li *ngFor="let band of sortedBands">{{ band }}</li>
+        </ng-container>
+      </ul>
+    </div>
+  `,
   styles:[`
     :host {
       display: block;
+    }
+
+    div {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      flex-basis: 100%;
     }
 
     #bands {
@@ -13,7 +35,6 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
       font-size: 20px;
       background: white;
       width: 500px;
-      margin: auto;
       padding: 0;
       box-shadow: 0 0 0 20px rgba(0, 0, 0, 0.05);
     }
@@ -34,11 +55,23 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SortedListComponent implements OnInit {
+export class SortedListComponent {
 
-  constructor() { }
+  sortedBands$ = of(['The Plot in You', 'The Devil Wears Prada', 
+    'Pierce the Veil', 
+    'Norma Jean', 'The Bled', 
+    'Say Anything', 
+    'The Midway State', 
+    'We Came as Romans', 
+    'Counterparts', 
+    'Oh, Sleeper', 
+    'A Skylit Drive', 
+    'Anywhere But Here', 
+    'An Old Dog'
+  ])
+  .pipe(map(bands => ([...bands].sort((a, b) => this.strip(a) > this.strip(b) ? 1 : -1))));
 
-  ngOnInit(): void {
+  private strip(bandName: string) {
+    return bandName.replace(/^(a |the |an )/i, '').trim();
   }
-
 }

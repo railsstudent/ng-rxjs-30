@@ -12,7 +12,7 @@ import { Title } from '@angular/platform-browser';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  title = 'day17 Sorted Without Articles';
+  title = 'Day17 Sorted Without Articles';
 
   constructor(titleService: Title) {
     titleService.setTitle(this.title);
