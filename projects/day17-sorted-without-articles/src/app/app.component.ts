@@ -1,10 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  template: '<app-sorted-list></app-sorted-list>',
+  styles: [`
+    :host {
+      display: block;
+    }
+  `],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  title = 'day17-sorted-without-articles';
+  title = 'Day17 Sorted Without Articles';
+
+  constructor(titleService: Title) {
+    titleService.setTitle(this.title);
+  }
 }

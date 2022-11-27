@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export function mapTextShadowStyle<T extends HTMLDivElement>(nativeElement: T, walk = 500) {
-    return function(source: Observable<MouseEvent>) {
+    return function(source: Observable<MouseEvent>): Observable<string> {
         return source.pipe(
             map((e: MouseEvent) => {
                 const { offsetX: x, offsetY: y } = e;
