@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, } from '@angular/core';
-import { map, shareReplay, tap } from 'rxjs';
+import { concatMap, from, map, max, min, reduce, shareReplay, tap } from 'rxjs';
 import { VideoService } from '../services/video.service';
 
 @Component({
@@ -18,6 +18,16 @@ import { VideoService } from '../services/video.service';
         <p>Video Total</p>
         <p *ngIf="videoTotal$ | async as videoTotal">
           {{ videoTotal }}
+        </p>
+
+        <p>Longest Video</p>
+        <p *ngIf="longestVideo$ | async as longestVideo">
+          {{ longestVideo.name }} - {{ longestVideo.time }}
+        </p>
+
+        <p>Shortest Video</p>
+        <p *ngIf="shortestVideo$ | async as shortestVideo">
+          {{ shortestVideo.name }} - {{ shortestVideo.time }}
         </p>
       </div>
     </section>
@@ -41,7 +51,6 @@ import { VideoService } from '../services/video.service';
       }
 
       &-list {
-        border: 1px solid green;
         flex-basis: 50%;
         padding: 1rem;
 
@@ -55,15 +64,14 @@ import { VideoService } from '../services/video.service';
       }
 
       &-total {
-        border: 1px solid blue;
         flex-basis: 50%;
         padding: 1rem;
 
-        p:first-of-type {
+        p:nth-of-type(2n + 1) {
           text-decoration: underline;
         }
 
-        p:nth-of-type(n+1) {
+        p:nth-of-type(n+2) {
           margin: 0.5rem;
         }
       }
@@ -79,22 +87,59 @@ export class VideoListComponent {
       shareReplay(1)
     );
 
-  videoTotal$ = this.videoList$
+  streamVideoList$ = this.videoService.getAll()
+    .pipe(
+      tap(() => console.log('streamVideoList$ observable')),
+      concatMap(videoTimes => from(videoTimes)),
+      shareReplay(1)
+    );
+
+  videoTotal$ = this.streamVideoList$
       .pipe(
         tap(() => console.log('videoTotal$ observable')),
-        map(videoTimes => 
-          videoTimes.map(videoTime => {
-            const [minutes, seconds] = videoTime.time.split(':').map(parseFloat);
-            return seconds + minutes * 60;
-          })
-        ),
-        map(arrSeconds => {
-          const totalSeconds = arrSeconds.reduce((acc, second) => acc + second, 0); 
-          const hours = Math.floor(totalSeconds / 60 / 60);
-          const minutes = Math.floor((totalSeconds - (hours * 60 * 60)) / 60);
-          const seconds = totalSeconds - (hours * 60 * 60) - (minutes * 60);
-          return `${hours} Hours ${minutes} minutes ${seconds} seconds`;
+        reduce((acc, videoTime) => {
+          const [minutes, seconds] = videoTime.time.split(':').map(parseFloat);
+          return acc + minutes * 60 + seconds;
+        }, 0),
+        map(totalSeconds => {
+          let secondsLeft = totalSeconds;
+
+          const hours = Math.floor(secondsLeft / 60 / 60);
+          secondsLeft = secondsLeft % 3600;
+          
+          const minutes = Math.floor(secondsLeft / 60);
+          secondsLeft = secondsLeft % 60;
+
+          return `${hours} Hours ${minutes} minutes ${secondsLeft} seconds`;
         })
+      )  
+
+  longestVideo$ = this.streamVideoList$
+      .pipe(
+        tap(() => console.log('longestVideo$ observable')),
+        max((a, b) => {
+            const [aMinutes, aSeconds] = a.time.split(':').map(parseFloat);
+            const aTotalSeconds = aSeconds + aMinutes * 60;
+
+            const [bMinutes, bSeconds] = b.time.split(':').map(parseFloat);
+            const bTotalSeconds = bSeconds + bMinutes * 60;
+
+            return aTotalSeconds < bTotalSeconds ? -1 : 1;
+        }),
+      )
+
+    shortestVideo$ = this.streamVideoList$
+      .pipe(
+        tap(() => console.log('shortestVideo$ observable')),
+        min((a, b) => {
+            const [aMinutes, aSeconds] = a.time.split(':').map(parseFloat);
+            const aTotalSeconds = aSeconds + aMinutes * 60;
+
+            const [bMinutes, bSeconds] = b.time.split(':').map(parseFloat);
+            const bTotalSeconds = bSeconds + bMinutes * 60;
+
+            return aTotalSeconds < bTotalSeconds ? -1 : 1;
+        }),
       )
   
   constructor(private videoService: VideoService) { }
