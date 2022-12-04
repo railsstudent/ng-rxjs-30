@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -11,5 +12,9 @@ import { Component } from '@angular/core';
   `],
 })
 export class AppComponent {
-  title = 'day18-adding-up-times';
+  title = 'Day 18 Adding Up Times';
+
+  constructor(titleService: Title) {
+    titleService.setTitle(this.title);
+  }
 }
