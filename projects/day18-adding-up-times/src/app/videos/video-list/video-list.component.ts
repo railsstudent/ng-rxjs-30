@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, } from '@angular/core';
-import { concatMap, from, map, max, min, reduce, shareReplay, tap } from 'rxjs';
+import { concatMap, from, max, min, reduce, shareReplay, tap, forkJoin } from 'rxjs';
 import { VideoTime } from '../interfaces/video-time.interface';
 import { VideoService } from '../services/video.service';
 
@@ -15,21 +15,19 @@ import { VideoService } from '../services/video.service';
           <li *ngFor="let video of videoList">{{ video.name }} - {{ video.time }}</li>
         </ul>
       </div>
-      <div class="video-total">
-        <p>Video Total</p>
-        <p *ngIf="videoTotal$ | async as videoTotal">
-          {{ videoTotal }}
-        </p>
-
-        <p>Longest Video</p>
-        <p *ngIf="longestVideo$ | async as longestVideo">
-          {{ longestVideo.name }} - {{ longestVideo.time }}
-        </p>
-
-        <p>Shortest Video</p>
-        <p *ngIf="shortestVideo$ | async as shortestVideo">
-          {{ shortestVideo.name }} - {{ shortestVideo.time }}
-        </p>
+      <div class="video-total" *ngIf="items$ | async as x">
+          <p>Video Total</p>
+          <p>
+            {{ x.total | formatTotalSeconds }}
+          </p>
+          <p>Longest Video</p>
+          <p>
+            {{ x.longest.name }} - {{ x.longest.time }}
+          </p>
+          <p>Shortest Video</p>
+          <p>
+            {{ x.shortest.name }} - {{ x.shortest.time }}
+          </p>
       </div>
     </section>
   </section>  
@@ -90,48 +88,37 @@ export class VideoListComponent {
 
   videoList$ = this.videoService.getAll()
     .pipe(
-      tap((data) => console.log('videoList$ observable', data)),
+      tap(() => console.log('videoList$ observable')),
       shareReplay(1)
     );
 
-  streamVideoList$ = this.videoService.getAll()
+  streamVideoList$ = this.videoList$
     .pipe(
       tap(() => console.log('streamVideoList$ observable')),
       concatMap(videoTimes => from(videoTimes)),
       shareReplay(1)
     );
-
-  videoTotal$ = this.streamVideoList$
+    
+  items$ = forkJoin({
+    total: this.streamVideoList$
       .pipe(
         tap(() => console.log('videoTotal$ observable')),
         reduce((acc, videoTime) => {
           const [minutes, seconds] = videoTime.time.split(':').map(parseFloat);
           return acc + minutes * 60 + seconds;
-        }, 0),
-        map(totalSeconds => {
-          let secondsLeft = totalSeconds;
-
-          const hours = Math.floor(secondsLeft / 60 / 60);
-          secondsLeft = secondsLeft % 3600;
-          
-          const minutes = Math.floor(secondsLeft / 60);
-          secondsLeft = secondsLeft % 60;
-
-          return `${hours} Hours ${minutes} minutes ${secondsLeft} seconds`;
-        })
-      )  
-
-  longestVideo$ = this.streamVideoList$
+        }, 0)
+      ),
+    longest: this.streamVideoList$
       .pipe(
         tap(() => console.log('longestVideo$ observable')),
         max((a, b) => this.compareVideoTimes(a, b)),
-      )
-
-  shortestVideo$ = this.streamVideoList$
+      ),
+    shortest: this.streamVideoList$
       .pipe(
         tap(() => console.log('shortestVideo$ observable')),
         min((a, b) => this.compareVideoTimes(a, b)),
-      )
+      )  
+  })
   
   constructor(private videoService: VideoService) { }
 
