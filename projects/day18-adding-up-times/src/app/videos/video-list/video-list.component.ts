@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, } from '@angular/core';
-import { concatMap, from, max, min, reduce, shareReplay, tap, forkJoin } from 'rxjs';
+import { concatMap, from, reduce, shareReplay, tap, forkJoin } from 'rxjs';
+import { minMaxVideos } from '../custom-operators/minmax-video.operator';
 import { VideoTime } from '../interfaces/video-time.interface';
 import { VideoService } from '../services/video.service';
 
@@ -22,11 +23,11 @@ import { VideoService } from '../services/video.service';
           </p>
           <p>Longest Video</p>
           <p>
-            {{ x.longest.name }} - {{ x.longest.time }}
+            {{ x.mixMaxVideos.max?.name }} - {{ x.mixMaxVideos.max?.time }}
           </p>
           <p>Shortest Video</p>
           <p>
-            {{ x.shortest.name }} - {{ x.shortest.time }}
+            {{ x.mixMaxVideos.min?.name }} - {{ x.mixMaxVideos.min?.time }}
           </p>
       </div>
     </section>
@@ -80,8 +81,7 @@ import { VideoService } from '../services/video.service';
           margin: 0.5rem;
         }
       }
-    }
-  `],
+    }`],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VideoListComponent {
@@ -108,26 +108,20 @@ export class VideoListComponent {
           return acc + minutes * 60 + seconds;
         }, 0)
       ),
-    longest: this.streamVideoList$
+    mixMaxVideos: this.streamVideoList$
       .pipe(
-        tap(() => console.log('longestVideo$ observable')),
-        max((a, b) => this.compareVideoTimes(a, b)),
-      ),
-    shortest: this.streamVideoList$
-      .pipe(
-        tap(() => console.log('shortestVideo$ observable')),
-        min((a, b) => this.compareVideoTimes(a, b)),
-      )  
+        tap(() => console.log('mixMaxVideos$ observable')),
+        minMaxVideos((x, y) => this.compareVideoTimes(x, y)),
+      )
   })
   
   constructor(private videoService: VideoService) { }
 
   private compareVideoTimes (a: VideoTime, b: VideoTime) {
     const [aMinutes, aSeconds] = a.time.split(':').map(parseFloat);
-    const aTotalSeconds = aSeconds + aMinutes * 60;
-
     const [bMinutes, bSeconds] = b.time.split(':').map(parseFloat);
-    const bTotalSeconds = bSeconds + bMinutes * 60;
+    const aTotalSeconds = aSeconds + aMinutes * 60;;
+    const bTotalSeconds = bSeconds + bMinutes * 60;;
 
     return aTotalSeconds < bTotalSeconds ? -1 : 1;
   }
