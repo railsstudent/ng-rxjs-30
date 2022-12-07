@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, } from '@angular/core';
-import { concatMap, from, reduce, shareReplay, tap, forkJoin } from 'rxjs';
+import { concatMap, from, reduce, shareReplay, tap, forkJoin, max, min } from 'rxjs';
 import { minMaxVideos } from '../custom-operators/minmax-video.operator';
 import { VideoTime } from '../interfaces/video-time.interface';
 import { VideoService } from '../services/video.service';
@@ -22,13 +22,15 @@ import { VideoService } from '../services/video.service';
             {{ x.total | formatTotalSeconds }}
           </p>
           <p>Longest Video</p>
-          <p>
-            {{ x.mixMaxVideos.max?.name }} - {{ x.mixMaxVideos.max?.time }}
-          </p>
+          <ul>
+            <li>custom operator: {{ x.minMaxVideos.max?.name }} - {{ x.minMaxVideos.max?.time }}</li>
+            <li>max operator: {{ x.maxVideo.name }} - {{ x.maxVideo.time }}</li>
+          </ul>
           <p>Shortest Video</p>
-          <p>
-            {{ x.mixMaxVideos.min?.name }} - {{ x.mixMaxVideos.min?.time }}
-          </p>
+          <ul>
+            <li>custom operator: {{ x.minMaxVideos.min?.name }} - {{ x.minMaxVideos.min?.time }}</li>
+            <li>min operator: {{ x.minVideo.name }} - {{ x.minVideo.time }}</li>
+          </ul>
       </div>
     </section>
   </section>  
@@ -67,7 +69,7 @@ import { VideoService } from '../services/video.service';
         flex-basis: 50%;
         padding: 1rem;
 
-        p:nth-of-type(2n + 1) {
+        p:nth-of-type(n + 1) {
           text-decoration: underline;
         }
 
@@ -79,6 +81,10 @@ import { VideoService } from '../services/video.service';
 
         p:nth-of-type(n+2) {
           margin: 0.5rem;
+        }
+
+        ul, li {
+          margin: 0.75rem;
         }
       }
     }`],
@@ -108,11 +114,21 @@ export class VideoListComponent {
           return acc + minutes * 60 + seconds;
         }, 0)
       ),
-    mixMaxVideos: this.streamVideoList$
+    minMaxVideos: this.streamVideoList$
       .pipe(
         tap(() => console.log('mixMaxVideos$ observable')),
         minMaxVideos((x, y) => this.compareVideoTimes(x, y)),
-      )
+      ),
+    maxVideo: this.streamVideoList$
+      .pipe(
+        tap(() => console.log('mixMaxVideos$ observable')),
+        max((x, y) => this.compareVideoTimes(x, y)),
+      ),
+    minVideo: this.streamVideoList$
+      .pipe(
+        tap(() => console.log('mixMaxVideos$ observable')),
+        min((x, y) => this.compareVideoTimes(x, y)),
+      )  
   })
   
   constructor(private videoService: VideoService) { }
