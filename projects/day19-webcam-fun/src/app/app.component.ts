@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
-  template: '<p>Test</p>', 
+  template: '<app-web-camera></app-web-camera>', 
   styles: [`
     :host {
       display: block;
