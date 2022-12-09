@@ -14,6 +14,10 @@ export class FormatTotalSecondsPipe implements PipeTransform {
     const minutes = Math.floor(secondsLeft / 60);
     secondsLeft = secondsLeft % 60;
 
-    return `${hours} Hours ${minutes} minutes ${secondsLeft} seconds`;
+    if (hours > 0) {
+      return `${hours} Hours ${minutes} minutes ${secondsLeft} seconds`;
+    }
+
+    return `${minutes} minutes ${secondsLeft} seconds`;
   }
 }
