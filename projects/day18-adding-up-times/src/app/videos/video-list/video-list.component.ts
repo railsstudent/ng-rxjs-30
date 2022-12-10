@@ -128,7 +128,7 @@ export class VideoListComponent {
       ),
     averageVideoTime: this.streamVideoList$.pipe(
       tap(() => console.log('averageVideoTime$ observable')),
-      averageVideoTime(),
+      averageVideoTime((acc: number, videoTime: VideoTime) => acc + this.convertToTotalSeconds(videoTime.time)),
     ) 
   });
   
