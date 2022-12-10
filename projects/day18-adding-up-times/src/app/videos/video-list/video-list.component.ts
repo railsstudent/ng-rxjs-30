@@ -109,10 +109,7 @@ export class VideoListComponent {
     total: this.streamVideoList$
       .pipe(
         tap(() => console.log('videoTotal$ observable')),
-        reduce((acc, videoTime) => {
-          const [minutes, seconds] = videoTime.time.split(':').map(parseFloat);
-          return acc + minutes * 60 + seconds;
-        }, 0)
+        reduce((acc, videoTime) => acc + this.convertToTotalSeconds(videoTime.time), 0)
       ),
     minMaxVideos: this.streamVideoList$
       .pipe(
@@ -121,27 +118,30 @@ export class VideoListComponent {
       ),
     maxVideo: this.streamVideoList$
       .pipe(
-        tap(() => console.log('mixMaxVideos$ observable')),
+        tap(() => console.log('maxVideo$ observable')),
         max((x, y) => this.compareVideoTimes(x, y)),
       ),
     minVideo: this.streamVideoList$
       .pipe(
-        tap(() => console.log('mixMaxVideos$ observable')),
+        tap(() => console.log('minVideo$ observable')),
         min((x, y) => this.compareVideoTimes(x, y)),
       ),
     averageVideoTime: this.streamVideoList$.pipe(
       tap(() => console.log('averageVideoTime$ observable')),
       averageVideoTime(),
     ) 
-  })
+  });
   
   constructor(private videoService: VideoService) { }
 
+  private convertToTotalSeconds(time: string): number {
+    const [aMinutes, aSeconds] = time.split(':').map(parseFloat);
+    return aSeconds + aMinutes * 60;
+  }
+
   private compareVideoTimes (a: VideoTime, b: VideoTime) {
-    const [aMinutes, aSeconds] = a.time.split(':').map(parseFloat);
-    const [bMinutes, bSeconds] = b.time.split(':').map(parseFloat);
-    const aTotalSeconds = aSeconds + aMinutes * 60;;
-    const bTotalSeconds = bSeconds + bMinutes * 60;;
+    const aTotalSeconds = this.convertToTotalSeconds(a.time);
+    const bTotalSeconds = this.convertToTotalSeconds(b.time);
 
     return aTotalSeconds < bTotalSeconds ? -1 : 1;
   }
