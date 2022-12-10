@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, } from '@angular/core';
 import { concatMap, from, reduce, shareReplay, tap, forkJoin, max, min } from 'rxjs';
-import { minMaxVideos } from '../custom-operators/minmax-video.operator';
+import { averageVideoTime, minMaxVideos } from '../custom-operators';
 import { VideoTime } from '../interfaces/video-time.interface';
 import { VideoService } from '../services/video.service';
 
@@ -18,9 +18,7 @@ import { VideoService } from '../services/video.service';
       </div>
       <div class="video-total" *ngIf="items$ | async as x">
           <p>Video Total</p>
-          <p>
-            {{ x.total | formatTotalSeconds }}
-          </p>
+          <p>{{ x.total | formatTotalSeconds }}</p>
           <p>Longest Video</p>
           <ul>
             <li>custom operator: {{ x.minMaxVideos.max?.name }} - {{ x.minMaxVideos.max?.time }}</li>
@@ -31,6 +29,8 @@ import { VideoService } from '../services/video.service';
             <li>custom operator: {{ x.minMaxVideos.min?.name }} - {{ x.minMaxVideos.min?.time }}</li>
             <li>min operator: {{ x.minVideo.name }} - {{ x.minVideo.time }}</li>
           </ul>
+          <p>Average Video Time</p>
+          <p>{{ x.averageVideoTime | formatTotalSeconds }}</p>
       </div>
     </section>
   </section>  
@@ -69,7 +69,7 @@ import { VideoService } from '../services/video.service';
         flex-basis: 50%;
         padding: 1rem;
 
-        p:nth-of-type(n + 1) {
+        p:first-of-type, p:nth-of-type(3), p:nth-of-type(4), p:nth-of-type(5) {
           text-decoration: underline;
         }
 
@@ -128,7 +128,11 @@ export class VideoListComponent {
       .pipe(
         tap(() => console.log('mixMaxVideos$ observable')),
         min((x, y) => this.compareVideoTimes(x, y)),
-      )  
+      ),
+    averageVideoTime: this.streamVideoList$.pipe(
+      tap(() => console.log('averageVideoTime$ observable')),
+      averageVideoTime(),
+    ) 
   })
   
   constructor(private videoService: VideoService) { }
