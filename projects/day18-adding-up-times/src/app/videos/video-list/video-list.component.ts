@@ -109,7 +109,7 @@ export class VideoListComponent {
     total: this.streamVideoList$
       .pipe(
         tap(() => console.log('videoTotal$ observable')),
-        reduce((acc, videoTime) => acc + this.convertToTotalSeconds(videoTime.time), 0)
+        reduce((acc, videoTime) => acc + this.convertTotalSeconds(videoTime.time), 0)
       ),
     minMaxVideos: this.streamVideoList$
       .pipe(
@@ -128,20 +128,20 @@ export class VideoListComponent {
       ),
     averageVideoTime: this.streamVideoList$.pipe(
       tap(() => console.log('averageVideoTime$ observable')),
-      averageVideoTime((acc: number, videoTime: VideoTime) => acc + this.convertToTotalSeconds(videoTime.time)),
+      averageVideoTime((acc: number, videoTime: VideoTime) => acc + this.convertTotalSeconds(videoTime.time)),
     ) 
   });
   
   constructor(private videoService: VideoService) { }
 
-  private convertToTotalSeconds(time: string): number {
+  private convertTotalSeconds(time: string): number {
     const [aMinutes, aSeconds] = time.split(':').map(parseFloat);
     return aSeconds + aMinutes * 60;
   }
 
   private compareVideoTimes (a: VideoTime, b: VideoTime) {
-    const aTotalSeconds = this.convertToTotalSeconds(a.time);
-    const bTotalSeconds = this.convertToTotalSeconds(b.time);
+    const aTotalSeconds = this.convertTotalSeconds(a.time);
+    const bTotalSeconds = this.convertTotalSeconds(b.time);
 
     return aTotalSeconds < bTotalSeconds ? -1 : 1;
   }
