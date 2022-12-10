@@ -1,8 +1,7 @@
-import { Videos } from './../interfaces/video-time.interface';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
-import { VideoTime } from '../interfaces/video-time.interface';
+import { Videos, VideoTime } from '../interfaces/video-time.interface';
 
 @Injectable({
   providedIn: 'root'
