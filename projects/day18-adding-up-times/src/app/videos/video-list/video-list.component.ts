@@ -118,12 +118,12 @@ export class VideoListComponent {
       ),
     maxVideo: this.streamVideoList$
       .pipe(
-        tap(() => console.log('mixMaxVideos$ observable')),
+        tap(() => console.log('maxVideo$ observable')),
         max((x, y) => this.compareVideoTimes(x, y)),
       ),
     minVideo: this.streamVideoList$
       .pipe(
-        tap(() => console.log('mixMaxVideos$ observable')),
+        tap(() => console.log('minVideo$ observable')),
         min((x, y) => this.compareVideoTimes(x, y)),
       ),
     averageVideoTime: this.streamVideoList$.pipe(
