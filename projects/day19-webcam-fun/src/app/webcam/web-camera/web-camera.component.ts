@@ -1,6 +1,7 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef, OnDestroy, Inject } from '@angular/core';
-import { fromEvent, Subject, takeUntil, tap } from 'rxjs';
+import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { fromEvent, map, Observable, scan, startWith, Subject, takeUntil, tap } from 'rxjs';
+import { Photo } from '../interfaces/webcam.interface';
 
 @Component({
   selector: 'app-web-camera',
@@ -11,42 +12,44 @@ import { fromEvent, Subject, takeUntil, tap } from 'rxjs';
         <button #btnPhoto>Take Photo</button>
       </div>
       <canvas class="photo" #photo></canvas>
-      <video class="player" #player></video>
-      <app-photo-stripe></app-photo-stripe>
+      <video class="player" #video></video>
+      <ng-container *ngIf="photoStripe$ | async as photoStripe">
+        <app-photo-stripe [photoStripe]="photoStripe"></app-photo-stripe>
+      </ng-container>
     </div>
     <audio class="snap" [src]="soundUrl" hidden #snap></audio>
   </ng-container>
   `,
   styles: [`
-  :host {
-    display: block;
-  }
+    :host {
+      display: block;
+    }
 
-  .photobooth {
-    background: white;
-    max-width: 150rem;
-    margin: 2rem auto;
-    border-radius: 2px;
-  }
+    .photobooth {
+      background: white;
+      max-width: 150rem;
+      margin: 2rem auto;
+      border-radius: 2px;
+    }
 
-  /*clearfix*/
-  .photobooth:after {
-    content: '';
-    display: block;
-    clear: both;
-  }
+    /*clearfix*/
+    .photobooth:after {
+      content: '';
+      display: block;
+      clear: both;
+    }
 
-  .photo {
-    width: 100%;
-    float: left;
-  }
+    .photo {
+      width: 100%;
+      float: left;
+    }
 
-  .player {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width:200px;
-  }
+    .player {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width:200px;
+    }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -58,28 +61,97 @@ export class WebCameraComponent implements OnInit, OnDestroy {
   @ViewChild('snap', { static: true, read: ElementRef })
   snap!: ElementRef<HTMLAudioElement>;
 
+  @ViewChild('video', { static: true, read: ElementRef })
+  video!: ElementRef<HTMLVideoElement>;
+
+  @ViewChild('photo', { static: true, read: ElementRef })
+  canvas!: ElementRef<HTMLCanvasElement>;
+
   destroy$ = new Subject<void>();
+
+  photoStripe$!: Observable<Photo[]>;
 
   constructor(@Inject(APP_BASE_HREF) private baseHref: string) { }
 
   ngOnInit(): void {
-    const btnPhotoNative = this.btnPhoto.nativeElement;
+    const videoNative = this.video.nativeElement;
 
-    fromEvent(btnPhotoNative, 'click')
+    this.getVideo();
+
+    this.photoStripe$ = fromEvent(this.btnPhoto.nativeElement, 'click')
       .pipe(
         tap(() => {
           const snapElement = this.snap.nativeElement;
           snapElement.currentTime = 0;
           snapElement.play();
         }),
+        map(() => ({ 
+          data: this.canvas.nativeElement.toDataURL('image/jpeg'),
+          description: 'My photo',
+          download: 'photo',
+        })),
+        scan((photos, photo) => [photo, ...photos], [] as Photo[]),
+        startWith([] as Photo[]),
+      );
+
+    fromEvent(videoNative, 'canplay')
+      .pipe(
+        tap(() => console.log('video can play')),
+        tap(() => this.paintToCanvas()),
         takeUntil(this.destroy$)
-      )
-      .subscribe(() => console.log('button clicked'));
+     )
+     .subscribe(() => console.log('video can play'));
   }
 
   get soundUrl() {
     const isEndWithSlash = this.baseHref.endsWith('/');
     return `${this.baseHref}${ isEndWithSlash ? '' : '/' }assets/audio/snap.mp3`; 
+  }
+
+  private getVideo() {
+    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+      .then(localMediaStream => {
+        console.log(localMediaStream);
+
+        const { nativeElement } = this.video;         
+        nativeElement.srcObject = localMediaStream;
+        nativeElement.play();
+      })
+      .catch(err => {
+        console.error(`OH NO!!!`, err);
+      });
+  }
+
+  private rgbSplit(pixels: ImageData) {
+    for (let i = 0; i < pixels.data.length; i += 4) {
+      pixels.data[i - 150] = pixels.data[i + 0]; // RED
+      pixels.data[i + 500] = pixels.data[i + 1]; // GREEN
+      pixels.data[i - 550] = pixels.data[i + 2]; // Blue
+    }
+    return pixels;
+  }
+
+  private paintToCanvas() {
+    const width = this.video.nativeElement.videoWidth;
+    const height = this.video.nativeElement.videoHeight;
+    this.canvas.nativeElement.width = width;
+    this.canvas.nativeElement.height = height;
+
+    const ctx = this.canvas.nativeElement.getContext('2d');
+
+    if (!ctx) {
+      return;
+    }
+  
+    return setInterval(() => {
+      ctx.drawImage(this.video.nativeElement, 0, 0, width, height);
+      // take the pixels out
+      const pixels = ctx.getImageData(0, 0, width, height);
+  
+      this.rgbSplit(pixels);
+      ctx.globalAlpha = 0.8;  
+      ctx.putImageData(pixels, 0, 0);
+    }, 16);
   }
 
   ngOnDestroy(): void {
