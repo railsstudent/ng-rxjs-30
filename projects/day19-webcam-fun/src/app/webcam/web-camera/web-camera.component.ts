@@ -1,6 +1,7 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { fromEvent, map, Observable, scan, startWith, Subject, takeUntil, tap } from 'rxjs';
+import { NAVIGATOR } from '../../core/navigator.service';
 import { Photo } from '../interfaces/webcam.interface';
 
 @Component({
@@ -71,7 +72,7 @@ export class WebCameraComponent implements OnInit, OnDestroy {
 
   photoStripe$!: Observable<Photo[]>;
 
-  constructor(@Inject(APP_BASE_HREF) private baseHref: string) { }
+  constructor(@Inject(APP_BASE_HREF) private baseHref: string, @Inject(NAVIGATOR) private navigator: Navigator) { }
 
   ngOnInit(): void {
     const videoNative = this.video.nativeElement;
@@ -96,7 +97,6 @@ export class WebCameraComponent implements OnInit, OnDestroy {
 
     fromEvent(videoNative, 'canplay')
       .pipe(
-        tap(() => console.log('video can play')),
         tap(() => this.paintToCanvas()),
         takeUntil(this.destroy$)
      )
@@ -109,7 +109,9 @@ export class WebCameraComponent implements OnInit, OnDestroy {
   }
 
   private getVideo() {
-    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+    console.log('navigator', this.navigator);
+
+    this.navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       .then(localMediaStream => {
         console.log(localMediaStream);
 

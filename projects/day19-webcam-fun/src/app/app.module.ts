@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
+import { CoreModule } from './core';
 import { WebCamModule } from './webcam';
 
 @NgModule({
@@ -11,7 +12,8 @@ import { WebCamModule } from './webcam';
   ],
   imports: [
     BrowserModule,
-    WebCamModule
+    WebCamModule,
+    CoreModule,
   ],
   providers: [
     {
