@@ -1,6 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { fromEvent, map, Observable, scan, startWith, Subject, takeUntil, tap } from 'rxjs';
+import { concatMap, EMPTY, filter, fromEvent, map, Observable, scan, startWith, Subject, takeUntil, tap, timer } from 'rxjs';
 import { NAVIGATOR } from '../../core/navigator.service';
 import { Photo } from '../interfaces/webcam.interface';
 
@@ -76,6 +76,7 @@ export class WebCameraComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const videoNative = this.video.nativeElement;
+    const canvasNative = this.canvas.nativeElement;
 
     this.getVideo();
 
@@ -95,12 +96,33 @@ export class WebCameraComponent implements OnInit, OnDestroy {
         startWith([] as Photo[]),
       );
 
+    const ctx = canvasNative.getContext('2d', { willReadFrequently: true });
+
     fromEvent(videoNative, 'canplay')
       .pipe(
-        tap(() => this.paintToCanvas()),
+        filter(() => !!ctx),
+        map(() => ctx as CanvasRenderingContext2D),
+        concatMap((canvasContext) => {
+          const width = videoNative.videoWidth;
+          const height = videoNative.videoHeight;    
+          canvasNative.width = width;
+          canvasNative.height = height;    
+
+          return timer(0, 16).pipe(
+            tap(() => {
+              canvasContext.drawImage(this.video.nativeElement, 0, 0, width, height);
+              // take the pixels out
+              const pixels = canvasContext.getImageData(0, 0, width, height);
+          
+              this.rgbSplit(pixels);
+              canvasContext.globalAlpha = 0.8;  
+              canvasContext.putImageData(pixels, 0, 0);
+            })
+          )
+        }),
         takeUntil(this.destroy$)
      )
-     .subscribe(() => console.log('video can play'));
+     .subscribe();
   }
 
   get soundUrl() {
@@ -153,6 +175,8 @@ export class WebCameraComponent implements OnInit, OnDestroy {
       this.rgbSplit(pixels);
       ctx.globalAlpha = 0.8;  
       ctx.putImageData(pixels, 0, 0);
+
+      console.log('in interval.....');
     }, 16);
   }
 
