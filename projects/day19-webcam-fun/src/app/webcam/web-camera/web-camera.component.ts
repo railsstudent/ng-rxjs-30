@@ -77,6 +77,7 @@ export class WebCameraComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const videoNative = this.video.nativeElement;
     const canvasNative = this.canvas.nativeElement;
+    const ctx = canvasNative.getContext('2d', { willReadFrequently: true });
 
     this.getVideo();
 
@@ -95,8 +96,6 @@ export class WebCameraComponent implements OnInit, OnDestroy {
         scan((photos, photo) => [photo, ...photos], [] as Photo[]),
         startWith([] as Photo[]),
       );
-
-    const ctx = canvasNative.getContext('2d', { willReadFrequently: true });
 
     fromEvent(videoNative, 'canplay')
       .pipe(
@@ -137,7 +136,7 @@ export class WebCameraComponent implements OnInit, OnDestroy {
       .then(localMediaStream => {
         console.log(localMediaStream);
 
-        const { nativeElement } = this.video;         
+        const nativeElement = this.video.nativeElement;         
         nativeElement.srcObject = localMediaStream;
         nativeElement.play();
       })
@@ -153,31 +152,6 @@ export class WebCameraComponent implements OnInit, OnDestroy {
       pixels.data[i - 550] = pixels.data[i + 2]; // Blue
     }
     return pixels;
-  }
-
-  private paintToCanvas() {
-    const width = this.video.nativeElement.videoWidth;
-    const height = this.video.nativeElement.videoHeight;
-    this.canvas.nativeElement.width = width;
-    this.canvas.nativeElement.height = height;
-
-    const ctx = this.canvas.nativeElement.getContext('2d');
-
-    if (!ctx) {
-      return;
-    }
-  
-    return setInterval(() => {
-      ctx.drawImage(this.video.nativeElement, 0, 0, width, height);
-      // take the pixels out
-      const pixels = ctx.getImageData(0, 0, width, height);
-  
-      this.rgbSplit(pixels);
-      ctx.globalAlpha = 0.8;  
-      ctx.putImageData(pixels, 0, 0);
-
-      console.log('in interval.....');
-    }, 16);
   }
 
   ngOnDestroy(): void {
