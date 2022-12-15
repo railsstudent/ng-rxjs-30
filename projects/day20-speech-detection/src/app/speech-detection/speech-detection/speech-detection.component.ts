@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef, OnDestroy, Inject } from '@angular/core';
-import { filter, fromEvent, map, Subject, takeUntil, tap } from 'rxjs';
+import { filter, fromEvent, map, Observable, scan, Subject, takeUntil, tap } from 'rxjs';
 import { WINDOW } from '../../core';
 
 declare var webkitSpeechRecognition: any;
@@ -7,7 +7,11 @@ declare var SpeechRecognition: any;
 
 @Component({
   selector: 'app-speech-detection',
-  template: '<div class="words" contenteditable #words></div>',
+  template: `<div class="words" contenteditable #words>
+      <ng-container *ngIf="wordList$ | async as wordList">
+        <p *ngFor="let word of wordList">{{word}}</p>
+      </ng-container>
+    </div>`,
   styles: [`
     :host {
       display: block;
@@ -48,6 +52,7 @@ export class SpeechDetectionComponent implements OnInit, OnDestroy {
   words!: ElementRef<HTMLDivElement>;
 
   destroy$ = new Subject<void>();
+  wordList$!: Observable<string[]>
 
   constructor(@Inject(WINDOW) private window: Window) {}
 
@@ -56,23 +61,28 @@ export class SpeechDetectionComponent implements OnInit, OnDestroy {
     recognition.interimResults = true;
     recognition.lang = 'en-US';
 
-    console.log('Recognition', recognition);
-
     fromEvent(recognition, 'end').pipe(
       tap(() => recognition.start()),
       takeUntil(this.destroy$)
-    ).subscribe(() => console.log('Recognition ends'));
+    ).subscribe();
 
-    fromEvent(recognition, 'result').pipe(
-      map((e: any) =>  Array.from(e.results)
-          .map((result: any) => result[0])
-          .map((result: any) => result.transcript)
-          .join('')
-      ),
-      // map((result: any) => result[0]),
-      // map((result: any) => result.transcript),
-      takeUntil(this.destroy$)
-    ).subscribe((e) => console.log('Recognition result', e));
+    this.wordList$ = fromEvent(recognition, 'result').pipe(
+        map((e: any) =>  { 
+          const transcript = Array.from(e.results)
+            .map((result: any) => result[0].transcript)
+            .join('');
+
+            const poopScript = transcript.replace(/poop|poo|shit|dump/gi, '💩');
+
+            return {
+              transcript: poopScript,
+              isFinal: e.results[0].isFinal as boolean
+            }
+        }),
+        filter((result) => result.isFinal),
+        map((result) => result.transcript),
+        scan((acc, transcript) => acc.concat(transcript), [] as string[]),
+      );
 
     recognition.start();
   }
