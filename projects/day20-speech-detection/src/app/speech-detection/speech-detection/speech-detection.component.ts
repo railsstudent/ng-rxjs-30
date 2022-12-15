@@ -1,8 +1,13 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef, OnDestroy, Inject } from '@angular/core';
+import { filter, fromEvent, map, Subject, takeUntil, tap } from 'rxjs';
+import { WINDOW } from '../../core';
+
+declare var webkitSpeechRecognition: any;
+declare var SpeechRecognition: any;
 
 @Component({
   selector: 'app-speech-detection',
-  template: '<div class="words" contenteditable></div>',
+  template: '<div class="words" contenteditable #words></div>',
   styles: [`
     :host {
       display: block;
@@ -38,11 +43,42 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SpeechDetectionComponent implements OnInit {
+export class SpeechDetectionComponent implements OnInit, OnDestroy {
+  @ViewChild('words', { static: true, read: ElementRef })
+  words!: ElementRef<HTMLDivElement>;
 
-  constructor() { }
+  destroy$ = new Subject<void>();
+
+  constructor(@Inject(WINDOW) private window: Window) {}
 
   ngOnInit(): void {
+    const recognition = new webkitSpeechRecognition() || new SpeechRecognition();
+    recognition.interimResults = true;
+    recognition.lang = 'en-US';
+
+    console.log('Recognition', recognition);
+
+    fromEvent(recognition, 'end').pipe(
+      tap(() => recognition.start()),
+      takeUntil(this.destroy$)
+    ).subscribe(() => console.log('Recognition ends'));
+
+    fromEvent(recognition, 'result').pipe(
+      map((e: any) =>  Array.from(e.results)
+          .map((result: any) => result[0])
+          .map((result: any) => result.transcript)
+          .join('')
+      ),
+      // map((result: any) => result[0]),
+      // map((result: any) => result.transcript),
+      takeUntil(this.destroy$)
+    ).subscribe((e) => console.log('Recognition result', e));
+
+    recognition.start();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
