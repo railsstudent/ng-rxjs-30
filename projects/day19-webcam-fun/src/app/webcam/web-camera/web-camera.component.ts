@@ -1,6 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { concatMap, EMPTY, filter, fromEvent, map, Observable, scan, startWith, Subject, takeUntil, tap, timer } from 'rxjs';
+import { concatMap, filter, fromEvent, map, Observable, scan, startWith, Subject, takeUntil, tap, timer } from 'rxjs';
 import { NAVIGATOR } from '../../core/navigator.service';
 import { Photo } from '../interfaces/webcam.interface';
 
