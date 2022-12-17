@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { CoreModule } from './core';
 import { SpeechDetectionModule } from './speech-detection/speech-detection.module';
 
 @NgModule({
@@ -11,7 +10,6 @@ import { SpeechDetectionModule } from './speech-detection/speech-detection.modul
   ],
   imports: [
     BrowserModule,
-    CoreModule,
     SpeechDetectionModule,
   ],
   providers: [],
