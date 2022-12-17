@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Photo } from '../interfaces/webcam.interface';
 
 @Component({
@@ -33,13 +33,8 @@ import { Photo } from '../interfaces/webcam.interface';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PhotoStripeComponent implements OnInit {
+export class PhotoStripeComponent {
 
   @Input()
   photoStripe!: Photo[];
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
 }
