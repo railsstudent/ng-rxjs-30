@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { every, find, findIndex, from, map, reduce, shareReplay, tap } from 'rxjs';
+import { every, find, findIndex, from, map, shareReplay, tap, toArray } from 'rxjs';
 import { some } from './custom-operators/some.operator';
 import { Person, PersonNoAge } from './interfaces/person.interface';
 
@@ -71,9 +71,7 @@ export class AppComponent {
     map((person) => this.calculateAge(person)),
     shareReplay(this.persons.length));
 
-  peopleArray$ = this.people$
-    .pipe(reduce((acc, people) => acc.concat(people), [] as Person[]));
-
+  peopleArray$ = this.people$.pipe(toArray());
   isAdult$ = this.people$.pipe(some(person => this.isAnAdult(person)));
   allAdults$ = this.people$.pipe(every(person => this.isAnAdult(person)));
   
@@ -90,10 +88,7 @@ export class AppComponent {
     shareReplay(this.comments.length)
   );
 
-  commentsArray$ = this.comments$.pipe(
-    reduce((acc, comment) => acc.concat(comment), [] as { text: string; id: number }[])
-  );
-
+  commentsArray$ = this.comments$.pipe(toArray());
   commentIndex$ = this.comments$.pipe(findIndex(c => c.id === 823423));
   comment$ = this.comments$.pipe(find(c => c.id === 823423));
 
