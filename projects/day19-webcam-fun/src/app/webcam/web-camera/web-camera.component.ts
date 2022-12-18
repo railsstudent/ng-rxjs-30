@@ -105,9 +105,10 @@ export class WebCameraComponent implements OnInit, OnDestroy {
           const width = videoNative.videoWidth;
           const height = videoNative.videoHeight;    
           canvasNative.width = width;
-          canvasNative.height = height;    
+          canvasNative.height = height;
+          const interval = 16; 
 
-          return timer(0, 16).pipe(
+          return timer(0, interval).pipe(
             tap(() => {
               canvasContext.drawImage(this.video.nativeElement, 0, 0, width, height);
               // take the pixels out
