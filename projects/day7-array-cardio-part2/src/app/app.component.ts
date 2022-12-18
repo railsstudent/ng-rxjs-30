@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { defaultIfEmpty, every, find, findIndex, from, map, reduce, shareReplay, tap } from 'rxjs';
+import { every, find, findIndex, from, map, reduce, shareReplay, tap } from 'rxjs';
+import { some } from './custom-operators/some.operator';
 import { Person, PersonNoAge } from './interfaces/person.interface';
 
 @Component({
@@ -73,18 +74,8 @@ export class AppComponent {
   peopleArray$ = this.people$
     .pipe(reduce((acc, people) => acc.concat(people), [] as Person[]));
 
-  isAdult$ = this.people$.pipe(
-    find(person => { 
-      console.log('some', person);
-      return this.isAnAdult(person);
-    }),
-    map(c => !!c),
-    defaultIfEmpty(false),
-  );
-  allAdults$ = this.people$.pipe(every(person => { 
-    console.log('every', person);
-    return this.isAnAdult(person);
-  }));
+  isAdult$ = this.people$.pipe(some(person => this.isAnAdult(person)));
+  allAdults$ = this.people$.pipe(every(person => this.isAnAdult(person)));
   
    comments = [
     { text: 'Love this!', id: 523423 },
