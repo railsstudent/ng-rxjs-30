@@ -1770,6 +1770,110 @@
           }
         }
       }
+    },
+    "day4-array-cardio-part1": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        },
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
+      "root": "projects/day4-array-cardio-part1",
+      "sourceRoot": "projects/day4-array-cardio-part1/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/day4-array-cardio-part1",
+            "index": "projects/day4-array-cardio-part1/src/index.html",
+            "main": "projects/day4-array-cardio-part1/src/main.ts",
+            "polyfills": "projects/day4-array-cardio-part1/src/polyfills.ts",
+            "tsConfig": "projects/day4-array-cardio-part1/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/day4-array-cardio-part1/src/favicon.ico",
+              "projects/day4-array-cardio-part1/src/assets"
+            ],
+            "styles": [
+              "projects/day4-array-cardio-part1/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/day4-array-cardio-part1/src/environments/environment.ts",
+                  "with": "projects/day4-array-cardio-part1/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all",
+              "baseHref": "https://railsstudent.github.io/ng-rxjs-30/day4-array-cardio-part1/"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "day4-array-cardio-part1:build:production"
+            },
+            "development": {
+              "browserTarget": "day4-array-cardio-part1:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "day4-array-cardio-part1:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/day4-array-cardio-part1/src/test.ts",
+            "polyfills": "projects/day4-array-cardio-part1/src/polyfills.ts",
+            "tsConfig": "projects/day4-array-cardio-part1/tsconfig.spec.json",
+            "karmaConfig": "projects/day4-array-cardio-part1/karma.conf.js",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/day4-array-cardio-part1/src/favicon.ico",
+              "projects/day4-array-cardio-part1/src/assets"
+            ],
+            "styles": [
+              "projects/day4-array-cardio-part1/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        }
+      }
     }
   },
   "defaultProject": "Day1-JavaScript-Drum-Kit"
