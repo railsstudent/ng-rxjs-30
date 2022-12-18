@@ -1,10 +1,19 @@
 import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styles: [`
+    :host {
+      display: block;
+    }
+  `]
 })
 export class AppComponent {
-  title = 'day4-array-cardio-part1';
+  title = 'Day4 Array Cardio Part 1';
+  
+  constructor(titleService: Title) {
+    titleService.setTitle(this.title);
+  }
 }
