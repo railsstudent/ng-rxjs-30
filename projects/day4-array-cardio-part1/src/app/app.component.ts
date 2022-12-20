@@ -28,16 +28,14 @@ import { sum } from './custom-operators/sum.operator';
         <p>{{ totalYears$ | async }}</p>
       </section>
       <section class="people">
-        <h2>People</h2>
-        <ul *ngIf="peopleArray$ | async as peopleArray">
-          <li *ngFor="let person of peopleArray">{{ person }}</li>
-        </ul>
+        <ng-container 
+          *ngTemplateOutlet="people; context: { $implicit: 'People', list: peopleArray$ | async }">
+        </ng-container>
       </section>
       <section class="people">
-        <h2>People (Ordered by last name)</h2>
-        <ul *ngIf="alpha$ | async as peopleArray">
-          <li *ngFor="let person of peopleArray">{{ person }}</li>
-        </ul>
+        <ng-container 
+          *ngTemplateOutlet="people; context: { $implicit: 'People (Ordered by last name)', list: alpha$ | async }">
+        </ng-container>
       </section>
       <section class="transportation">
         <h2>Transportation</h2>
@@ -48,13 +46,20 @@ import { sum } from './custom-operators/sum.operator';
         </ul>
       </section>
     </div>
+
     <ng-template #inventors let-title let-list="list">
       <h2>{{ title }}</h2>
-        <ul>
-          <li *ngFor="let inventory of list; trackby: inventoryTrackBy">
-            Name: {{ inventory.first }} {{ inventory.last }}<br />
-            {{ inventory.year }} - {{ inventory.passed }}, Age: {{ inventory.passed - inventory.year }}
-          </li>
+      <ul>
+        <li *ngFor="let inventory of list; trackby: inventoryTrackBy">
+          Name: {{ inventory.first }} {{ inventory.last }}<br />
+          {{ inventory.year }} - {{ inventory.passed }}, Age: {{ inventory.passed - inventory.year }}
+        </li>
+      </ul>
+    </ng-template>
+    <ng-template #people let-title let-list="list">
+      <h2>{{ title }}</h2>
+      <ul>
+        <li *ngFor="let person of list; trackby: peopleTrackBy">{{ person }}</li>
       </ul>
     </ng-template>
   `,
@@ -142,5 +147,9 @@ export class AppComponent {
 
   inventoryTrackBy(index: number, item: { first: string; last: string }) {
     return `${index}${item.first}${item.last}`;
+  }
+
+  peopleTrackBy(index: number, item: string) {
+    return `${index}${item}`;
   }
 }
