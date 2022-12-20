@@ -8,35 +8,25 @@ import { sum } from './custom-operators/sum.operator';
   selector: 'app-root',
   template: `
     <div class="container">
-      <section class="inventors">
-        <ng-container 
-          *ngTemplateOutlet="inventors; context: { $implicit: 'Inventors', list: inventorArray$ | async }">
-        </ng-container>
-      </section>
-      <section class="inventors">
-        <ng-container 
-          *ngTemplateOutlet="inventors; context: { $implicit: 'Ordered Inventors', list: ordered$ | async }">
-        </ng-container>
-      </section>
-      <section class="inventors">
-        <ng-container 
-          *ngTemplateOutlet="inventors; context: { $implicit: 'Oldest Inventors', list: oldest$ | async }">
-        </ng-container>
-      </section>
+      <ng-container 
+        *ngTemplateOutlet="inventors; context: { $implicit: 'Inventors', list: inventorArray$ | async }">
+      </ng-container>
+      <ng-container 
+        *ngTemplateOutlet="inventors; context: { $implicit: 'Ordered Inventors', list: ordered$ | async }">
+      </ng-container>
+      <ng-container 
+        *ngTemplateOutlet="inventors; context: { $implicit: 'Oldest Inventors', list: oldest$ | async }">
+      </ng-container>
       <section class="inventors">
         <h2>Total Years</h2>
         <p>{{ totalYears$ | async }}</p>
       </section>
-      <section class="people">
-        <ng-container 
-          *ngTemplateOutlet="people; context: { $implicit: 'People', list: peopleArray$ | async }">
-        </ng-container>
-      </section>
-      <section class="people">
-        <ng-container 
-          *ngTemplateOutlet="people; context: { $implicit: 'People (Ordered by last name)', list: alpha$ | async }">
-        </ng-container>
-      </section>
+      <ng-container 
+        *ngTemplateOutlet="people; context: { $implicit: 'People', list: peopleArray$ | async }">
+      </ng-container>
+      <ng-container 
+        *ngTemplateOutlet="people; context: { $implicit: 'People (Ordered by last name)', list: alpha$ | async }">
+      </ng-container>
       <section class="transportation">
         <h2>Transportation</h2>
         <ul *ngIf="transportation$ | async as transportation">
@@ -48,19 +38,23 @@ import { sum } from './custom-operators/sum.operator';
     </div>
 
     <ng-template #inventors let-title let-list="list">
-      <h2>{{ title }}</h2>
-      <ul>
-        <li *ngFor="let inventory of list; trackby: inventoryTrackBy">
-          Name: {{ inventory.first }} {{ inventory.last }}<br />
-          {{ inventory.year }} - {{ inventory.passed }}, Age: {{ inventory.passed - inventory.year }}
-        </li>
-      </ul>
+      <section class="inventors">
+        <h2>{{ title }}</h2>
+        <ul>
+          <li *ngFor="let inventory of list; trackby: inventoryTrackBy">
+            Name: {{ inventory.first }} {{ inventory.last }}<br />
+            {{ inventory.year }} - {{ inventory.passed }}, Age: {{ inventory.passed - inventory.year }}
+          </li>
+        </ul>
+      </section>
     </ng-template>
     <ng-template #people let-title let-list="list">
-      <h2>{{ title }}</h2>
-      <ul>
-        <li *ngFor="let person of list; trackby: peopleTrackBy">{{ person }}</li>
-      </ul>
+      <section class="people">
+        <h2>{{ title }}</h2>
+        <ul>
+          <li *ngFor="let person of list; trackby: peopleTrackBy">{{ person }}</li>
+        </ul>
+      </section>
     </ng-template>
   `,
   styles: [`
