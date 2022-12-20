@@ -9,14 +9,9 @@ import { sum } from './custom-operators/sum.operator';
   template: `
     <div class="container">
       <section class="inventors">
-        <h2>Inventors</h2>
-        <ul *ngIf="inventorArray$ | async as inventorArray">
-          <li *ngFor="let inventory of inventorArray">
-            Name: {{ inventory.first }} {{ inventory.last }}<br />
-            {{ inventory.year }} - {{ inventory.passed }}, Age: {{ inventory.passed - inventory.year }}
-            
-          </li>
-        </ul>
+        <ng-container 
+          *ngTemplateOutlet="inventors; context: { title: 'Inventors', list: inventorArray$ | async }">
+        </ng-container>
       </section>
       <section class="inventors">
         <h2>Ordered Inventors</h2>
@@ -61,6 +56,15 @@ import { sum } from './custom-operators/sum.operator';
         </ul>
       </section>
     </div>
+    <ng-template #inventors let-title="title" let-list="list">
+      <h2>Ng-template, {{ title }}</h2>
+        <ul>
+          <li *ngFor="let inventory of list">
+            Name: {{ inventory.first }} {{ inventory.last }}<br />
+            {{ inventory.year }} - {{ inventory.passed }}, Age: {{ inventory.passed - inventory.year }}
+          </li>
+      </ul>
+    </ng-template>
   `,
   styles: [`
     :host {
