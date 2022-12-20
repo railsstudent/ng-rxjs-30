@@ -1,12 +1,68 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { from, shareReplay, toArray } from 'rxjs';
+import { sort } from './custom-operators/sort.operator';
+import { sum } from './custom-operators/sum.operator';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
+  template: `
+    <div class="container">
+      <section class="inventors">
+        <h2>Inventors</h2>
+        <ul *ngIf="inventorArray$ | async as inventorArray">
+          <li *ngFor="let inventory of inventorArray">
+            Name: {{ inventory.first }} {{ inventory.last }}<br />
+            {{ inventory.year }} - {{ inventory.passed }}, Age: {{ inventory.passed - inventory.year }}
+            
+          </li>
+        </ul>
+      </section>
+      <section class="inventors">
+        <h2>Ordered Inventors</h2>
+        <ul *ngIf="ordered$ | async as inventorArray">
+          <li *ngFor="let inventory of inventorArray">
+            Name: {{ inventory.first }} {{ inventory.last }}<br />
+            {{ inventory.year }} - {{ inventory.passed }}, Age: {{ inventory.passed - inventory.year }}
+          </li>
+        </ul>
+      </section>
+      <section class="inventors">
+        <h2>Oldest Inventors</h2>
+        <ul *ngIf="oldest$ | async as inventorArray">
+          <li *ngFor="let inventory of inventorArray">
+            Name: {{ inventory.first }} {{ inventory.last }}<br />
+            {{ inventory.year }} - {{ inventory.passed }}, Age: {{ inventory.passed - inventory.year }}
+          </li>
+        </ul>
+      </section>
+      <section class="inventors">
+        <h2>Total Years</h2>
+        <p>{{ totalYears$ | async }}</p>
+      </section>
+    </div>
+  `,
   styles: [`
     :host {
       display: block;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .inventors, .people, .comments {
+      flex-basis: 25%;
+
+      padding: 1rem;
+      ul {
+        padding: 0.75rem;
+
+        li {
+          margin: 0.5rem;
+        }
+      }
     }
   `]
 })
@@ -27,6 +83,16 @@ export class AppComponent {
     { first: 'Lise', last: 'Meitner', year: 1878, passed: 1968 },
     { first: 'Hanna', last: 'Hammarström', year: 1829, passed: 1909 }
   ];
+
+  inventors$ = from(this.inventors).pipe(shareReplay(this.inventors.length));
+  inventorArray$ = this.inventors$.pipe(toArray());
+  ordered$ = this.inventors$.pipe(sort((a, b) => a.year > b.year ? 1 : -1));
+  oldest$ = this.inventors$.pipe(sort((a, b) => { 
+    const lastInventor = a.passed - a.year;
+    const nextInventor = b.passed - b.year;
+    return lastInventor > nextInventor ? -1 : 1;
+  }));
+  totalYears$ = this.inventors$.pipe(sum((acc: number, y) => acc + (y.passed - y.year), 0));
 
   people = [
     'Bernhard, Sandra', 'Bethea, Erin', 'Becker, Carl', 'Bentsen, Lloyd', 'Beckett, Samuel', 'Blake, William', 'Berger, Ric', 'Beddoes, Mick', 'Beethoven, Ludwig',
