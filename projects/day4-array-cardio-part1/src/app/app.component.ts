@@ -131,7 +131,7 @@ export class AppComponent {
     if (!obj[item]) {
       obj[item] = 0;
     }
-    obj[item]++;
+    obj[item] = obj[item] + 1;
     return obj;
   }, {} as Record<string, number>));
 
