@@ -10,26 +10,18 @@ import { sum } from './custom-operators/sum.operator';
     <div class="container">
       <section class="inventors">
         <ng-container 
-          *ngTemplateOutlet="inventors; context: { title: 'Inventors', list: inventorArray$ | async }">
+          *ngTemplateOutlet="inventors; context: { $implicit: 'Inventors', list: inventorArray$ | async }">
         </ng-container>
       </section>
       <section class="inventors">
-        <h2>Ordered Inventors</h2>
-        <ul *ngIf="ordered$ | async as inventorArray">
-          <li *ngFor="let inventory of inventorArray">
-            Name: {{ inventory.first }} {{ inventory.last }}<br />
-            {{ inventory.year }} - {{ inventory.passed }}, Age: {{ inventory.passed - inventory.year }}
-          </li>
-        </ul>
+        <ng-container 
+          *ngTemplateOutlet="inventors; context: { $implicit: 'Ordered Inventors', list: ordered$ | async }">
+        </ng-container>
       </section>
       <section class="inventors">
-        <h2>Oldest Inventors</h2>
-        <ul *ngIf="oldest$ | async as inventorArray">
-          <li *ngFor="let inventory of inventorArray">
-            Name: {{ inventory.first }} {{ inventory.last }}<br />
-            {{ inventory.year }} - {{ inventory.passed }}, Age: {{ inventory.passed - inventory.year }}
-          </li>
-        </ul>
+        <ng-container 
+          *ngTemplateOutlet="inventors; context: { $implicit: 'Oldest Inventors', list: oldest$ | async }">
+        </ng-container>
       </section>
       <section class="inventors">
         <h2>Total Years</h2>
@@ -56,10 +48,10 @@ import { sum } from './custom-operators/sum.operator';
         </ul>
       </section>
     </div>
-    <ng-template #inventors let-title="title" let-list="list">
-      <h2>Ng-template, {{ title }}</h2>
+    <ng-template #inventors let-title let-list="list">
+      <h2>{{ title }}</h2>
         <ul>
-          <li *ngFor="let inventory of list">
+          <li *ngFor="let inventory of list; trackby: inventoryTrackBy">
             Name: {{ inventory.first }} {{ inventory.last }}<br />
             {{ inventory.year }} - {{ inventory.passed }}, Age: {{ inventory.passed - inventory.year }}
           </li>
@@ -146,5 +138,9 @@ export class AppComponent {
 
   constructor(titleService: Title) {
     titleService.setTitle(this.title);
+  }
+
+  inventoryTrackBy(index: number, item: { first: string; last: string }) {
+    return `${index}${item.first}${item.last}`;
   }
 }
