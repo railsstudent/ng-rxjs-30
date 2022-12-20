@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { from, shareReplay, toArray } from 'rxjs';
+import { from, shareReplay, toArray, reduce } from 'rxjs';
 import { sort } from './custom-operators/sort.operator';
 import { sum } from './custom-operators/sum.operator';
 
@@ -40,6 +40,26 @@ import { sum } from './custom-operators/sum.operator';
         <h2>Total Years</h2>
         <p>{{ totalYears$ | async }}</p>
       </section>
+      <section class="people">
+        <h2>People</h2>
+        <ul *ngIf="peopleArray$ | async as peopleArray">
+          <li *ngFor="let person of peopleArray">{{ person }}</li>
+        </ul>
+      </section>
+      <section class="people">
+        <h2>People (Ordered by last name)</h2>
+        <ul *ngIf="alpha$ | async as peopleArray">
+          <li *ngFor="let person of peopleArray">{{ person }}</li>
+        </ul>
+      </section>
+      <section class="transportation">
+        <h2>Transportation</h2>
+        <ul *ngIf="transportation$ | async as transportation">
+          <li *ngFor="let item of transportation | keyvalue">
+            Object Key:{{item.key}} and Object Value:{{item.value}}
+          </li>
+        </ul>
+      </section>
     </div>
   `,
   styles: [`
@@ -52,7 +72,7 @@ import { sum } from './custom-operators/sum.operator';
       flex-wrap: wrap;
     }
 
-    .inventors, .people, .comments {
+    .inventors, .people, .transportation {
       flex-basis: 25%;
 
       padding: 1rem;
@@ -101,6 +121,24 @@ export class AppComponent {
     'Berne, Eric', 'Berra, Yogi', 'Berry, Wendell', 'Bevan, Aneurin', 'Ben-Gurion, David', 'Bevel, Ken', 'Biden, Joseph', 'Bennington, Chester', 'Bierce, Ambrose',
     'Billings, Josh', 'Birrell, Augustine', 'Blair, Tony', 'Beecher, Henry', 'Biondo, Frank'
   ];
+  people$ = from(this.people).pipe(shareReplay(this.people.length));
+  peopleArray$ = this.people$.pipe(toArray());
+  alpha$ = this.people$.pipe(sort((lastOne, nextOne) => {
+    const [aLast] = lastOne.split(', ');
+    const [bLast] = nextOne.split(', ');
+    return aLast > bLast ? 1 : -1;
+  }));
+
+  data$ = from(['car', 'car', 'truck', 'truck', 'bike', 'walk', 'car', 'van', 'bike', 'walk', 'car', 'van', 'car', 'truck', 'pogostick']);
+
+  transportation$ = this.data$.pipe(
+    reduce((obj, item) => {
+    if (!obj[item]) {
+      obj[item] = 0;
+    }
+    obj[item]++;
+    return obj;
+  }, {} as Record<string, number>));
 
   constructor(titleService: Title) {
     titleService.setTitle(this.title);
