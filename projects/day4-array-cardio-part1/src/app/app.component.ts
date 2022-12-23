@@ -20,6 +20,8 @@ import { sum } from './custom-operators/sum.operator';
       <section class="inventors">
         <h2>Total Years</h2>
         <p>{{ totalYears$ | async }}</p>
+        <h2>Total First Length</h2>
+        <p>{{ totalFirstLength$ | async }}</p>
       </section>
       <ng-container 
         *ngTemplateOutlet="people; context: { $implicit: 'People', list: peopleArray$ | async }">
@@ -108,6 +110,7 @@ export class AppComponent {
     return lastInventor > nextInventor ? -1 : 1;
   }));
   totalYears$ = this.inventors$.pipe(sum((acc: number, y) => acc + (y.passed - y.year), 0));
+  totalFirstLength$ = this.inventors$.pipe(sum((acc: number, y) => acc + y.first.length, 0));
 
   people = [
     'Bernhard, Sandra', 'Bethea, Erin', 'Becker, Carl', 'Bentsen, Lloyd', 'Beckett, Samuel', 'Blake, William', 'Berger, Ric', 'Beddoes, Mick', 'Beethoven, Ludwig',
