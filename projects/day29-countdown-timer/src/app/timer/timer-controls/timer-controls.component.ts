@@ -1,16 +1,17 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ElementRef, ViewChild } from '@angular/core';
+import { filter, fromEvent, map, merge } from 'rxjs';
 
 @Component({
   selector: 'app-timer-controls',
   template: `
   <div class="timer__controls">
-    <button data-time="20" class="timer__button">20 Secs</button>
-    <button data-time="300" class="timer__button">Work 5</button>
-    <button data-time="900" class="timer__button">Quick 15</button>
-    <button data-time="1200" class="timer__button">Snack 20</button>
-    <button data-time="3600" class="timer__button">Lunch Break</button>
-    <form name="customForm" id="custom">
-      <input type="text" name="minutes" placeholder="Enter Minutes">
+    <button class="timer__button" #timer1>20 Secs</button>
+    <button class="timer__button" #timer2>Work 5</button>
+    <button class="timer__button" #timer3>Quick 15</button>
+    <button class="timer__button" #timer4>Snack 20</button>
+    <button class="timer__button" #timer5>Lunch Break</button>
+    <form name="customForm" id="custom" #myForm>
+      <input type="text" name="minutes" placeholder="Enter Minutes" [(ngModel)]="customMinutes">
     </form>
   </div>
   `,
@@ -62,9 +63,44 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 })
 export class TimerControlsComponent implements OnInit {
 
-  constructor() { }
+  @ViewChild('timer1', { static: true, read: ElementRef })
+  timer1!: ElementRef<HTMLButtonElement>;
+
+  @ViewChild('timer2', { static: true, read: ElementRef })
+  timer2!: ElementRef<HTMLButtonElement>;
+
+  @ViewChild('timer3', { static: true, read: ElementRef })
+  timer3!: ElementRef<HTMLButtonElement>;
+
+  @ViewChild('timer4', { static: true, read: ElementRef })
+  timer4!: ElementRef<HTMLButtonElement>;
+
+  @ViewChild('timer5', { static: true, read: ElementRef })
+  timer5!: ElementRef<HTMLButtonElement>;
+
+  @ViewChild('myForm', { static: true, read: ElementRef })
+  myForm!: ElementRef<HTMLFormElement>;
+
+  customMinutes = '';
 
   ngOnInit(): void {
+    const timer1$ = this.createButtonObservable(this.timer1.nativeElement, 20);
+    const timer2$ = this.createButtonObservable(this.timer2.nativeElement, 300);
+    const timer3$ = this.createButtonObservable(this.timer3.nativeElement, 900);
+    const timer4$ = this.createButtonObservable(this.timer4.nativeElement, 1200);
+    const timer5$ = this.createButtonObservable(this.timer5.nativeElement, 3600);
+    const myForm$ = fromEvent(this.myForm.nativeElement, 'submit')
+      .pipe(
+        filter(() => !!this.customMinutes),
+        map(() => parseFloat(this.customMinutes)),
+        map((customMinutes) => Math.floor(customMinutes * 60))
+      );
+
+    merge(timer1$, timer2$, timer3$, timer4$, timer5$, myForm$)
+      .subscribe(value => console.log(`${value} seconds`));
   }
 
+  createButtonObservable(nativeElement: HTMLButtonElement, seconds: number) {
+    return fromEvent(nativeElement, 'click').pipe(map(() => seconds))
+  }
 }
