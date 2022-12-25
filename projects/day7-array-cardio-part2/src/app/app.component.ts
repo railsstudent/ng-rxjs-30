@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { every, find, findIndex, from, map, shareReplay, tap, toArray } from 'rxjs';
+import { every, filter, find, findIndex, from, map, shareReplay, tap, toArray } from 'rxjs';
 import { some } from './custom-operators/some.operator';
+import { Comment } from './interfaces/comment.interface';
 import { Person, PersonNoAge } from './interfaces/person.interface';
 
 @Component({
@@ -15,6 +16,12 @@ import { Person, PersonNoAge } from './interfaces/person.interface';
         </ul>
         <p>Is Adult (at least one person is 19 or older)? {{ isAdult$ | async }}</p>
         <p>All Adults (everyone is 19 or older)? {{ allAdults$ | async }}</p>
+      </section>
+      <section class="people">
+        <h1>People</h1>
+        <ul *ngIf="adults$ | async as adults">
+          <li *ngFor="let p of adults">Name: {{ p.name }}<br/> Year: {{ p.year }}<br/> Age: {{ p.age }}</li>
+        </ul>
       </section>
       <section class="comments">
         <h1>Comments</h1>
@@ -61,6 +68,8 @@ export class AppComponent {
 
   persons = [
     { name: 'Wes', year: 1988 },
+    { name: 'Mary', year: 2006 },
+    { name: 'George', year: 2009 },
     { name: 'Kait', year: 1986 },
     { name: 'Irv', year: 1970 },
     { name: 'Lux', year: 2015 }
@@ -69,13 +78,18 @@ export class AppComponent {
   people$ = from(this.persons).pipe(
     tap((person) => console.log('people$', person)),
     map((person) => this.calculateAge(person)),
-    shareReplay(this.persons.length));
+    shareReplay(this.persons.length),
+  );
 
   peopleArray$ = this.people$.pipe(toArray());
   isAdult$ = this.people$.pipe(some(person => this.isAnAdult(person)));
   allAdults$ = this.people$.pipe(every(person => this.isAnAdult(person)));
+  adults$ = this.people$.pipe(
+    filter(person => this.isAnAdult(person)),
+    toArray()
+  );
   
-   comments = [
+   comments: Comment[] = [
     { text: 'Love this!', id: 523423 },
     { text: 'Super good', id: 823423 },
     { text: 'You are the best', id: 2039842 },
