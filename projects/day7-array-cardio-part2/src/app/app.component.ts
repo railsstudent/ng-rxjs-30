@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { every, find, findIndex, from, map, shareReplay, tap, toArray } from 'rxjs';
 import { some } from './custom-operators/some.operator';
+import { Comment } from './interfaces/comment.interface';
 import { Person, PersonNoAge } from './interfaces/person.interface';
 
 @Component({
@@ -69,13 +70,14 @@ export class AppComponent {
   people$ = from(this.persons).pipe(
     tap((person) => console.log('people$', person)),
     map((person) => this.calculateAge(person)),
-    shareReplay(this.persons.length));
+    shareReplay(this.persons.length),
+  );
 
   peopleArray$ = this.people$.pipe(toArray());
   isAdult$ = this.people$.pipe(some(person => this.isAnAdult(person)));
   allAdults$ = this.people$.pipe(every(person => this.isAnAdult(person)));
   
-   comments = [
+   comments: Comment[] = [
     { text: 'Love this!', id: 523423 },
     { text: 'Super good', id: 823423 },
     { text: 'You are the best', id: 2039842 },
