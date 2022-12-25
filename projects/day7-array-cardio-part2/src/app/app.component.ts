@@ -18,7 +18,7 @@ import { Person, PersonNoAge } from './interfaces/person.interface';
         <p>All Adults (everyone is 19 or older)? {{ allAdults$ | async }}</p>
       </section>
       <section class="people">
-        <h1>People</h1>
+        <h1>Adults</h1>
         <ul *ngIf="adults$ | async as adults">
           <li *ngFor="let p of adults">Name: {{ p.name }}<br/> Year: {{ p.year }}<br/> Age: {{ p.age }}</li>
         </ul>
