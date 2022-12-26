@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ElementRef, ViewChild } from '@angular/core';
-import { filter, fromEvent, map, merge } from 'rxjs';
+import { filter, fromEvent, map, merge, tap } from 'rxjs';
 
 @Component({
   selector: 'app-timer-controls',
@@ -10,7 +10,7 @@ import { filter, fromEvent, map, merge } from 'rxjs';
     <button class="timer__button" #timer3>Quick 15</button>
     <button class="timer__button" #timer4>Snack 20</button>
     <button class="timer__button" #timer5>Lunch Break</button>
-    <form name="customForm" id="custom" #myForm>
+    <form name="customForm" id="custom" #myForm="ngForm">
       <input type="text" name="minutes" placeholder="Enter Minutes" [(ngModel)]="customMinutes">
     </form>
   </div>
@@ -93,7 +93,8 @@ export class TimerControlsComponent implements OnInit {
       .pipe(
         filter(() => !!this.customMinutes),
         map(() => parseFloat(this.customMinutes)),
-        map((customMinutes) => Math.floor(customMinutes * 60))
+        map((customMinutes) => Math.floor(customMinutes * 60)),
+        tap(() => this.myForm.nativeElement.reset())
       );
 
     merge(timer1$, timer2$, timer3$, timer4$, timer5$, myForm$)
