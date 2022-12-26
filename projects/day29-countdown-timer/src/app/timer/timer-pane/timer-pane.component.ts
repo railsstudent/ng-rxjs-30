@@ -1,11 +1,14 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { combineLatest, map, shareReplay, switchMap, take, tap, timer } from 'rxjs';
+import { TimerService } from '../services/timer.service';
 
 @Component({
   selector: 'app-timer-pane',
   template: `
     <div class="display">
-      <h1 class="display__time-left">1</h1>
-      <p class="display__end-time">2</p>
+      <h1 class="display__time-left">{{ displayTimeLeft$ | async }}</h1>
+      <p class="display__end-time">{{ displayEndTime$ | async }}</p>
     </div>
   `,
   styles: [`
@@ -32,11 +35,41 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimerPaneComponent implements OnInit {
+export class TimerPaneComponent {
 
-  constructor() { }
+  oneSecond = 1000;
+  nowTo$ = this.timerService.seconds$.pipe(shareReplay(1));
+  
+  displayEndTime$ = this.nowTo$.pipe(map((seconds) => this.displayEndTime(Date.now(), seconds)));
 
-  ngOnInit(): void {
+  displayTimeLeft$ = combineLatest({ 
+    secondsLeft: this.nowTo$, 
+    countdown: this.nowTo$.pipe(
+      switchMap((seconds) => timer(0, this.oneSecond).pipe(take(seconds + 1)))
+    )
+  })
+    .pipe(
+      map(({ secondsLeft, countdown }) => secondsLeft - countdown),
+      map((secondsLeft) => this.displayTimeLeft(secondsLeft)),
+      tap((strTimeLeft) => this.titleService.setTitle(strTimeLeft))
+    );
+
+  constructor(private titleService: Title, private timerService: TimerService) { }
+
+  private displayTimeLeft(seconds: number) {
+    const minutes = Math.floor(seconds / 60);
+    const remainderSeconds = seconds % 60;
+    return `${minutes}:${remainderSeconds < 10 ? '0' : '' }${remainderSeconds}`;
   }
 
+  private displayEndTime(now: number, seconds: number): string {
+    const timestamp = now + seconds * this.oneSecond;
+
+    const end = new Date(timestamp);
+    const hour = end.getHours();
+    const amPm = hour >= 12 ? 'PM': 'AM';
+    const adjustedHour = hour > 12 ? hour - 12 : hour;
+    const minutes = end.getMinutes();
+    return `Be Back At ${adjustedHour}:${minutes < 10 ? '0' : ''}${minutes} ${amPm}`;
+  }
 }
