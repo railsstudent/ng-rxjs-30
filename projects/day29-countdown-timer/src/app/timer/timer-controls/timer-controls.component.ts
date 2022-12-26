@@ -1,5 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy, ElementRef, ViewChild } from '@angular/core';
-import { filter, fromEvent, map, merge, tap } from 'rxjs';
+import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subscription, filter, fromEvent, map, merge, tap } from 'rxjs';
+import { TimerService } from '../services/timer.service';
 
 @Component({
   selector: 'app-timer-controls',
@@ -61,7 +62,7 @@ import { filter, fromEvent, map, merge, tap } from 'rxjs';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimerControlsComponent implements OnInit {
+export class TimerControlsComponent implements OnInit, OnDestroy {
 
   @ViewChild('timer1', { static: true, read: ElementRef })
   timer1!: ElementRef<HTMLButtonElement>;
@@ -82,6 +83,9 @@ export class TimerControlsComponent implements OnInit {
   myForm!: ElementRef<HTMLFormElement>;
 
   customMinutes = '';
+  subscriptions = new Subscription();
+
+  constructor(private timerService: TimerService) {}
 
   ngOnInit(): void {
     const timer1$ = this.createButtonObservable(this.timer1.nativeElement, 20);
@@ -97,11 +101,22 @@ export class TimerControlsComponent implements OnInit {
         tap(() => this.myForm.nativeElement.reset())
       );
 
-    merge(timer1$, timer2$, timer3$, timer4$, timer5$, myForm$)
-      .subscribe(value => console.log(`${value} seconds`));
+    this.subscriptions.add(
+      merge(timer1$, timer2$, timer3$, timer4$, timer5$, myForm$)
+        .subscribe((seconds) => {
+            this.timerService.updateSeconds(seconds);
+            console.log(`${seconds} seconds`);
+          })
+    );
   }
 
   createButtonObservable(nativeElement: HTMLButtonElement, seconds: number) {
     return fromEvent(nativeElement, 'click').pipe(map(() => seconds))
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscriptions) {
+      this.subscriptions.unsubscribe();
+    }
   }
 }
