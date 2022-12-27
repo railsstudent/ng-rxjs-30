@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
-  template: '<div>Wrack a mole</div>',
+  template: '<app-mole></app-mole>',
   styles: [`
     :host {
       display: block;
