@@ -11,7 +11,7 @@ import { Title } from '@angular/platform-browser';
   `]
 })
 export class AppComponent {
-  title = 'Day 29 Coundown Timer';
+  title = 'Day 29 Countdown Timer';
 
   constructor(titleService: Title) {
     titleService.setTitle(this.title);
