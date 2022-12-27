@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { combineLatest, map, shareReplay, switchMap, take, tap, timer } from 'rxjs';
+import { map, shareReplay, switchMap, take, tap, timer, withLatestFrom } from 'rxjs';
 import { TimerService } from '../services/timer.service';
 
 @Component({
@@ -42,14 +42,10 @@ export class TimerPaneComponent {
   
   displayEndTime$ = this.nowTo$.pipe(map((seconds) => this.displayEndTime(Date.now(), seconds)));
 
-  displayTimeLeft$ = combineLatest({ 
-    secondsLeft: this.nowTo$, 
-    countdown: this.nowTo$.pipe(
-      switchMap((seconds) => timer(0, this.oneSecond).pipe(take(seconds + 1)))
-    )
-  })
+  displayTimeLeft$ = this.nowTo$.pipe(switchMap((seconds) => timer(0, this.oneSecond).pipe(take(seconds + 1))))
     .pipe(
-      map(({ secondsLeft, countdown }) => secondsLeft - countdown),
+      withLatestFrom(this.nowTo$),
+      map(([countdown, secondsLeft]) => secondsLeft - countdown),
       map((secondsLeft) => this.displayTimeLeft(secondsLeft)),
       tap((strTimeLeft) => this.titleService.setTitle(strTimeLeft))
     );
