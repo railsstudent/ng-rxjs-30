@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {  map, Observable, timer } from 'rxjs';
 import { HandTransformations } from './clock.interface';
 
@@ -16,26 +16,20 @@ import { HandTransformations } from './clock.interface';
   styleUrls: ['./clock.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ClockComponent implements OnInit {
-  clockHandsTransform$!: Observable<HandTransformations>;
-  
-  ngOnInit(): void {
-    const oneSecond = 1000;
+export class ClockComponent {
+  readonly oneSecond = 1000;
 
-    const currentTime$ = timer(0, oneSecond)
-      .pipe(map(() => new Date()));
-
-    const timeParts$ = currentTime$
+  clockHandsTransform$: Observable<HandTransformations> = 
+    timer(0, this.oneSecond)
       .pipe(
-        map(time => ({ 
-          seconds: time.getSeconds(),
-          minutes: time.getMinutes(),
-          hours: time.getHours()
+        map(() => { 
+          const time = new Date();
+          return { 
+            seconds: time.getSeconds(),
+            minutes: time.getMinutes(),
+            hours: time.getHours()
+          }
         }),
-      ));
-
-    this.clockHandsTransform$ = timeParts$
-      .pipe(
         map(({ seconds, minutes, hours }) => { 
           const secondsDegrees = ((seconds / 60) * 360) + 90;
           const minsDegrees = ((minutes / 60) * 360) + ((seconds/60)*6) + 90;
@@ -48,5 +42,4 @@ export class ClockComponent implements OnInit {
           };
         }),
       );
-  }
 }
