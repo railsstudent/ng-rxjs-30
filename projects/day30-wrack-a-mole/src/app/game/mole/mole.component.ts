@@ -1,7 +1,8 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription, concatMap, filter, fromEvent, merge, repeat, scan, startWith, takeWhile, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, concatMap, filter, fromEvent, map, merge, repeat, scan, startWith, takeWhile, tap } from 'rxjs';
 import { peep } from '../custom-operators/peep.operator';
+import { SCORE_ACTION } from './mole.enum';
 
 @Component({
   selector: 'app-mole',
@@ -80,16 +81,15 @@ export class MoleComponent implements OnInit, OnDestroy {
   constructor(@Inject(APP_BASE_HREF) private baseHref: string) { }
 
   ngOnInit(): void {
-    const mole1Clicked$ = this.createMoleClickObservable(this.mole1.nativeElement);
-    const mole2Clicked$ = this.createMoleClickObservable(this.mole2.nativeElement);
-    const mole3Clicked$ = this.createMoleClickObservable(this.mole3.nativeElement);
-    const mole4Clicked$ = this.createMoleClickObservable(this.mole4.nativeElement);
-    const mole5Clicked$ = this.createMoleClickObservable(this.mole5.nativeElement);
-    const mole6Clicked$ = this.createMoleClickObservable(this.mole6.nativeElement);
+    const molesClickedArray = [this.mole1, this.mole2, this.mole3, this.mole4, this.mole5, this.mole6]
+      .map(mole => this.createMoleClickedObservable(mole));
 
-    this.score$ = merge(mole1Clicked$, mole2Clicked$, mole3Clicked$, mole4Clicked$, mole5Clicked$, mole6Clicked$)
+    const startButtonClicked$ = fromEvent(this.startButton.nativeElement, 'click')
+      .pipe(map(() => SCORE_ACTION.RESET));
+
+    this.score$ = merge(...molesClickedArray, startButtonClicked$)
       .pipe(
-        scan((score) => score + 1, 0),
+        scan((score, action) => action === SCORE_ACTION.RESET ? 0 : score + 1, 0),
         startWith(0),
       );
 
@@ -99,15 +99,10 @@ export class MoleComponent implements OnInit, OnDestroy {
         .pipe(
           peep(holes, this.lastHoleUpdated),
           repeat(),
-          takeWhile(() => {
-            const tenSeconds = 10000;
-            const currentTime = Date.now();
-            const gameEndTime = this.startGameTimestamp.getValue() + tenSeconds;
-            return currentTime <= gameEndTime;
-          }),
+          takeWhile(() => this.isGameRunning),
         )
 
-    const startGame = fromEvent(this.startButton.nativeElement, 'click')
+    const startGame = startButtonClicked$
       .pipe(
         tap(() => {
           this.startGameTimestamp.next(Date.now());
@@ -128,7 +123,15 @@ export class MoleComponent implements OnInit, OnDestroy {
     return this.buildImage('dirt.svg');
   }
 
-  private createMoleClickObservable(nativeElement: HTMLDivElement): Observable<Event> {
+  private get isGameRunning(): boolean {
+    const tenSeconds = 10000;
+    const currentTime = Date.now();
+    const gameEndTime = this.startGameTimestamp.getValue() + tenSeconds;
+    return currentTime <= gameEndTime;
+  }
+
+  private createMoleClickedObservable(mole: ElementRef<HTMLDivElement>): Observable<SCORE_ACTION> {
+    const nativeElement = mole.nativeElement;
     return fromEvent(nativeElement, 'click')
       .pipe(
         filter(event => event.isTrusted),
@@ -136,7 +139,8 @@ export class MoleComponent implements OnInit, OnDestroy {
           if (nativeElement.parentElement) {
             nativeElement.parentElement.classList.remove('up');
           }
-        })
+        }),
+        map(() => SCORE_ACTION.ADD)
       );
   }
 
