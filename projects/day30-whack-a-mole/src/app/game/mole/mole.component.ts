@@ -1,6 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription, concatMap, delay, filter, fromEvent, map, merge, scan, shareReplay, startWith, takeUntil, tap, timer } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, concatMap, delay, filter, fromEvent, map, merge, scan, shareReplay, startWith, take, takeUntil, tap, timer } from 'rxjs';
 import { peep, trackGameTime } from '../custom-operators';
 import { SCORE_ACTION } from './mole.enum';
 
@@ -10,6 +10,9 @@ import { SCORE_ACTION } from './mole.enum';
     <h1>Whack-a-mole! <span class="score">{{ score$ | async }}</span></h1>
     <button #start class="start">Start!</button>
     <span class="duration">Time remained: {{ timeLeft$ | async }}</span>
+    <ng-container *ngIf="delayGameMsg$ | async as delayGameMsg">
+      <span class="message">{{ delayGameMsg | whackAMoletMessage }}</span>
+    </ng-container>
     <div class="game">
       <div class="hole hole1" [style]="'--hole-image:' + holeSrc" #hole1>
         <div class="mole" [style]="'--mole-image:' + moleSrc" #mole1></div>
@@ -76,6 +79,7 @@ export class MoleComponent implements OnInit, OnDestroy {
 
   score$!: Observable<number>;
   timeLeft$!: Observable<string>;
+  delayGameMsg$!: Observable<number>
   subscription = new Subscription();
   lastHoleUpdated = new BehaviorSubject<number>(-1);
 
@@ -103,7 +107,6 @@ export class MoleComponent implements OnInit, OnDestroy {
           .pipe(
             take(delayTime + 1),
             map((value) => delayTime - value),
-            map((seconds) => seconds > 0 ? `Moles will appear in ${seconds} seconds` : ''),
           )
       }),
     );
@@ -124,7 +127,7 @@ export class MoleComponent implements OnInit, OnDestroy {
     const gameExpired$ = timer(gameDuration * 1000);
     const gameLoop$ = this.lastHoleUpdated
       .pipe(
-        peep(holes, 250, 1000),
+        peep(holes, 350, 1000),
         takeUntil(gameExpired$)
       );
 

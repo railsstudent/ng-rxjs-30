@@ -1979,7 +1979,7 @@
         }
       }
     },
-    "day30-wrack-a-mole": {
+    "day30-whack-a-mole": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -1989,25 +1989,25 @@
           "strict": true
         }
       },
-      "root": "projects/day30-wrack-a-mole",
-      "sourceRoot": "projects/day30-wrack-a-mole/src",
+      "root": "projects/day30-whack-a-mole",
+      "sourceRoot": "projects/day30-whack-a-mole/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/day30-wrack-a-mole",
-            "index": "projects/day30-wrack-a-mole/src/index.html",
-            "main": "projects/day30-wrack-a-mole/src/main.ts",
-            "polyfills": "projects/day30-wrack-a-mole/src/polyfills.ts",
-            "tsConfig": "projects/day30-wrack-a-mole/tsconfig.app.json",
+            "outputPath": "dist/day30-whack-a-mole",
+            "index": "projects/day30-whack-a-mole/src/index.html",
+            "main": "projects/day30-whack-a-mole/src/main.ts",
+            "polyfills": "projects/day30-whack-a-mole/src/polyfills.ts",
+            "tsConfig": "projects/day30-whack-a-mole/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "projects/day30-wrack-a-mole/src/favicon.ico",
-              "projects/day30-wrack-a-mole/src/assets"
+              "projects/day30-whack-a-mole/src/favicon.ico",
+              "projects/day30-whack-a-mole/src/assets"
             ],
             "styles": [
-              "projects/day30-wrack-a-mole/src/styles.scss"
+              "projects/day30-whack-a-mole/src/styles.scss"
             ],
             "scripts": []
           },
@@ -2027,12 +2027,12 @@
               ],
               "fileReplacements": [
                 {
-                  "replace": "projects/day30-wrack-a-mole/src/environments/environment.ts",
-                  "with": "projects/day30-wrack-a-mole/src/environments/environment.prod.ts"
+                  "replace": "projects/day30-whack-a-mole/src/environments/environment.ts",
+                  "with": "projects/day30-whack-a-mole/src/environments/environment.prod.ts"
                 }
               ],
               "outputHashing": "all",
-              "baseHref": "https://railsstudent.github.io/ng-rxjs-30/day30-wrack-a-mole/"
+              "baseHref": "https://railsstudent.github.io/ng-rxjs-30/day30-whack-a-mole/"
             },
             "development": {
               "buildOptimizer": false,
@@ -2049,10 +2049,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "day30-wrack-a-mole:build:production"
+              "browserTarget": "day30-whack-a-mole:build:production"
             },
             "development": {
-              "browserTarget": "day30-wrack-a-mole:build:development"
+              "browserTarget": "day30-whack-a-mole:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -2060,23 +2060,23 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "day30-wrack-a-mole:build"
+            "browserTarget": "day30-whack-a-mole:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/day30-wrack-a-mole/src/test.ts",
-            "polyfills": "projects/day30-wrack-a-mole/src/polyfills.ts",
-            "tsConfig": "projects/day30-wrack-a-mole/tsconfig.spec.json",
-            "karmaConfig": "projects/day30-wrack-a-mole/karma.conf.js",
+            "main": "projects/day30-whack-a-mole/src/test.ts",
+            "polyfills": "projects/day30-whack-a-mole/src/polyfills.ts",
+            "tsConfig": "projects/day30-whack-a-mole/tsconfig.spec.json",
+            "karmaConfig": "projects/day30-whack-a-mole/karma.conf.js",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "projects/day30-wrack-a-mole/src/favicon.ico",
-              "projects/day30-wrack-a-mole/src/assets"
+              "projects/day30-whack-a-mole/src/favicon.ico",
+              "projects/day30-whack-a-mole/src/assets"
             ],
             "styles": [
-              "projects/day30-wrack-a-mole/src/styles.scss"
+              "projects/day30-whack-a-mole/src/styles.scss"
             ],
             "scripts": []
           }
