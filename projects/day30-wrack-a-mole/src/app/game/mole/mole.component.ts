@@ -1,6 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription, concatMap, filter, fromEvent, map, merge, scan, shareReplay, startWith, takeUntil, tap, timer } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, concatMap, delay, filter, fromEvent, map, merge, scan, shareReplay, startWith, takeUntil, tap, timer } from 'rxjs';
 import { peep, trackGameTime } from '../custom-operators';
 import { SCORE_ACTION } from './mole.enum';
 
@@ -82,24 +82,44 @@ export class MoleComponent implements OnInit, OnDestroy {
   constructor(@Inject(APP_BASE_HREF) private baseHref: string) { }
 
   ngOnInit(): void {
-    const molesClickedArray = [this.mole1, this.mole2, this.mole3, this.mole4, this.mole5, this.mole6]
-      .map(mole => this.createMoleClickedObservable(mole));
-
+    const moles = [this.mole1, this.mole2, this.mole3, this.mole4, this.mole5, this.mole6];
+    const molesClickedArray$ = moles.map(mole => this.createMoleClickedObservable(mole));
     const startButtonClicked$ = fromEvent(this.startButton.nativeElement, 'click')
       .pipe(
         map(() => SCORE_ACTION.RESET),
         shareReplay(1)
       );
 
-    this.score$ = merge(...molesClickedArray, startButtonClicked$)
+    this.score$ = merge(...molesClickedArray$, startButtonClicked$)
       .pipe(
         scan((score, action) => action === SCORE_ACTION.RESET ? 0 : score + 1, 0),
         startWith(0),
       );
-    
-    const gameDuration = 10;
-    this.timeLeft$ = startButtonClicked$.pipe(trackGameTime(gameDuration));
 
+    const delayTime = 3;
+    this.delayGameMsg$ = startButtonClicked$.pipe(
+      concatMap(() => {
+        return timer(0, 1000)
+          .pipe(
+            take(delayTime + 1),
+            map((value) => delayTime - value),
+            map((seconds) => seconds > 0 ? `Moles will appear in ${seconds} seconds` : ''),
+          )
+      }),
+    );
+
+    const delayGameStart$ = startButtonClicked$.pipe(
+      delay(delayTime * 1000),
+      shareReplay(1)
+    );
+
+    const gameDuration = 10;
+    this.timeLeft$ = delayGameStart$.pipe(trackGameTime(gameDuration));
+
+    this.subscription.add(this.createGame(gameDuration, delayGameStart$));
+  }
+
+  private createGame(gameDuration: number, delayGameStart$: Observable<SCORE_ACTION>): Subscription {
     const holes = [this.hole1, this.hole2, this.hole3, this.hole4, this.hole5, this.hole6];
     const gameExpired$ = timer(gameDuration * 1000);
     const gameLoop$ = this.lastHoleUpdated
@@ -107,12 +127,8 @@ export class MoleComponent implements OnInit, OnDestroy {
         peep(holes, 250, 1000),
         takeUntil(gameExpired$)
       );
-  
-    const startGame = startButtonClicked$
-      .pipe(concatMap(() => gameLoop$))
-      .subscribe();
 
-    this.subscription.add(startGame);
+    return delayGameStart$.pipe(concatMap(() => gameLoop$)).subscribe();
   }
 
   get moleSrc(): string {
