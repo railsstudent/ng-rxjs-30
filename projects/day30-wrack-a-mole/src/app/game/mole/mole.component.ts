@@ -1,6 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription, concatMap, filter, fromEvent, map, merge, repeat, scan, startWith, takeWhile, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, concatMap, filter, fromEvent, map, merge, scan, startWith, take, takeWhile, tap, timer } from 'rxjs';
 import { peep } from '../custom-operators/peep.operator';
 import { SCORE_ACTION } from './mole.enum';
 
@@ -9,6 +9,7 @@ import { SCORE_ACTION } from './mole.enum';
   template: `
     <h1>Whack-a-mole! <span class="score">{{ score$ | async }}</span></h1>
     <button #start class="start">Start!</button>
+    <span class="duration">Time remained: {{ timeLeft$ | async }}</span>
     <div class="game">
       <div class="hole hole1" [style]="'--hole-image:' + holeSrc" #hole1>
         <div class="mole" [style]="'--mole-image:' + moleSrc" #mole1></div>
@@ -74,6 +75,7 @@ export class MoleComponent implements OnInit, OnDestroy {
   mole6!: ElementRef<HTMLDivElement>;
 
   score$!: Observable<number>;
+  timeLeft$!: Observable<string>;
   subscription = new Subscription();
   lastHoleUpdated = new BehaviorSubject<number>(-1);
   startGameTimestamp = new BehaviorSubject(Date.now());
@@ -98,9 +100,19 @@ export class MoleComponent implements OnInit, OnDestroy {
     const gameLoop$ = this.lastHoleUpdated
         .pipe(
           peep(holes, this.lastHoleUpdated),
-          repeat(),
           takeWhile(() => this.isGameRunning),
         )
+
+    this.timeLeft$ = startButtonClicked$
+      .pipe(
+        concatMap(() => timer(0, 1000).pipe(
+          take(10),
+          map(() => 1),
+          scan((acc, value) => acc - value, 10),
+          map((seconds) => `${seconds} seconds`)
+        )),
+        startWith('10 seconds'),
+      );
 
     const startGame = startButtonClicked$
       .pipe(

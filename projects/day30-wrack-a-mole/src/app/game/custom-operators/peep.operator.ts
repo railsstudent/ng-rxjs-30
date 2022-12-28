@@ -8,12 +8,12 @@ function randomTime(min: number, max: number): number {
 }
 
 function randomHole(holes: Holes, lastHole: number): number {
-    console.log('In randomHole', 'lastHole', lastHole);
+    // console.log('In randomHole', 'lastHole', lastHole);
 
     const idx = Math.floor(Math.random() * holes.length);
 
     if (idx === lastHole) {
-      console.log('Ah nah thats the same one bud');
+    //   console.log('Ah nah thats the same one bud');
       return randomHole(holes, lastHole);
     }
 
