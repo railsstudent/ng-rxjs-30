@@ -1,54 +1,47 @@
-import { ElementRef, QueryList } from '@angular/core';
-import { Observable, concatMap, map, repeat, takeUntil, tap, timer } from 'rxjs';
+import { ElementRef } from '@angular/core';
+import { BehaviorSubject, Observable, concatMap, map, tap, timer } from 'rxjs';
 
-type Holes = QueryList<ElementRef<HTMLDivElement>>;
+type Holes = ElementRef<HTMLDivElement>[];
 
 function randomTime(min: number, max: number): number {
     return Math.round(Math.random() * (max - min) + min);
 }
 
-function randomHole(holes: Holes, lastHole: HTMLDivElement | undefined): HTMLDivElement {
+function randomHole(holes: Holes, lastHole: number): number {
+    console.log('In randomHole', 'lastHole', lastHole);
+
     const idx = Math.floor(Math.random() * holes.length);
-    const hole = holes.get(idx);
 
-    if (!hole) {
-      console.log('Ah nah the hole is undefined');
-      return randomHole(holes, lastHole);
-    }
-
-    if (lastHole && hole.nativeElement === lastHole) {
+    if (idx === lastHole) {
       console.log('Ah nah thats the same one bud');
       return randomHole(holes, lastHole);
     }
 
-    return hole.nativeElement;
+    return idx;
 }
 
-export function peep<T>(holes: Holes, lastHole: HTMLDivElement | undefined): (source: Observable<T>) => Observable<HTMLDivElement> {
-    // const tenSeconds = 10000;
-    // const gameExpires$ = timer(tenSeconds);
-    
+export function peep<T>(holes: Holes, lastHole: BehaviorSubject<number>): (source: Observable<T>) => Observable<number> {
     return function(source: Observable<T>) {
         return source.pipe(
             map(() => {
                 const upTime = randomTime(500, 1000);
-                const hole = randomHole(holes, lastHole);
+                const holeIdx = randomHole(holes, lastHole.getValue());
 
                 return {
                     upTime,
-                    hole,
+                    holeIdx,
                 }
             }),
-            concatMap(({ upTime, hole }) => {
+            concatMap(({ upTime, holeIdx }) => {
+                lastHole.next(holeIdx);
+                const hole = holes[holeIdx].nativeElement;
                 hole.classList.add('up');
                 return timer(upTime)
                     .pipe(
                         tap(() => hole.classList.remove('up')),
-                        map(() => hole)
+                        map(() => holeIdx)
                     );  
             }),
-            // takeUntil(gameExpires$),
-            // repeat(),
         );
     }
 }

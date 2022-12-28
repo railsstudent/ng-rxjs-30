@@ -1,40 +1,58 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription, filter, fromEvent, merge, repeat, scan, startWith, takeWhile, tap, timer } from 'rxjs';
+import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { BehaviorSubject, Observable, Subscription, concatMap, filter, fromEvent, merge, repeat, scan, startWith, takeWhile, tap } from 'rxjs';
 import { peep } from '../custom-operators/peep.operator';
 
 @Component({
   selector: 'app-mole',
   template: `
     <h1>Whack-a-mole! <span class="score">{{ score$ | async }}</span></h1>
-    <button #start>Start!</button>
+    <button #start class="start">Start!</button>
     <div class="game">
-      <div class="hole hole1 up" [style]="'--hole-image:' + holeSrc" #hole1>
+      <div class="hole hole1" [style]="'--hole-image:' + holeSrc" #hole1>
         <div class="mole" [style]="'--mole-image:' + moleSrc" #mole1></div>
       </div>
-      <div class="hole hole2 up" [style]="'--hole-image:' + holeSrc" #hole2>
+      <div class="hole hole2" [style]="'--hole-image:' + holeSrc" #hole2>
         <div class="mole" [style]="'--mole-image:' + moleSrc" #mole2></div>
       </div>
-      <div class="hole hole3 up" [style]="'--hole-image:' + holeSrc" #hole3>
+      <div class="hole hole3" [style]="'--hole-image:' + holeSrc" #hole3>
         <div class="mole" [style]="'--mole-image:' + moleSrc" #mole3></div>
       </div>
-      <div class="hole hole4 up" [style]="'--hole-image:' + holeSrc" #hole4>
+      <div class="hole hole4" [style]="'--hole-image:' + holeSrc" #hole4>
         <div class="mole" [style]="'--mole-image:' + moleSrc" #mole4></div>
       </div>
-      <div class="hole hole5 up" [style]="'--hole-image:' + holeSrc" #hole5>
+      <div class="hole hole5" [style]="'--hole-image:' + holeSrc" #hole5>
         <div class="mole" [style]="'--mole-image:' + moleSrc" #mole5></div>
       </div>
-      <div class="hole hole6 up" [style]="'--hole-image:' + holeSrc" #hole6>
+      <div class="hole hole6" [style]="'--hole-image:' + holeSrc" #hole6>
         <div class="mole" [style]="'--mole-image:' + moleSrc" #mole6></div>
       </div>
     </div>`,
   styleUrls: ['mole.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MoleComponent implements OnInit, AfterViewInit, OnDestroy {
+export class MoleComponent implements OnInit, OnDestroy {
 
   @ViewChild('start', { static: true, read: ElementRef })
   startButton!: ElementRef<HTMLButtonElement>;
+
+  @ViewChild('hole1', { static: true, read: ElementRef })
+  hole1!: ElementRef<HTMLDivElement>;
+  
+  @ViewChild('hole2', { static: true, read: ElementRef })
+  hole2!: ElementRef<HTMLDivElement>;
+
+  @ViewChild('hole3', { static: true, read: ElementRef })
+  hole3!: ElementRef<HTMLDivElement>;
+  
+  @ViewChild('hole4', { static: true, read: ElementRef })
+  hole4!: ElementRef<HTMLDivElement>;
+  
+  @ViewChild('hole5', { static: true, read: ElementRef })
+  hole5!: ElementRef<HTMLDivElement>;
+  
+  @ViewChild('hole6', { static: true, read: ElementRef })
+  hole6!: ElementRef<HTMLDivElement>;
 
   @ViewChild('mole1', { static: true, read: ElementRef })
   mole1!: ElementRef<HTMLDivElement>;
@@ -54,12 +72,9 @@ export class MoleComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('mole6', { static: true, read: ElementRef })
   mole6!: ElementRef<HTMLDivElement>;
 
-  @ViewChildren('holes', { read: ElementRef })
-  holes!: QueryList<ElementRef<HTMLDivElement>>;
-
   score$!: Observable<number>;
   subscription = new Subscription();
-  lastHoleUpdated = new BehaviorSubject<HTMLDivElement | undefined>(undefined);
+  lastHoleUpdated = new BehaviorSubject<number>(-1);
   startGameTimestamp = new BehaviorSubject(Date.now());
 
   constructor(@Inject(APP_BASE_HREF) private baseHref: string) { }
@@ -77,6 +92,32 @@ export class MoleComponent implements OnInit, AfterViewInit, OnDestroy {
         scan((score) => score + 1, 0),
         startWith(0),
       );
+
+    const holes = [this.hole1, this.hole2, this.hole3, this.hole4, this.hole5, this.hole6];
+
+    const gameLoop$ = this.lastHoleUpdated
+        .pipe(
+          peep(holes, this.lastHoleUpdated),
+          repeat(),
+          takeWhile(() => {
+            const tenSeconds = 10000;
+            const currentTime = Date.now();
+            const gameEndTime = this.startGameTimestamp.getValue() + tenSeconds;
+            return currentTime <= gameEndTime;
+          }),
+        )
+
+    const startGame = fromEvent(this.startButton.nativeElement, 'click')
+      .pipe(
+        tap(() => {
+          this.startGameTimestamp.next(Date.now());
+          console.log('start game now', new Date(this.startGameTimestamp.getValue()).toISOString())
+        }),
+        concatMap(() => gameLoop$),
+      )
+      .subscribe();
+
+    this.subscription.add(startGame);
   }
 
   get moleSrc(): string {
@@ -103,40 +144,6 @@ export class MoleComponent implements OnInit, AfterViewInit, OnDestroy {
     const isEndWithSlash = this.baseHref.endsWith('/');
     const imagePath = `${this.baseHref}${isEndWithSlash ? '' : '/'}assets/images/${image}`;
     return `url('${imagePath}')`
-  }
-
-  ngAfterViewInit(): void {
-    const tenSeconds = 10000;
-    // const gameExpires$ = timer(tenSeconds);
-    const gameLoop$ = timer(0)
-        .pipe(
-          peep(this.holes, this.lastHoleUpdated.getValue()),
-          tap((hole) => this.lastHoleUpdated.next(hole)),
-          takeWhile(() => {
-            const currentTime = Date.now();
-            const gameEndTime = this.startGameTimestamp.getValue() + tenSeconds;
-            console.log('currentTime', currentTime, 'gameEndTime', gameEndTime);
-            return currentTime <= gameEndTime;
-          }),
-          repeat()
-        )
-
-    const startGame = fromEvent(this.startButton.nativeElement, 'click')
-      .pipe(
-        tap(() => {
-          this.startGameTimestamp.next(Date.now());
-          console.log('start game now', new Date(this.startGameTimestamp.getValue()).toISOString())
-        }),
-        // peep(this.holes, this.lastHoleUpdated.getValue()),
-        // concatMap(() => gameLoop$),
-        // tap((hole) => { 
-        //   console.log('Update last hole');
-        //   this.lastHoleUpdated.next(hole);
-        // }),
-      )
-      .subscribe(() => console.log('start game end', new Date().toISOString()));
-
-    this.subscription.add(startGame);
   }
 
   ngOnDestroy(): void {
