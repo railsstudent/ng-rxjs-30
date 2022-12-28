@@ -1,7 +1,7 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription, concatMap, filter, fromEvent, map, merge, scan, startWith, take, takeWhile, tap, timer } from 'rxjs';
-import { peep } from '../custom-operators/peep.operator';
+import { BehaviorSubject, Observable, Subscription, concatMap, filter, fromEvent, map, merge, scan, shareReplay, startWith, takeUntil, tap, timer } from 'rxjs';
+import { peep, trackGameTime } from '../custom-operators';
 import { SCORE_ACTION } from './mole.enum';
 
 @Component({
@@ -78,7 +78,6 @@ export class MoleComponent implements OnInit, OnDestroy {
   timeLeft$!: Observable<string>;
   subscription = new Subscription();
   lastHoleUpdated = new BehaviorSubject<number>(-1);
-  startGameTimestamp = new BehaviorSubject(Date.now());
 
   constructor(@Inject(APP_BASE_HREF) private baseHref: string) { }
 
@@ -87,41 +86,30 @@ export class MoleComponent implements OnInit, OnDestroy {
       .map(mole => this.createMoleClickedObservable(mole));
 
     const startButtonClicked$ = fromEvent(this.startButton.nativeElement, 'click')
-      .pipe(map(() => SCORE_ACTION.RESET));
+      .pipe(
+        map(() => SCORE_ACTION.RESET),
+        shareReplay(1)
+      );
 
     this.score$ = merge(...molesClickedArray, startButtonClicked$)
       .pipe(
         scan((score, action) => action === SCORE_ACTION.RESET ? 0 : score + 1, 0),
         startWith(0),
       );
+    
+    const gameDuration = 10;
+    this.timeLeft$ = startButtonClicked$.pipe(trackGameTime(gameDuration));
 
     const holes = [this.hole1, this.hole2, this.hole3, this.hole4, this.hole5, this.hole6];
-
+    const gameExpired$ = timer(gameDuration * 1000);
     const gameLoop$ = this.lastHoleUpdated
-        .pipe(
-          peep(holes, this.lastHoleUpdated),
-          takeWhile(() => this.isGameRunning),
-        )
-
-    this.timeLeft$ = startButtonClicked$
       .pipe(
-        concatMap(() => timer(0, 1000).pipe(
-          take(10),
-          map(() => 1),
-          scan((acc, value) => acc - value, 10),
-          map((seconds) => `${seconds} seconds`)
-        )),
-        startWith('10 seconds'),
+        peep(holes, 250, 1000),
+        takeUntil(gameExpired$)
       );
-
+  
     const startGame = startButtonClicked$
-      .pipe(
-        tap(() => {
-          this.startGameTimestamp.next(Date.now());
-          console.log('start game now', new Date(this.startGameTimestamp.getValue()).toISOString())
-        }),
-        concatMap(() => gameLoop$),
-      )
+      .pipe(concatMap(() => gameLoop$))
       .subscribe();
 
     this.subscription.add(startGame);
@@ -133,13 +121,6 @@ export class MoleComponent implements OnInit, OnDestroy {
 
   get holeSrc(): string {
     return this.buildImage('dirt.svg');
-  }
-
-  private get isGameRunning(): boolean {
-    const tenSeconds = 10000;
-    const currentTime = Date.now();
-    const gameEndTime = this.startGameTimestamp.getValue() + tenSeconds;
-    return currentTime <= gameEndTime;
   }
 
   private createMoleClickedObservable(mole: ElementRef<HTMLDivElement>): Observable<SCORE_ACTION> {
