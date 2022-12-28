@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
-  template: '<app-timer></app-timer>',
+  template: '<app-mole></app-mole>',
   styles: [`
     :host {
       display: block;
@@ -11,7 +11,7 @@ import { Title } from '@angular/platform-browser';
   `]
 })
 export class AppComponent {
-  title = 'Day 29 Countdown Timer';
+  title = 'Day30 Wrack a mole';
 
   constructor(titleService: Title) {
     titleService.setTitle(this.title);

@@ -7,9 +7,7 @@ import { Subject } from 'rxjs';
 export class TimerService {
 
   private readonly secondsSub = new Subject<number>(); 
-  seconds$ = this.secondsSub.asObservable();
-
-  constructor() { }
+  readonly seconds$ = this.secondsSub.asObservable();
 
   updateSeconds(seconds: number) {
     this.secondsSub.next(seconds);

@@ -12,7 +12,6 @@ import { TimerModule } from './timer';
     BrowserModule,
     TimerModule
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
