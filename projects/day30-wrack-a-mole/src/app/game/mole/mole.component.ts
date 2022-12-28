@@ -1,6 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { Component, OnInit, ChangeDetectionStrategy, Inject, QueryList, ElementRef, ViewChildren, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
-import { Observable, Subscription, filter, fromEvent, merge, scan, startWith, takeUntil, tap, timer } from 'rxjs';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { BehaviorSubject, Observable, Subscription, filter, fromEvent, merge, scan, startWith, takeUntil, tap, timer } from 'rxjs';
 
 @Component({
   selector: 'app-mole',
@@ -8,8 +8,8 @@ import { Observable, Subscription, filter, fromEvent, merge, scan, startWith, ta
     <h1>Whack-a-mole! <span class="score">0</span></h1>
     <button #start>Start!</button>
     <div class="game">
-      <div *ngFor="let id of [1, 2, 3, 4, 5, 6]" class="hole hole{{id}}" [style]="'--hole-image:' + holeSrc">
-        <div class="mole" [style]="'--mole-image:' + moleSrc" #mole></div>
+      <div *ngFor="let id of [1, 2, 3, 4, 5, 6]" class="hole hole{{id}}" [style]="'--hole-image:' + holeSrc" #holes>
+        <div class="mole" [style]="'--mole-image:' + moleSrc" #moles></div>
       </div>
     </div>`,
   styleUrls: ['mole.component.scss'],
@@ -23,8 +23,12 @@ export class MoleComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren('moles', { read: ElementRef })
   moles!: QueryList<ElementRef<HTMLDivElement>>;
 
+  @ViewChildren('holes', { read: ElementRef })
+  holes!: QueryList<ElementRef<HTMLDivElement>>;
+
   score$!: Observable<number>;
   subscription = new Subscription();
+  lastHoleUpdated = new BehaviorSubject<HTMLDivElement | undefined>(undefined);
 
   constructor(@Inject(APP_BASE_HREF) private baseHref: string) { }
 
@@ -34,9 +38,10 @@ export class MoleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscription.add(
       fromEvent(this.startButton.nativeElement, 'click')
         .pipe(
+          tap(() => console.log('start game now', new Date().toISOString())),
           takeUntil(gameExpires$)
         )
-        .subscribe(() => console.log('start game'))
+        .subscribe(() => console.log('start game end', new Date().toISOString()))
     );
   }
 
@@ -55,6 +60,8 @@ export class MoleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    console.log('this.holes', this.holes);
+    console.log('this.moles', this.moles);
     const molesClicked$ = this.moles.map(({ nativeElement }) => 
       fromEvent(nativeElement, 'click')
         .pipe(
@@ -78,20 +85,26 @@ export class MoleComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+ 
+  randomTime(min: number, max: number): number {
+    return Math.round(Math.random() * (max - min) + min);
+  }
 
+  randomHole(): HTMLDivElement {
+    const idx = Math.floor(Math.random() * this.holes.length);
+    const lastHole = this.lastHoleUpdated.getValue();
+    const hole = this.holes.get(idx);
 
-  // randomTime(min: number, max: number): number {
-  //   return Math.round(Math.random() * (max - min) + min);
-  // }
+    if (!hole) {
+      console.log('Ah nah the hole is undefined');
+      return this.randomHole();
+    }
 
-  // randomHole(holes) {
-  //   const idx = Math.floor(Math.random() * holes.length);
-  //   const hole = holes[idx];
-  //   if (hole === lastHole) {
-  //     console.log('Ah nah thats the same one bud');
-  //     return this.randomHole(holes);
-  //   }
-  //   lastHole = hole;
-  //   return hole;
-  // }
+    if (lastHole && hole.nativeElement === lastHole) {
+      console.log('Ah nah thats the same one bud');
+      return this.randomHole();
+    }
+    this.lastHoleUpdated.next(hole.nativeElement);
+    return hole.nativeElement;
+  }
 }
