@@ -1,8 +1,8 @@
-import { AlertMessagePipe } from './alert-message.pipe';
+import { WhackAMoleMessagePipe } from './whack-a-mole-message.pipe';
 
 describe('AlertMessagePipe', () => {
   it('create an instance', () => {
-    const pipe = new AlertMessagePipe();
+    const pipe = new WhackAMoleMessagePipe();
     expect(pipe).toBeTruthy();
   });
 });
