@@ -102,14 +102,12 @@ export class MoleComponent implements OnInit, OnDestroy {
 
     const delayTime = 3;
     this.delayGameMsg$ = startButtonClicked$.pipe(
-      concatMap(() => {
-        return timer(0, 1000)
-          .pipe(
-            take(delayTime + 1),
-            map((value) => delayTime - value),
-          )
-      }),
-    );
+      concatMap(() => timer(0, 1000)
+        .pipe(
+          take(delayTime + 1),
+          map((value) => delayTime - value),
+        ))
+      );
 
     const delayGameStart$ = startButtonClicked$.pipe(
       delay(delayTime * 1000),
@@ -119,19 +117,15 @@ export class MoleComponent implements OnInit, OnDestroy {
     const gameDuration = 10;
     this.timeLeft$ = delayGameStart$.pipe(trackGameTime(gameDuration));
 
-    this.subscription.add(this.createGame(gameDuration, delayGameStart$));
-  }
-
-  private createGame(gameDuration: number, delayGameStart$: Observable<SCORE_ACTION>): Subscription {
-    const holes = [this.hole1, this.hole2, this.hole3, this.hole4, this.hole5, this.hole6];
-    const gameExpired$ = timer(gameDuration * 1000);
-    const gameLoop$ = this.lastHoleUpdated
+    const createGame = delayGameStart$.pipe(concatMap(() => this.lastHoleUpdated
       .pipe(
-        peep(holes, 350, 1000),
-        takeUntil(gameExpired$)
-      );
+        peep([this.hole1, this.hole2, this.hole3, this.hole4, this.hole5, this.hole6], 350, 1000),
+        takeUntil(timer(gameDuration * 1000))
+      )
+    ))
+    .subscribe();
 
-    return delayGameStart$.pipe(concatMap(() => gameLoop$)).subscribe();
+    this.subscription.add(createGame);
   }
 
   get moleSrc(): string {
