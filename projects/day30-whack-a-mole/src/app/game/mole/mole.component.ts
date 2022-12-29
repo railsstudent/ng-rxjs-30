@@ -1,7 +1,7 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription, concatMap, delay, filter, fromEvent, map, merge, scan, shareReplay, startWith, take, takeUntil, tap, timer } from 'rxjs';
-import { peep, trackGameTime } from '../custom-operators';
+import { peep, trackGameTime, whackAMole } from '../custom-operators';
 import { SCORE_ACTION } from './mole.enum';
 
 @Component({
@@ -9,7 +9,9 @@ import { SCORE_ACTION } from './mole.enum';
   template: `
     <h1>Whack-a-mole! <span class="score">{{ score$ | async }}</span></h1>
     <button #start class="start">Start!</button>
-    <span class="duration">Time remained: {{ timeLeft$ | async }}</span>
+    <ng-container *ngIf="{ timeLeft: timeLeft$ | async } as data">
+      <span class="duration">{{ data.timeLeft | remainingTime }}</span>
+    </ng-container>
     <ng-container *ngIf="delayGameMsg$ | async as delayGameMsg">
       <span class="message">{{ delayGameMsg | whackAMoletMessage }}</span>
     </ng-container>
@@ -78,7 +80,7 @@ export class MoleComponent implements OnInit, OnDestroy {
   mole6!: ElementRef<HTMLDivElement>;
 
   score$!: Observable<number>;
-  timeLeft$!: Observable<string>;
+  timeLeft$!: Observable<number>;
   delayGameMsg$!: Observable<number>
   subscription = new Subscription();
   lastHoleUpdated = new BehaviorSubject<number>(-1);
@@ -86,8 +88,7 @@ export class MoleComponent implements OnInit, OnDestroy {
   constructor(@Inject(APP_BASE_HREF) private baseHref: string) { }
 
   ngOnInit(): void {
-    const moles = [this.mole1, this.mole2, this.mole3, this.mole4, this.mole5, this.mole6];
-    const molesClickedArray$ = moles.map(mole => this.createMoleClickedObservable(mole));
+    const molesClickedArray$ = this.createMoleClickedObservables(this.mole1, this.mole2, this.mole3, this.mole4, this.mole5, this.mole6);
     const startButtonClicked$ = fromEvent(this.startButton.nativeElement, 'click')
       .pipe(
         map(() => SCORE_ACTION.RESET),
@@ -102,14 +103,12 @@ export class MoleComponent implements OnInit, OnDestroy {
 
     const delayTime = 3;
     this.delayGameMsg$ = startButtonClicked$.pipe(
-      concatMap(() => {
-        return timer(0, 1000)
-          .pipe(
-            take(delayTime + 1),
-            map((value) => delayTime - value),
-          )
-      }),
-    );
+      concatMap(() => timer(0, 1000)
+        .pipe(
+          take(delayTime + 1),
+          map((value) => delayTime - value),
+        ))
+      );
 
     const delayGameStart$ = startButtonClicked$.pipe(
       delay(delayTime * 1000),
@@ -119,19 +118,15 @@ export class MoleComponent implements OnInit, OnDestroy {
     const gameDuration = 10;
     this.timeLeft$ = delayGameStart$.pipe(trackGameTime(gameDuration));
 
-    this.subscription.add(this.createGame(gameDuration, delayGameStart$));
-  }
-
-  private createGame(gameDuration: number, delayGameStart$: Observable<SCORE_ACTION>): Subscription {
-    const holes = [this.hole1, this.hole2, this.hole3, this.hole4, this.hole5, this.hole6];
-    const gameExpired$ = timer(gameDuration * 1000);
-    const gameLoop$ = this.lastHoleUpdated
+    const createGame = delayGameStart$.pipe(concatMap(() => this.lastHoleUpdated
       .pipe(
-        peep(holes, 350, 1000),
-        takeUntil(gameExpired$)
-      );
+        peep([this.hole1, this.hole2, this.hole3, this.hole4, this.hole5, this.hole6], 350, 1000),
+        takeUntil(timer(gameDuration * 1000))
+      )
+    ))
+    .subscribe();
 
-    return delayGameStart$.pipe(concatMap(() => gameLoop$)).subscribe();
+    this.subscription.add(createGame);
   }
 
   get moleSrc(): string {
@@ -142,18 +137,8 @@ export class MoleComponent implements OnInit, OnDestroy {
     return this.buildImage('dirt.svg');
   }
 
-  private createMoleClickedObservable(mole: ElementRef<HTMLDivElement>): Observable<SCORE_ACTION> {
-    const nativeElement = mole.nativeElement;
-    return fromEvent(nativeElement, 'click')
-      .pipe(
-        filter(event => event.isTrusted),
-        tap(() => {
-          if (nativeElement.parentElement) {
-            nativeElement.parentElement.classList.remove('up');
-          }
-        }),
-        map(() => SCORE_ACTION.ADD)
-      );
+  private createMoleClickedObservables(...moles: ElementRef<HTMLDivElement>[]): Observable<SCORE_ACTION>[] {
+    return moles.map(({ nativeElement }) => fromEvent(nativeElement, 'click').pipe(whackAMole(nativeElement)));
   }
 
   private buildImage(image: string) {

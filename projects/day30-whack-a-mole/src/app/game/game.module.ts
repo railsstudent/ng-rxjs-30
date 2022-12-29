@@ -1,12 +1,13 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { MoleComponent } from './mole/mole.component';
-import { WhackAMoleMessagePipe } from './pipes/whack-a-mole-message.pipe';
+import { RemainingTimePipe, WhackAMoleMessagePipe } from './pipes';
 
 @NgModule({
   declarations: [
     MoleComponent,
-    WhackAMoleMessagePipe
+    WhackAMoleMessagePipe,
+    RemainingTimePipe
   ],
   imports: [
     CommonModule

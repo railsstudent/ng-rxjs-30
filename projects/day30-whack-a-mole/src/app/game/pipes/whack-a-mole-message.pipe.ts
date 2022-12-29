@@ -6,6 +6,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class WhackAMoleMessagePipe implements PipeTransform {
 
   transform(seconds: number): string {
-    return seconds > 0 ? `Whack a mole in ${seconds} seconds` : ''
+    return seconds > 0 ? `Whack a mole in ${seconds} seconds` : '';
   }
 }

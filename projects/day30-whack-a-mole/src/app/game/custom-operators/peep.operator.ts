@@ -30,11 +30,7 @@ export function peep<T extends number>(holes: ElementRef<HTMLDivElement>[], minU
                 }
                 const hole = holes[holeIdx].nativeElement;
                 hole.classList.add('up');
-                return timer(upTime)
-                    .pipe(
-                        tap(() => hole.classList.remove('up')),
-                        map(() => holeIdx)
-                    );  
+                return timer(upTime).pipe(tap(() => hole.classList.remove('up')))
             }),
         );
     }
