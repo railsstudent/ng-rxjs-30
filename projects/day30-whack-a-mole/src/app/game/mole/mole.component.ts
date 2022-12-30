@@ -116,7 +116,8 @@ export class MoleComponent implements OnInit, OnDestroy {
     );
 
     const gameDuration = 10;
-    this.timeLeft$ = delayGameStart$.pipe(trackGameTime(gameDuration));
+    const resetTime$ = startButtonClicked$.pipe(map(() => gameDuration));
+    this.timeLeft$ = merge(resetTime$, delayGameStart$.pipe(trackGameTime(gameDuration)));
 
     const createGame = delayGameStart$.pipe(concatMap(() => this.lastHoleUpdated
       .pipe(
