@@ -1,6 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription, concatMap, delay, filter, fromEvent, map, merge, scan, shareReplay, startWith, take, takeUntil, tap, timer } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, concatMap, delay, fromEvent, map, merge, scan, shareReplay, startWith, take, takeUntil, timer } from 'rxjs';
 import { peep, trackGameTime, whackAMole } from '../custom-operators';
 import { SCORE_ACTION } from './mole.enum';
 
