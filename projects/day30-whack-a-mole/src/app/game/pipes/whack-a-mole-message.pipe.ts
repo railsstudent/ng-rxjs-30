@@ -11,6 +11,6 @@ export class WhackAMoleMessagePipe implements PipeTransform {
     }
 
     const units = seconds > 1 ? 'seconds' : 'second'; 
-    return seconds > 0 ? `Whack a mole begins in ${seconds} ${units}` : '';
+    return seconds > 0 ? `Whack a mole will begin in ${seconds} ${units}` : '';
   }
 }
