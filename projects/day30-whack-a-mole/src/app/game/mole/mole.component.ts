@@ -12,8 +12,8 @@ import { SCORE_ACTION } from './mole.enum';
     <ng-container *ngIf="{ timeLeft: timeLeft$ | async } as data">
       <span class="duration">{{ data.timeLeft | remainingTime }}</span>
     </ng-container>
-    <ng-container *ngIf="delayGameMsg$ | async as delayGameMsg">
-      <span class="message">{{ delayGameMsg | whackAMoletMessage }}</span>
+    <ng-container *ngIf="{ delayGameMsg: delayGameMsg$ | async } as data">
+      <span class="message">{{ data.delayGameMsg | whackAMoleMessage }}</span>
     </ng-container>
     <div class="game">
       <div class="hole hole1" [style]="'--hole-image:' + holeSrc" #hole1>
