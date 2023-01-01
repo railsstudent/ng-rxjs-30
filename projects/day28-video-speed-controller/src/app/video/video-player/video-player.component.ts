@@ -72,10 +72,7 @@ export class VideoPlayerComponent implements OnInit {
   height$!: Observable<string>;
   playbackRate$!: Observable<string>;
 
-  constructor(@Inject(APP_BASE_HREF) private baseHref: string) {
-    console.log('basehref', this.baseHref);
-    console.log('videoSrc', this.videoSrc);
-  }
+  constructor(@Inject(APP_BASE_HREF) private baseHref: string) {}
 
   get videoSrc(): string {
     const isEndWithSlash = this.baseHref.endsWith('/');
