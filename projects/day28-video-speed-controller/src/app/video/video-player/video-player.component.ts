@@ -73,7 +73,6 @@ export class VideoPlayerComponent implements OnInit {
 
   ngOnInit(): void {
     const nativeElement = this.speed.nativeElement;
-    console.log(nativeElement.offsetHeight, nativeElement.offsetTop);
 
     const mouseMove$ = fromEvent(nativeElement, 'mousemove')
       .pipe(
