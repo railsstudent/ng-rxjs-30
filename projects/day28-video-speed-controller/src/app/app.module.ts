@@ -1,3 +1,4 @@
+import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -12,7 +13,13 @@ import { VideoModule } from './video/video.module'
     BrowserModule,
     VideoModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_BASE_HREF,
+      useFactory: (platformLocation: PlatformLocation) => platformLocation.getBaseHrefFromDOM(),
+      deps: [PlatformLocation]
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
