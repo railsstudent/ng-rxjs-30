@@ -72,11 +72,14 @@ export class VideoPlayerComponent implements OnInit {
   height$!: Observable<string>;
   playbackRate$!: Observable<string>;
 
-  constructor(@Inject(APP_BASE_HREF) private baseHref: string) {}
+  constructor(@Inject(APP_BASE_HREF) private baseHref: string) {
+    console.log('basehref', this.baseHref);
+    console.log('videoSrc', this.videoSrc);
+  }
 
   get videoSrc(): string {
     const isEndWithSlash = this.baseHref.endsWith('/');
-    return `${this.baseHref}${isEndWithSlash ? '' : '/'}assets/_VfE_html5.mp4`;
+    return `${this.baseHref}${isEndWithSlash ? '' : '/'}assets/video.mp4`;
   }
 
   ngOnInit(): void {
