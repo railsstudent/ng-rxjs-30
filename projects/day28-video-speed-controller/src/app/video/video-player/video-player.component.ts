@@ -1,23 +1,102 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { filter, fromEvent, map, Observable, shareReplay, startWith, tap } from 'rxjs';
 
 @Component({
   selector: 'app-video-player',
   template: `
     <div class="wrapper">
-      <video class="flex" width="765" height="430" src="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" loop controls></video>
-      <div class="speed">
-        <div class="speed-bar">1×</div>
+      <video class="flex" width="765" height="430" src="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" loop controls #video></video>
+      <div class="speed" #speed>
+        <div class="speed-bar" #speedBar [style.height]="height$ | async">{{ playbackRate$ | async }}</div>
       </div>
     </div>
   `,
-  styleUrls: ['./video-player.component.scss'],
+  styles: [`
+    :host {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #4C4C4C url('https://unsplash.it/1500/900?image=1021');
+      background-size: cover;
+      font-family: sans-serif;
+    }
+
+    .wrapper {
+      width: 850px;
+      display: flex;
+    }
+
+    video {
+      box-shadow: 0 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .speed {
+      background: #efefef;
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      margin: 10px;
+      border-radius: 50px;
+      box-shadow: 0 0 1px 3px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .speed-bar {
+      width: 100%;
+      background: linear-gradient(-170deg, #2376ae 0%, #c16ecf 100%);
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px;
+      color: white;
+      height: 16.3%;
+    }
+  `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VideoPlayerComponent implements OnInit {
 
-  constructor() { }
+  @ViewChild('video', { static: true, read: ElementRef })
+  video!: ElementRef<HTMLVideoElement>;
+
+  @ViewChild('speed', { static: true, read: ElementRef })
+  speed!: ElementRef<HTMLDivElement>;
+
+  @ViewChild('video', { static: true, read: ElementRef })
+  speedBar!: ElementRef<HTMLDivElement>;
+
+  height$!: Observable<string>;
+  playbackRate$!: Observable<string>;
 
   ngOnInit(): void {
-  }
+    const nativeElement = this.speed.nativeElement;
+    console.log(nativeElement.offsetHeight, nativeElement.offsetTop);
 
+    const mouseMove$ = fromEvent(nativeElement, 'mousemove')
+      .pipe(
+        filter((e) => e instanceof MouseEvent),
+        map((e) => e as MouseEvent),
+        map((e) => {
+          const y = e.pageY - nativeElement.offsetTop;
+          const percent = y / nativeElement.offsetHeight;
+          const min = 0.4;
+          const max = 4;
+          return {
+            height: `${Math.round(percent * 100)}%`,
+            playbackRate: percent * (max - min) + min,
+          };
+        }),
+        tap(({ playbackRate }) => this.video.nativeElement.playbackRate = playbackRate),
+        shareReplay(1),
+      );
+
+    this.height$ = mouseMove$.pipe(map(({ height }) => height));
+    this.playbackRate$ = mouseMove$.pipe(
+        map(({ playbackRate }) => `${playbackRate.toFixed(2)}x`),
+        startWith('1x')
+      );
+  }
 }
