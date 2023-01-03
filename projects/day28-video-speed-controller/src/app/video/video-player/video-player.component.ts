@@ -8,7 +8,7 @@ import { filter, fromEvent, map, Observable, shareReplay, startWith, tap } from 
     <div class="wrapper">
       <video class="flex" width="765" height="430" [src]="videoSrc" loop controls #video></video>
       <div class="speed" #speed>
-        <div class="speed-bar" #speedBar [style.height]="height$ | async">{{ playbackRate$ | async }}</div>
+        <div class="speed-bar" [style.height]="height$ | async">{{ playbackRate$ | async }}</div>
       </div>
     </div>
   `,
@@ -65,9 +65,6 @@ export class VideoPlayerComponent implements OnInit {
 
   @ViewChild('speed', { static: true, read: ElementRef })
   speed!: ElementRef<HTMLDivElement>;
-
-  @ViewChild('video', { static: true, read: ElementRef })
-  speedBar!: ElementRef<HTMLDivElement>;
 
   height$!: Observable<string>;
   playbackRate$!: Observable<string>;
