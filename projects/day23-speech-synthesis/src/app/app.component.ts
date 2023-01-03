@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
-  template: '<div>It works</div>',
+  template: '<app-speech-synthesis></app-speech-synthesis>',
   styles: [`
     :host {
       display: block;
