@@ -103,7 +103,9 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 })
 export class SpeechSynthesisComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+    console.log(new SpeechSynthesisUtterance(), 'speechSynthesis', speechSynthesis);
+   }
 
   ngOnInit(): void {
   }
