@@ -7,9 +7,13 @@ import { BehaviorSubject } from 'rxjs';
 export class SpeechService {
   private readonly subSpeech = new BehaviorSubject<SpeechSynthesisUtterance>(new SpeechSynthesisUtterance());
 
-  updateMessage(msg: string) {
+  updateSpeech(property: 'rate' | 'pitch' | 'text', value: number | string): void {
     const speech = this.subSpeech.getValue();
-    speech.text = msg;
+    if (property === 'text' && typeof value === 'string') {
+      speech[property] = value;
+    } else if ((property === 'rate' || property === 'pitch') && typeof value === 'number') {
+      speech[property] = value;
+    }
     this.subSpeech.next(speech);
   }
 

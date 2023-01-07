@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subscription, fromEvent, map, merge, tap } from 'rxjs';
+import { Subject, Subscription, fromEvent, map, merge, tap } from 'rxjs';
 import { SpeechService } from '../services/speech.service';
 
 @Component({
   selector: 'app-speech-text',
   template: `
     <ng-container>
-      <textarea name="text" [(ngModel)]="msg"></textarea>
+      <textarea name="text" [(ngModel)]="msg" (change)="textChange$.next()"></textarea>
       <button id="stop" #stop>Stop!</button>
       <button id="speak" #speak>Speak</button>
     </ng-container>
@@ -61,6 +61,7 @@ export class SpeechTextComponent implements OnInit, OnDestroy {
   @ViewChild('speak', { static: true, read: ElementRef })
   btnSpeak!: ElementRef<HTMLButtonElement>;
 
+  textChange$ = new Subject<void>();
   subscription = new Subscription();
   msg = 'Hello! I love JavaScript 👍';
 
@@ -70,9 +71,19 @@ export class SpeechTextComponent implements OnInit, OnDestroy {
     const btnStop$ = fromEvent(this.btnStop.nativeElement, 'click').pipe(map(() => false));
     const btnSpeak$ = fromEvent(this.btnSpeak.nativeElement, 'click').pipe(map(() => true));
 
-    this.subscription = merge(btnStop$, btnSpeak$)
-      .pipe(tap(() => this.speechService.updateMessage(this.msg)))
-      .subscribe((startOver) => this.speechService.toggle(startOver));
+    this.speechService.updateSpeech('text', this.msg);
+
+    this.subscription.add(
+      merge(btnStop$, btnSpeak$)
+      .pipe(tap(() => this.speechService.updateSpeech('text', this.msg)))
+      .subscribe((startOver) => this.speechService.toggle(startOver))
+    );
+
+    this.subscription.add(
+      this.textChange$
+        .pipe(tap(() => this.speechService.updateSpeech('text', this.msg)))
+        .subscribe(() => this.speechService.toggle())
+    );
   }
 
   ngOnDestroy(): void {
