@@ -5,17 +5,9 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
   template: `
     <div class="voiceinator">
       <h1>The Voiceinator 5000</h1>
-      <select name="voice" id="voices">
-        <option value="">Select A Voice</option>
-      </select>
-      <label for="rate">Rate:</label>
-      <input name="rate" type="range" min="0" max="3" value="1" step="0.1">
-      <label for="pitch">Pitch:</label>
-      <input name="pitch" type="range" min="0" max="2" step="0.1">
-      <textarea name="text">Hello! I love JavaScript 👍</textarea>
-      <button id="stop">Stop!</button>
-      <button id="speak">Speak</button>
-  </div>`,
+      <app-speech-voice></app-speech-voice>
+      <app-speech-text></app-speech-text>
+    </div>`,
   styles: [`
     :host {
       margin: 0;
@@ -38,65 +30,26 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
     .voiceinator {
       padding: 2rem;
       width: 50rem;
-    margin: 0 auto;
-    border-radius: 1rem;
-    position: relative;
-    background: white;
-    overflow: hidden;
-    z-index: 1;
-    box-shadow: 0 0 5px 5px rgba(0,0,0,0.1);
-  }
-
-  h1 {
-    width: calc(100% + 4rem);
-    margin: -2rem 0 2rem -2rem;
-    padding: .5rem;
-    background: #ffc600;
-    border-bottom: 5px solid #F3C010;
-    text-align: center;
-    font-size: 5rem;
-    font-weight: 100;
-    font-family: 'Pacifico', cursive;
-    text-shadow: 3px 3px 0 #F3C010;
-  }
-
-  .voiceinator input,
-  .voiceinator button,
-  .voiceinator select,
-  .voiceinator textarea {
-    width: 100%;
-    display: block;
-    margin: 10px 0;
-    padding: 10px;
-    border: 0;
-    font-size: 2rem;
-    background: #F7F7F7;
-    outline: 0;
-  }
-
-  textarea {
-    height: 20rem;
-  }
-
-  .voiceinator button {
-    background: #ffc600;
-    border: 0;
-    width: 49%;
-    float: left;
-    font-family: 'Pacifico', cursive;
-    margin-bottom: 0;
-    font-size: 2rem;
-    border-bottom: 5px solid #F3C010;
-    cursor: pointer;
-    position: relative;
-  }
-
-    .voiceinator button:active {
-      top: 2px;
+      margin: 0 auto;
+      border-radius: 1rem;
+      position: relative;
+      background: white;
+      overflow: hidden;
+      z-index: 1;
+      box-shadow: 0 0 5px 5px rgba(0,0,0,0.1);
     }
 
-    .voiceinator button:nth-of-type(1) {
-      margin-right: 2%;
+    h1 {
+      width: calc(100% + 4rem);
+      margin: -2rem 0 2rem -2rem;
+      padding: .5rem;
+      background: #ffc600;
+      border-bottom: 5px solid #F3C010;
+      text-align: center;
+      font-size: 5rem;
+      font-weight: 100;
+      font-family: 'Pacifico', cursive;
+      text-shadow: 3px 3px 0 #F3C010;
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
