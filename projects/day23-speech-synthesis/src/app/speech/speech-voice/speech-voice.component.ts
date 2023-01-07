@@ -53,6 +53,7 @@ export class SpeechVoiceComponent implements OnInit, OnDestroy {
       .pipe(
         map(() => speechSynthesis.getVoices()),
         map((voices) => voices.filter(voice => voice.lang.includes('en'))),
+        tap((voices) => this.speechService.setVoices(voices)),
       );
 
     const rateChange$ = fromEvent(this.rate.nativeElement, 'change')
@@ -61,15 +62,17 @@ export class SpeechVoiceComponent implements OnInit, OnDestroy {
     const pitchChange$ = fromEvent(this.pitch.nativeElement, 'change')
       .pipe(map(() => ({ property: 'pitch', value: +this.pitch.nativeElement.value })));
 
-    fromEvent(this.voices.nativeElement, 'change')
-      .pipe(
-        tap((value) => console.log(value.target))
-      ).subscribe();
+    this.subscription.add(
+      fromEvent(this.voices.nativeElement, 'change')
+        .pipe(
+          tap(() => this.speechService.updateVoice(this.voices.nativeElement.value))
+        ).subscribe()
+      );
 
     this.subscription.add(
       merge(rateChange$, pitchChange$).pipe(
         tap(({ property, value }) => this.speechService.updateSpeech(property as 'rate' | 'pitch', value))
-      ).subscribe(() => this.speechService.toggle())
+      ).subscribe()
     );
   }
 

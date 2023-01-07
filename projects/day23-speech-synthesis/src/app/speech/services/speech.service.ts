@@ -5,22 +5,34 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class SpeechService {
-  private readonly subSpeech = new BehaviorSubject<SpeechSynthesisUtterance>(new SpeechSynthesisUtterance());
+  private readonly speech = new SpeechSynthesisUtterance();
+  private voices: SpeechSynthesisVoice[] = [];
 
   updateSpeech(property: 'rate' | 'pitch' | 'text', value: number | string): void {
-    const speech = this.subSpeech.getValue();
     if (property === 'text' && typeof value === 'string') {
-      speech[property] = value;
+      this.speech[property] = value;
     } else if ((property === 'rate' || property === 'pitch') && typeof value === 'number') {
-      speech[property] = value;
+      this.speech[property] = value;
     }
-    this.subSpeech.next(speech);
+    this.toggle();
+  }
+
+  setVoices(voices: SpeechSynthesisVoice[]) {
+    this.voices = voices;
+  }
+
+  updateVoice(voiceName: string): void {
+    const voice = this.voices.find(v => v.name === voiceName);
+    if (voice) {
+      this.speech.voice = voice;
+    }
+    this.toggle();
   }
 
   toggle(startOver = true) {
     speechSynthesis.cancel();
     if (startOver) {
-      speechSynthesis.speak(this.subSpeech.getValue());
+      speechSynthesis.speak(this.speech);
     }
   }
 }

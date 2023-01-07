@@ -82,7 +82,7 @@ export class SpeechTextComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.textChange$
         .pipe(tap(() => this.speechService.updateSpeech('text', this.msg)))
-        .subscribe(() => this.speechService.toggle())
+        .subscribe()
     );
   }
 
