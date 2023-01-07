@@ -1,12 +1,14 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subscription, fromEvent, map, merge, tap } from 'rxjs';
+import { SpeechService } from '../services/speech.service';
 
 @Component({
   selector: 'app-speech-text',
   template: `
     <ng-container>
-      <textarea name="text">Hello! I love JavaScript 👍</textarea>
-      <button id="stop">Stop!</button>
-      <button id="speak">Speak</button>
+      <textarea name="text" [(ngModel)]="msg"></textarea>
+      <button id="stop" #stop>Stop!</button>
+      <button id="speak" #speak>Speak</button>
     </ng-container>
   `,
   styles: [`
@@ -14,8 +16,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
       display: block;
     }
 
-    button,
-    textarea {
+    button, textarea {
       width: 100%;
       display: block;
       margin: 10px 0;
@@ -53,11 +54,28 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SpeechTextComponent implements OnInit {
+export class SpeechTextComponent implements OnInit, OnDestroy {
+  @ViewChild('stop', { static: true, read: ElementRef })
+  btnStop!: ElementRef<HTMLButtonElement>;
 
-  constructor() { }
+  @ViewChild('speak', { static: true, read: ElementRef })
+  btnSpeak!: ElementRef<HTMLButtonElement>;
+
+  subscription = new Subscription();
+  msg = 'Hello! I love JavaScript 👍';
+
+  constructor(private speechService: SpeechService) { }
 
   ngOnInit(): void {
+    const btnStop$ = fromEvent(this.btnStop.nativeElement, 'click').pipe(map(() => false));
+    const btnSpeak$ = fromEvent(this.btnSpeak.nativeElement, 'click').pipe(map(() => true));
+
+    this.subscription = merge(btnStop$, btnSpeak$)
+      .pipe(tap(() => this.speechService.updateMessage(this.msg)))
+      .subscribe((startOver) => this.speechService.toggle(startOver));
   }
 
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 }

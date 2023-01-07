@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { SpeechSynthesisComponent } from './speech-synthesis/speech-synthesis.component';
 import { SpeechTextComponent } from './speech-text/speech-text.component';
 import { SpeechVoiceComponent } from './speech-voice/speech-voice.component';
@@ -11,7 +12,8 @@ import { SpeechVoiceComponent } from './speech-voice/speech-voice.component';
     SpeechTextComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule,
   ],
   exports: [
     SpeechSynthesisComponent
