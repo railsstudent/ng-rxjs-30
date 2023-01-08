@@ -17,7 +17,12 @@ export class SpeechService {
     this.toggle();
   }
 
-  setVoices(voices: SpeechSynthesisVoice[]) {
+  getVoices(): SpeechSynthesisVoice[] {
+    return speechSynthesis.getVoices()
+      .filter(voice => voice.lang.includes('en'));
+  }
+
+  setVoices(voices: SpeechSynthesisVoice[]): void {
     this.voices = voices;
   }
 
@@ -31,7 +36,7 @@ export class SpeechService {
     return voice ? voice : null;
   }
 
-  toggle(startOver = true) {
+  toggle(startOver = true): void {
     const speech = this.makeRequest();
     speechSynthesis.cancel();
     if (startOver) {
@@ -42,12 +47,13 @@ export class SpeechService {
   private makeRequest() {
     const speech = new SpeechSynthesisUtterance();
     speech.text = localStorage.getItem('text') || '';
-    speech.rate = +(localStorage.getItem('rate') || '0');
-    speech.pitch = +(localStorage.getItem('pitch') || '0');
+    speech.rate = +(localStorage.getItem('rate') || '1');
+    speech.pitch = +(localStorage.getItem('pitch') || '1');
     const voice = this.getVoice(localStorage.getItem('voice') || '');
     if (voice) {
       speech.voice = voice;
     }
+    console.log('speech', speech);
     return speech;
   }
 }
