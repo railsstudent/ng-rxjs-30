@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable, Subscription, fromEvent, map, merge, tap } from 'rxjs';
+import { RateOrPitch } from '../interfaces/speech.interface';
 import { SpeechService } from '../services/speech.service';
 
 @Component({
@@ -41,7 +42,7 @@ export class SpeechVoiceComponent implements OnInit, OnDestroy {
   pitch!: ElementRef<HTMLInputElement>;
 
   @ViewChild('voices', { static: true, read: ElementRef })
-  voices!: ElementRef<HTMLSelectElement>;
+  voiceDropdown!: ElementRef<HTMLSelectElement>;
   
   voices$!: Observable<SpeechSynthesisVoice[]>;
   subscription = new Subscription();
@@ -56,22 +57,19 @@ export class SpeechVoiceComponent implements OnInit, OnDestroy {
         tap((voices) => this.speechService.setVoices(voices)),
       );
 
-    const rateChange$ = fromEvent(this.rate.nativeElement, 'change')
-      .pipe(map(() => ({ property: 'rate', value: +this.rate.nativeElement.value })));
-
-    const pitchChange$ = fromEvent(this.pitch.nativeElement, 'change')
-      .pipe(map(() => ({ property: 'pitch', value: +this.pitch.nativeElement.value })));
-
     this.subscription.add(
-      fromEvent(this.voices.nativeElement, 'change')
+      fromEvent(this.voiceDropdown.nativeElement, 'change')
         .pipe(
-          tap(() => this.speechService.updateVoice(this.voices.nativeElement.value))
+          tap(() => this.speechService.updateVoice(this.voiceDropdown.nativeElement.value))
         ).subscribe()
       );
 
     this.subscription.add(
-      merge(rateChange$, pitchChange$).pipe(
-        tap(({ property, value }) => this.speechService.updateSpeech(property as 'rate' | 'pitch', value))
+      merge(fromEvent(this.rate.nativeElement, 'change'), fromEvent(this.pitch.nativeElement, 'change'))
+        .pipe(
+          map((e) => e.target as HTMLInputElement),
+          map((e) => ({ name: e.name as RateOrPitch, value: e.valueAsNumber })),
+          tap((property) => this.speechService.updateSpeech(property))
       ).subscribe()
     );
   }

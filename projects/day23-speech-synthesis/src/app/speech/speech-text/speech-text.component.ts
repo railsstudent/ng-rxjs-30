@@ -68,20 +68,19 @@ export class SpeechTextComponent implements OnInit, OnDestroy {
   constructor(private speechService: SpeechService) { }
 
   ngOnInit(): void {
+    this.speechService.updateSpeech({ name: 'text', value: this.msg });
+
     const btnStop$ = fromEvent(this.btnStop.nativeElement, 'click').pipe(map(() => false));
     const btnSpeak$ = fromEvent(this.btnSpeak.nativeElement, 'click').pipe(map(() => true));
-
-    this.speechService.updateSpeech('text', this.msg);
-
     this.subscription.add(
       merge(btnStop$, btnSpeak$)
-      .pipe(tap(() => this.speechService.updateSpeech('text', this.msg)))
-      .subscribe((startOver) => this.speechService.toggle(startOver))
+        .pipe(tap(() => this.speechService.updateSpeech({ name: 'text', value: this.msg })))
+        .subscribe((startOver) => this.speechService.toggle(startOver))
     );
 
     this.subscription.add(
       this.textChange$
-        .pipe(tap(() => this.speechService.updateSpeech('text', this.msg)))
+        .pipe(tap(() => this.speechService.updateSpeech({ name: 'text', value: this.msg })))
         .subscribe()
     );
   }

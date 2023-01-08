@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { SpeechProperties } from '../interfaces/speech.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -8,11 +8,12 @@ export class SpeechService {
   private readonly speech = new SpeechSynthesisUtterance();
   private voices: SpeechSynthesisVoice[] = [];
 
-  updateSpeech(property: 'rate' | 'pitch' | 'text', value: number | string): void {
-    if (property === 'text' && typeof value === 'string') {
-      this.speech[property] = value;
-    } else if ((property === 'rate' || property === 'pitch') && typeof value === 'number') {
-      this.speech[property] = value;
+  updateSpeech(property: SpeechProperties): void {
+    const { name, value } = property;
+    if ((name === 'text')) {
+      this.speech[name] = value;
+    } else if (['rate', 'pitch'].includes(name)) {
+      this.speech[name] = value;
     }
     this.toggle();
   }
