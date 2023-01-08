@@ -5,15 +5,14 @@ import { SpeechProperties } from '../interfaces/speech.interface';
   providedIn: 'root'
 })
 export class SpeechService {
-  private readonly speech = new SpeechSynthesisUtterance();
   private voices: SpeechSynthesisVoice[] = [];
 
   updateSpeech(property: SpeechProperties): void {
     const { name, value } = property;
     if ((name === 'text')) {
-      this.speech[name] = value;
+      localStorage.setItem(name, value);
     } else if (['rate', 'pitch'].includes(name)) {
-      this.speech[name] = value;
+      localStorage.setItem(name, `${value}`);
     }
     this.toggle();
   }
@@ -23,17 +22,32 @@ export class SpeechService {
   }
 
   updateVoice(voiceName: string): void {
-    const voice = this.voices.find(v => v.name === voiceName);
-    if (voice) {
-      this.speech.voice = voice;
-    }
+    localStorage.setItem('voice', voiceName);
     this.toggle();
   }
 
+  private getVoice(voiceName: string): SpeechSynthesisVoice | null {
+    const voice = this.voices.find(v => v.name === voiceName);
+    return voice ? voice : null;
+  }
+
   toggle(startOver = true) {
+    const speech = this.makeRequest();
     speechSynthesis.cancel();
     if (startOver) {
-      speechSynthesis.speak(this.speech);
+      speechSynthesis.speak(speech);
     }
+  }
+
+  private makeRequest() {
+    const speech = new SpeechSynthesisUtterance();
+    speech.text = localStorage.getItem('text') || '';
+    speech.rate = +(localStorage.getItem('rate') || '0');
+    speech.pitch = +(localStorage.getItem('pitch') || '0');
+    const voice = this.getVoice(localStorage.getItem('voice') || '');
+    if (voice) {
+      speech.voice = voice;
+    }
+    return speech;
   }
 }
