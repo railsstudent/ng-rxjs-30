@@ -9,11 +9,7 @@ export class SpeechService {
 
   updateSpeech(property: SpeechProperties): void {
     const { name, value } = property;
-    if ((name === 'text')) {
-      localStorage.setItem(name, value);
-    } else if (['rate', 'pitch'].includes(name)) {
-      localStorage.setItem(name, `${value}`);
-    }
+    localStorage.setItem(name, value);
     this.toggle();
   }
 

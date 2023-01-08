@@ -1,2 +1,2 @@
-export type RateOrPitch = keyof Pick<SpeechSynthesisUtterance, 'rate' | 'pitch'>;
-export type SpeechProperties = { name: RateOrPitch, value: number } | { name: 'text', value: string };
+export type PropertyName = keyof Pick<SpeechSynthesisUtterance, 'rate' | 'pitch' | 'text'>;
+export type SpeechProperties = { name: PropertyName, value: string };
