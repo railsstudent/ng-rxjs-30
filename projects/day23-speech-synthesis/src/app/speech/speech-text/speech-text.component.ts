@@ -6,7 +6,7 @@ import { SpeechService } from '../services/speech.service';
   selector: 'app-speech-text',
   template: `
     <ng-container>
-      <textarea name="text" [(ngModel)]="msg" (change)="textChange$.next()"></textarea>
+      <textarea name="text" [(ngModel)]="msg" (change)="textChanged$.next()"></textarea>
       <button id="stop" #stop>Stop!</button>
       <button id="speak" #speak>Speak</button>
     </ng-container>
@@ -61,7 +61,7 @@ export class SpeechTextComponent implements OnInit, OnDestroy {
   @ViewChild('speak', { static: true, read: ElementRef })
   btnSpeak!: ElementRef<HTMLButtonElement>;
 
-  textChange$ = new Subject<void>();
+  textChanged$ = new Subject<void>();
   subscription = new Subscription();
   msg = 'Hello! I love JavaScript 👍';
 
@@ -79,7 +79,7 @@ export class SpeechTextComponent implements OnInit, OnDestroy {
     );
 
     this.subscription.add(
-      this.textChange$
+      this.textChanged$
         .pipe(tap(() => this.speechService.updateSpeech({ name: 'text', value: this.msg })))
         .subscribe()
     );
