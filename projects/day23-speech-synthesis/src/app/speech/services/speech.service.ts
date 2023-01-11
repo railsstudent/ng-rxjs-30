@@ -13,11 +13,6 @@ export class SpeechService {
     this.toggle();
   }
 
-  getVoices(): SpeechSynthesisVoice[] {
-    return speechSynthesis.getVoices()
-      .filter(voice => voice.lang.includes('en'));
-  }
-
   setVoices(voices: SpeechSynthesisVoice[]): void {
     this.voices = voices;
   }
@@ -49,7 +44,6 @@ export class SpeechService {
     if (voice) {
       speech.voice = voice;
     }
-    console.log('speech', speech);
     return speech;
   }
 }
