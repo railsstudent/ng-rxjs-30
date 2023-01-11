@@ -22,7 +22,7 @@ export class SpeechService {
     this.toggle();
   }
 
-  private getVoice(voiceName: string): SpeechSynthesisVoice | null {
+  private findVoice(voiceName: string): SpeechSynthesisVoice | null {
     const voice = this.voices.find(v => v.name === voiceName);
     return voice ? voice : null;
   }
@@ -40,7 +40,7 @@ export class SpeechService {
     speech.text = localStorage.getItem('text') || '';
     speech.rate = +(localStorage.getItem('rate') || '1');
     speech.pitch = +(localStorage.getItem('pitch') || '1');
-    const voice = this.getVoice(localStorage.getItem('voice') || '');
+    const voice = this.findVoice(localStorage.getItem('voice') || '');
     if (voice) {
       speech.voice = voice;
     }
