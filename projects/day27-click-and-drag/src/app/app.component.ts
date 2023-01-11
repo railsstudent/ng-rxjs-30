@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
-  template: '<div>It works</div>',
+  template: '<app-slider></app-slider>',
   styles: [`
     :host {
       display: block;
@@ -11,7 +11,7 @@ import { Title } from '@angular/platform-browser';
   `]
 })
 export class AppComponent {
-  title = 'Day27 Click and Drag';
+  title = 'Day 27 Click and Drag';
 
   constructor(titleService: Title) {
     titleService.setTitle(this.title);
