@@ -52,7 +52,7 @@ export class SpeechVoiceComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.voices$ = fromEvent(speechSynthesis, 'voiceschanged')
       .pipe(
-        map(() => this.speechService.getVoices()),
+        map(() => speechSynthesis.getVoices().filter(voice => voice.lang.includes('en'))),
         tap((voices) => this.speechService.setVoices(voices)),
       );
 
