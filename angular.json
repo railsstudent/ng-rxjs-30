@@ -2284,6 +2284,107 @@
           }
         }
       }
+    },
+    "day27-click-and-drag": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/day27-click-and-drag",
+      "sourceRoot": "projects/day27-click-and-drag/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/day27-click-and-drag",
+            "index": "projects/day27-click-and-drag/src/index.html",
+            "main": "projects/day27-click-and-drag/src/main.ts",
+            "polyfills": "projects/day27-click-and-drag/src/polyfills.ts",
+            "tsConfig": "projects/day27-click-and-drag/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/day27-click-and-drag/src/favicon.ico",
+              "projects/day27-click-and-drag/src/assets"
+            ],
+            "styles": [
+              "projects/day27-click-and-drag/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/day27-click-and-drag/src/environments/environment.ts",
+                  "with": "projects/day27-click-and-drag/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all",
+              "baseHref": "https://railsstudent.github.io/ng-rxjs-30/day27-click-and-drag/"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "day27-click-and-drag:build:production"
+            },
+            "development": {
+              "browserTarget": "day27-click-and-drag:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "day27-click-and-drag:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/day27-click-and-drag/src/test.ts",
+            "polyfills": "projects/day27-click-and-drag/src/polyfills.ts",
+            "tsConfig": "projects/day27-click-and-drag/tsconfig.spec.json",
+            "karmaConfig": "projects/day27-click-and-drag/karma.conf.js",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/day27-click-and-drag/src/favicon.ico",
+              "projects/day27-click-and-drag/src/assets"
+            ],
+            "styles": [
+              "projects/day27-click-and-drag/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        }
+      }
     }
   }
 }

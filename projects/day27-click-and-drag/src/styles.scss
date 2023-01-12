@@ -1,0 +1,11 @@
+/* You can add global styles to this file, and also import other style files */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    min-height: 100vh;
+    background: url('https://source.unsplash.com/NFs6dRTBgaM/2000x2000') fixed;
+    background-size: cover;
+}
