@@ -29,15 +29,14 @@ export class SliderComponent implements OnInit, OnDestroy {
         tap(() => sliderNative.classList.add('active')),
         tap(() => console.log('mouse down'))
       );
-    const mouseLeave$ = fromEvent(sliderNative, 'mousedown');
-    const mouseUp$ = fromEvent(sliderNative, 'mousedown');
+    const mouseLeave$ = fromEvent(sliderNative, 'mouseleave');
+    const mouseUp$ = fromEvent(sliderNative, 'mouseup');
     const stop$ = merge(mouseLeave$, mouseUp$)
       .pipe(
         tap(() => sliderNative.classList.remove('active')),
         tap(() => console.log('stop dragging')),
       );
-    const mouseMove$ = fromEvent(sliderNative, 'mousemove')
-      .pipe(takeUntil(stop$));
+    const mouseMove$ = fromEvent(sliderNative, 'mousemove');
 
     this.subscription.add(
       mouseDown$.pipe(
@@ -47,20 +46,17 @@ export class SliderComponent implements OnInit, OnDestroy {
           const startX = moveDownEvent.pageX - sliderNative.offsetLeft;
           const scrollLeft = sliderNative.scrollLeft;          
           return mouseMove$.pipe(
-            // tap(() => console.log('mousemove')),
             filter((moveEvent) => moveEvent instanceof MouseEvent),
             map((moveEvent) => moveEvent as MouseEvent),
-            tap((moveEvent) => { 
-              console.log('e', moveEvent);
-              moveEvent.preventDefault();
-            }),
+            tap((moveEvent) => moveEvent.preventDefault()),
             map((e) => {
               const x = e.pageX - sliderNative.offsetLeft;
               const walk = (x - startX) * 3;
               sliderNative.scrollLeft = scrollLeft - walk;
             }),
+            takeUntil(stop$)
           );
-        })
+        }),
       ).subscribe()
     );
   }
