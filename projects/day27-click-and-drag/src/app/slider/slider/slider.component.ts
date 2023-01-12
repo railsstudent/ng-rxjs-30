@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { concatMap, filter, fromEvent, map, merge, Subscription, takeUntil, tap } from 'rxjs';
+import { Observable, Subscription, concatMap, filter, fromEvent, map, merge, startWith, takeUntil, tap } from 'rxjs';
 
 @Component({
   selector: 'app-slider',
   template: `
-    <div class="items" #items>
+    <div class="items" [ngClass]="{ active: active$ | async }" #items>
       <div *ngFor="let index of panels" class="item">{{index}}</div>
     </div>
   `,
@@ -16,27 +16,21 @@ export class SliderComponent implements OnInit, OnDestroy {
   @ViewChild('items', { static: true, read: ElementRef })
   slider!: ElementRef<HTMLDivElement>;
 
-  panels = [...Array(25).keys()].map(i => i < 9 ? `0${i + 1}` : `${i + 1}`);
-
+  active$!: Observable<boolean>;
   subscription = new Subscription();
 
-  constructor() { }
+  panels = [...Array(25).keys()].map(i => i < 9 ? `0${i + 1}` : `${i + 1}`);
 
   ngOnInit(): void {
     const sliderNative = this.slider.nativeElement;
-    const mouseDown$ = fromEvent(sliderNative, 'mousedown')
-      .pipe(
-        tap(() => sliderNative.classList.add('active')),
-        tap(() => console.log('mouse down'))
-      );
+    const mouseDown$ = fromEvent(sliderNative, 'mousedown');
     const mouseLeave$ = fromEvent(sliderNative, 'mouseleave');
     const mouseUp$ = fromEvent(sliderNative, 'mouseup');
-    const stop$ = merge(mouseLeave$, mouseUp$)
-      .pipe(
-        tap(() => sliderNative.classList.remove('active')),
-        tap(() => console.log('stop dragging')),
-      );
+    const stop$ = merge(mouseLeave$, mouseUp$);
     const mouseMove$ = fromEvent(sliderNative, 'mousemove');
+
+    this.active$ = merge(mouseDown$.pipe(map(() => true)), stop$.pipe(map(() => false)))
+      .pipe(startWith(false));
 
     this.subscription.add(
       mouseDown$.pipe(
