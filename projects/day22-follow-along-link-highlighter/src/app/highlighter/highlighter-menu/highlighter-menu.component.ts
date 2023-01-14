@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subscription, fromEvent, map, merge, startWith } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { createMouseEnterStream } from '../helpers/mouseenter-stream.helper';
 import { HighlighterService } from '../services/highlighter.service';
 
 @Component({
@@ -58,39 +59,8 @@ export class HighlighterMenuComponent implements OnInit, OnDestroy {
   constructor(private highlighterService: HighlighterService) {}
 
   ngOnInit(): void {
-    this.subscription = this.createMouseEnterStream(this.home, this.order, this.tweet, this.history, this.contact)
-      .pipe(
-        startWith({
-          width: '0px',
-          height: '0px',
-          transform: ''
-        })
-      ).subscribe((style) => this.highlighterService.updateStyle(style));
-  }
-
-  createMouseEnterStream(...elementRefs: ElementRef<HTMLAnchorElement>[]) {
-    const mouseEnter$ = elementRefs.map(({ nativeElement }) => 
-      fromEvent(nativeElement, 'mouseenter')
-        .pipe(
-          map(() => {
-            const linkCoords = nativeElement.getBoundingClientRect();
-            return {
-              width: linkCoords.width,
-              height: linkCoords.height,
-              top: linkCoords.top + window.scrollY,
-              left: linkCoords.left + window.scrollX
-            };
-          })
-        ));
-
-    return merge(...mouseEnter$)
-      .pipe(
-        map((coords) => ({
-          width: `${coords.width}px`,
-          height: `${coords.height}px`,
-          transform: `translate(${coords.left}px, ${coords.top}px)`
-        }))  
-      );    
+    this.subscription = createMouseEnterStream([this.home, this.order, this.tweet, this.history, this.contact])
+      .subscribe((style) => this.highlighterService.updateStyle(style));
   }
 
   ngOnDestroy(): void {

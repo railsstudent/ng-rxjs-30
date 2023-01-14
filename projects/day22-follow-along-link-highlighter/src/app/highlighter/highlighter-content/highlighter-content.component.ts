@@ -1,6 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, QueryList, ViewChildren } from '@angular/core';
-import { Subscription, fromEvent, map, merge } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { HighlightAnchorDirective } from '../directives/highlight-anchor.directive';
+import { createMouseEnterStream } from '../helpers/mouseenter-stream.helper';
 import { HighlighterService } from '../services/highlighter.service';
 
 @Component({
@@ -46,29 +47,7 @@ export class HighlighterContentComponent implements AfterViewInit, OnDestroy {
   constructor(private highlighterService: HighlighterService) { }
 
   ngAfterViewInit(): void {
-    const mouseEnterArray$ = this.anchors.map(({ nativeElement }) => {
-      return fromEvent(nativeElement, 'mouseenter')
-        .pipe(
-          map(() => {
-            const linkCoords = nativeElement.getBoundingClientRect();
-            return {
-              width: linkCoords.width,
-              height: linkCoords.height,
-              top: linkCoords.top + window.scrollY,
-              left: linkCoords.left + window.scrollX
-            };
-          }),
-        );
-    });
-
-    this.subscription = merge(...mouseEnterArray$)
-      .pipe(
-        map((coords) => ({
-          width: `${coords.width}px`,
-          height: `${coords.height}px`,
-          transform: `translate(${coords.left}px, ${coords.top}px)`
-        })),
-      )
+    this.subscription = createMouseEnterStream(this.anchors)
       .subscribe((style) => this.highlighterService.updateStyle(style));
   }
 
