@@ -1,10 +1,12 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { HighlightAnchorDirective } from './directives/highlight-anchor.directive';
 import { HighlighterPageComponent } from './highlighter-page/highlighter-page.component';
 
 @NgModule({
   declarations: [
-    HighlighterPageComponent
+    HighlighterPageComponent,
+    HighlightAnchorDirective
   ],
   imports: [
     CommonModule
