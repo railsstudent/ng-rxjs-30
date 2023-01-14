@@ -1,5 +1,6 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, OnDestroy, QueryList, ViewChildren } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { WINDOW } from '../../core';
 import { HighlightAnchorDirective } from '../directives/highlight-anchor.directive';
 import { createMouseEnterStream } from '../helpers/mouseenter-stream.helper';
 import { HighlighterService } from '../services/highlighter.service';
@@ -44,10 +45,10 @@ export class HighlighterContentComponent implements AfterViewInit, OnDestroy {
 
   subscription!: Subscription;
 
-  constructor(private highlighterService: HighlighterService) { }
+  constructor(private highlighterService: HighlighterService, @Inject(WINDOW) private window: Window) { }
 
   ngAfterViewInit(): void {
-    this.subscription = createMouseEnterStream(this.anchors)
+    this.subscription = createMouseEnterStream(this.anchors, this.window)
       .subscribe((style) => this.highlighterService.updateStyle(style));
   }
 
