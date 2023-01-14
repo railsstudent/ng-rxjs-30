@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
-  template: `<div>It works!!!!</div>`,
+  template: `<app-highlighter-page></app-highlighter-page>`,
   styles: [`
     :host {
       display: block;
