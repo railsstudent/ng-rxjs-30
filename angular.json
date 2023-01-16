@@ -2536,7 +2536,8 @@
                   "with": "projects/day24-sticky-nav/src/environments/environment.prod.ts"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "baseHref": "https://railsstudent.github.io/ng-rxjs-30/day24-sticky-nav/"
             },
             "development": {
               "buildOptimizer": false,
