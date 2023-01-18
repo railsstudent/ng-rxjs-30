@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
-  template: '<div>testing</div>',
+  template: '<app-stick-nav-page></app-stick-nav-page>',
   styles: [`
     :host {
       display: block;
