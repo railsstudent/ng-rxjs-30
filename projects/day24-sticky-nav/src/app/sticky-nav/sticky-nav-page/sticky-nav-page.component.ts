@@ -8,7 +8,11 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
       <app-stick-nav-content></app-stick-nav-content>
     </ng-container>
   `,
-  styleUrls: ['./sticky-nav-page.component.scss'],
+  styles: [`
+    :host {
+      display: block;
+    }
+  `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StickyNavPageComponent implements OnInit {
