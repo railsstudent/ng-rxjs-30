@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subscription, fromEvent, map, startWith } from 'rxjs';
+import { WINDOW } from '../../core';
+import { StickyNavStyle } from '../sticky-nav.interface';
 
 @Component({
   selector: 'app-stick-nav-header',
@@ -6,7 +9,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
     <header>
       <h1>A story about getting lost.</h1>
     </header>
-    <nav id="main">
+    <nav id="main" #menu [ngClass]="{ 'fixed-nav': stickyNavStyle.shouldAddFixedNav }">
       <ul>
         <li class="logo"><a href="#">LOST.</a></li>
         <li><a href="#">Home</a></li>
@@ -95,10 +98,44 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StickNavHeaderComponent implements OnInit {
+export class StickNavHeaderComponent implements OnInit, OnDestroy {
+  @ViewChild('menu', { static: true, read: ElementRef })
+  nav!: ElementRef<HTMLElement>;
 
-  constructor() { }
+  subscription!: Subscription;
+
+  readonly nonStickyNavStyle: StickyNavStyle = {
+    shouldAddFixedNav: false,
+    paddingTop: 0
+  };
+
+  stickyNavStyle = this.nonStickyNavStyle;
+
+  constructor(@Inject(WINDOW) private window: Window, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
+    const navNative = this.nav.nativeElement;
+
+    this.subscription = fromEvent(this.window, 'scroll')
+      .pipe(
+        map(() => { 
+          if(this.window.scrollY > navNative.offsetTop) {
+            return {
+              shouldAddFixedNav: true,
+              paddingTop: navNative.offsetHeight
+            }
+          }
+          
+          return this.nonStickyNavStyle;
+        }),
+        startWith(this.nonStickyNavStyle)
+      ).subscribe((result) => {
+        this.stickyNavStyle = result;
+        this.cdr.markForCheck();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
+import { CoreModule } from './core';
 import { StickyNavModule } from './sticky-nav';
 
 @NgModule({
@@ -10,7 +11,8 @@ import { StickyNavModule } from './sticky-nav';
   ],
   imports: [
     BrowserModule,
-    StickyNavModule
+    StickyNavModule,
+    CoreModule
   ],
   providers: [],
   bootstrap: [AppComponent]
