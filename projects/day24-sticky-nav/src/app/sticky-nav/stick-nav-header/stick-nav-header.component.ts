@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription, fromEvent, map, startWith } from 'rxjs';
 import { WINDOW } from '../../core';
-import { StickyNavStyle } from '../sticky-nav.interface';
+import { StickyNavService } from '../services/sticky-nav.service';
 
 @Component({
   selector: 'app-stick-nav-header',
@@ -103,15 +103,9 @@ export class StickNavHeaderComponent implements OnInit, OnDestroy {
   nav!: ElementRef<HTMLElement>;
 
   subscription!: Subscription;
+  stickyNavStyle = this.service.nonStickyNavStyle;
 
-  readonly nonStickyNavStyle: StickyNavStyle = {
-    shouldAddFixedNav: false,
-    paddingTop: 0
-  };
-
-  stickyNavStyle = this.nonStickyNavStyle;
-
-  constructor(@Inject(WINDOW) private window: Window, private cdr: ChangeDetectorRef) { }
+  constructor(@Inject(WINDOW) private window: Window, private cdr: ChangeDetectorRef, private service: StickyNavService) { }
 
   ngOnInit(): void {
     const navNative = this.nav.nativeElement;
@@ -126,11 +120,12 @@ export class StickNavHeaderComponent implements OnInit, OnDestroy {
             }
           }
           
-          return this.nonStickyNavStyle;
+          return this.service.nonStickyNavStyle;
         }),
-        startWith(this.nonStickyNavStyle)
+        startWith(this.service.nonStickyNavStyle)
       ).subscribe((result) => {
         this.stickyNavStyle = result;
+        this.service.updateStyle(result);
         this.cdr.markForCheck();
       });
   }
