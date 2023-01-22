@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subscription, fromEvent, map, startWith, tap } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { Observable, fromEvent, map, startWith, tap } from 'rxjs';
 import { WINDOW } from '../../core';
 import { StickyNavService } from '../services/sticky-nav.service';
 
@@ -9,7 +9,7 @@ import { StickyNavService } from '../services/sticky-nav.service';
     <header>
       <h1>A story about getting lost.</h1>
     </header>
-    <nav id="main" #menu [ngClass]="{ 'fixed-nav': stickyNavStyle }">
+    <nav id="main" #menu [ngClass]="{ 'fixed-nav': shouldFixNav$ | async }">
       <ul>
         <li class="logo"><a href="#">LOST.</a></li>
         <li><a href="#">Home</a></li>
@@ -98,12 +98,11 @@ import { StickyNavService } from '../services/sticky-nav.service';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StickNavHeaderComponent implements OnInit, OnDestroy {
+export class StickNavHeaderComponent implements OnInit {
   @ViewChild('menu', { static: true, read: ElementRef })
   nav!: ElementRef<HTMLElement>;
 
-  subscription!: Subscription;
-  stickyNavStyle = false;
+  shouldFixNav$!: Observable<boolean>;
 
   constructor(@Inject(WINDOW) private window: Window, private cdr: ChangeDetectorRef, private service: StickyNavService) { }
 
@@ -111,23 +110,16 @@ export class StickNavHeaderComponent implements OnInit, OnDestroy {
     const navNative = this.nav.nativeElement;
     const body = navNative.closest('body');
 
-    this.subscription = fromEvent(this.window, 'scroll')
+    this.shouldFixNav$ = fromEvent(this.window, 'scroll')
       .pipe(
         map(() => this.window.scrollY > navNative.offsetTop),
         tap((result) => {
           if (body) {
             body.style.paddingTop = result ? `${navNative.offsetHeight}px` : '0';
           }            
+          this.service.addClass(result);
         }),
         startWith(false)
-      ).subscribe((result) => {
-        this.stickyNavStyle = result;
-        this.service.addClass(result);
-        this.cdr.markForCheck();
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+      );
   }
 }
