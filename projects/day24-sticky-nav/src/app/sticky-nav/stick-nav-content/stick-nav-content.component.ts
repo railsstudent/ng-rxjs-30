@@ -43,6 +43,7 @@ import { StickyNavService } from '../services/sticky-nav.service';
 
     .fixed-nav.site-wrap {
       transform: scale(1);
+      border: 2px solid black;
     }
 
     p {

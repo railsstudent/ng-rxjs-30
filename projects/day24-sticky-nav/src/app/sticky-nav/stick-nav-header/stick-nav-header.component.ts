@@ -109,6 +109,7 @@ export class StickNavHeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const navNative = this.nav.nativeElement;
+    const body = navNative.closest('body');
 
     this.subscription = fromEvent(this.window, 'scroll')
       .pipe(
@@ -126,6 +127,9 @@ export class StickNavHeaderComponent implements OnInit, OnDestroy {
       ).subscribe((result) => {
         this.stickyNavStyle = result;
         this.service.updateStyle(result);
+        if (body) {
+          body.style.paddingTop = `${result.paddingTop}px`;
+        }
         this.cdr.markForCheck();
       });
   }
