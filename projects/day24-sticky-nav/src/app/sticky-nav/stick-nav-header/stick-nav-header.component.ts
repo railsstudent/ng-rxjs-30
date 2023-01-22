@@ -47,7 +47,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
       z-index: 1;
     }
 
-    body.fixed-nav nav {
+    nav.fixed-nav {
       position: fixed;
       box-shadow: 0 5px 0 rgba(0,0,0,0.1);
     }

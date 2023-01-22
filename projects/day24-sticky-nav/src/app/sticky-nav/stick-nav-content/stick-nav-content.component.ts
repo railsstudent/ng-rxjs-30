@@ -40,7 +40,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
       transition: transform 0.5s;
     }
 
-    body.fixed-nav .site-wrap {
+    .fixed-nav.site-wrap {
       transform: scale(1);
     }
 
