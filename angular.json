@@ -2486,6 +2486,107 @@
           }
         }
       }
+    },
+    "day24-sticky-nav": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/day24-sticky-nav",
+      "sourceRoot": "projects/day24-sticky-nav/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/day24-sticky-nav",
+            "index": "projects/day24-sticky-nav/src/index.html",
+            "main": "projects/day24-sticky-nav/src/main.ts",
+            "polyfills": "projects/day24-sticky-nav/src/polyfills.ts",
+            "tsConfig": "projects/day24-sticky-nav/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/day24-sticky-nav/src/favicon.ico",
+              "projects/day24-sticky-nav/src/assets"
+            ],
+            "styles": [
+              "projects/day24-sticky-nav/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/day24-sticky-nav/src/environments/environment.ts",
+                  "with": "projects/day24-sticky-nav/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all",
+              "baseHref": "https://railsstudent.github.io/ng-rxjs-30/day24-sticky-nav/"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "day24-sticky-nav:build:production"
+            },
+            "development": {
+              "browserTarget": "day24-sticky-nav:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "day24-sticky-nav:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/day24-sticky-nav/src/test.ts",
+            "polyfills": "projects/day24-sticky-nav/src/polyfills.ts",
+            "tsConfig": "projects/day24-sticky-nav/tsconfig.spec.json",
+            "karmaConfig": "projects/day24-sticky-nav/karma.conf.js",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/day24-sticky-nav/src/favicon.ico",
+              "projects/day24-sticky-nav/src/assets"
+            ],
+            "styles": [
+              "projects/day24-sticky-nav/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        }
+      }
     }
   }
 }
