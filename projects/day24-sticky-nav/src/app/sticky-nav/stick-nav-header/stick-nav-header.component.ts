@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subscription, fromEvent, map, startWith } from 'rxjs';
+import { Subscription, fromEvent, map, startWith, tap } from 'rxjs';
 import { WINDOW } from '../../core';
 import { StickyNavService } from '../services/sticky-nav.service';
 
@@ -9,7 +9,7 @@ import { StickyNavService } from '../services/sticky-nav.service';
     <header>
       <h1>A story about getting lost.</h1>
     </header>
-    <nav id="main" #menu [ngClass]="{ 'fixed-nav': stickyNavStyle.shouldAddFixedNav }">
+    <nav id="main" #menu [ngClass]="{ 'fixed-nav': stickyNavStyle }">
       <ul>
         <li class="logo"><a href="#">LOST.</a></li>
         <li><a href="#">Home</a></li>
@@ -103,7 +103,7 @@ export class StickNavHeaderComponent implements OnInit, OnDestroy {
   nav!: ElementRef<HTMLElement>;
 
   subscription!: Subscription;
-  stickyNavStyle = this.service.nonStickyNavStyle;
+  stickyNavStyle = false;
 
   constructor(@Inject(WINDOW) private window: Window, private cdr: ChangeDetectorRef, private service: StickyNavService) { }
 
@@ -113,23 +113,16 @@ export class StickNavHeaderComponent implements OnInit, OnDestroy {
 
     this.subscription = fromEvent(this.window, 'scroll')
       .pipe(
-        map(() => { 
-          if(this.window.scrollY > navNative.offsetTop) {
-            return {
-              shouldAddFixedNav: true,
-              paddingTop: navNative.offsetHeight
-            }
-          }
-          
-          return this.service.nonStickyNavStyle;
+        map(() => this.window.scrollY > navNative.offsetTop),
+        tap((result) => {
+          if (body) {
+            body.style.paddingTop = result ? `${navNative.offsetHeight}px` : '0';
+          }            
         }),
-        startWith(this.service.nonStickyNavStyle)
+        startWith(false)
       ).subscribe((result) => {
         this.stickyNavStyle = result;
-        this.service.updateStyle(result);
-        if (body) {
-          body.style.paddingTop = `${result.paddingTop}px`;
-        }
+        this.service.addClass(result);
         this.cdr.markForCheck();
       });
   }
