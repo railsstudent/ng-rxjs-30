@@ -5,10 +5,10 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class StickyNavService {
-  private readonly shouldIncludeClassSub = new BehaviorSubject<boolean>(false);
-  readonly shouldIncludeClass$ = this.shouldIncludeClassSub.asObservable();
+  private readonly shouldFixNavSub = new BehaviorSubject<boolean>(false);
+  readonly shouldFixNav$ = this.shouldFixNavSub.asObservable();
 
   addClass(value: boolean) {
-    this.shouldIncludeClassSub.next(value);
+    this.shouldFixNavSub.next(value);
   }
 }
