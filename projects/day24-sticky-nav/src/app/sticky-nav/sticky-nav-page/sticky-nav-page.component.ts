@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'app-stick-nav-page',
+  selector: 'app-sticky-nav-page',
   template: `
     <ng-container>
-      <app-stick-nav-header></app-stick-nav-header>
-      <app-stick-nav-content></app-stick-nav-content>
+      <app-sticky-nav-header></app-sticky-nav-header>
+      <app-sticky-nav-content></app-sticky-nav-content>
     </ng-container>
   `,
   styles: [`

@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { Observable, fromEvent, map, startWith, tap } from 'rxjs';
 import { WINDOW } from '../../core';
 import { StickyNavService } from '../services/sticky-nav.service';
 
 @Component({
-  selector: 'app-stick-nav-header',
+  selector: 'app-sticky-nav-header',
   template: `
     <header>
       <h1>A story about getting lost.</h1>
@@ -98,13 +98,13 @@ import { StickyNavService } from '../services/sticky-nav.service';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StickNavHeaderComponent implements OnInit {
+export class StickyNavHeaderComponent implements OnInit {
   @ViewChild('menu', { static: true, read: ElementRef })
   nav!: ElementRef<HTMLElement>;
 
   shouldFixNav$!: Observable<boolean>;
 
-  constructor(@Inject(WINDOW) private window: Window, private cdr: ChangeDetectorRef, private service: StickyNavService) { }
+  constructor(@Inject(WINDOW) private window: Window, private service: StickyNavService) { }
 
   ngOnInit(): void {
     const navNative = this.nav.nativeElement;

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StickNavHeaderComponent } from './stick-nav-header.component';
+import { StickyNavHeaderComponent } from './sticky-nav-header.component';
 
 describe('StickNavHeaderComponent', () => {
-  let component: StickNavHeaderComponent;
-  let fixture: ComponentFixture<StickNavHeaderComponent>;
+  let component: StickyNavHeaderComponent;
+  let fixture: ComponentFixture<StickyNavHeaderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StickNavHeaderComponent ]
+      declarations: [ StickyNavHeaderComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(StickNavHeaderComponent);
+    fixture = TestBed.createComponent(StickyNavHeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
