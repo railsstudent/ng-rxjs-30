@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
-  template: '<app-stick-nav-page></app-stick-nav-page>',
+  template: '<app-sticky-nav-page></app-sticky-nav-page>',
   styles: [`
     :host {
       display: block;
@@ -11,7 +11,7 @@ import { Title } from '@angular/platform-browser';
   `]
 })
 export class AppComponent {
-  title = 'Day24 Sticky Nav';
+  title = 'Day 24 Sticky Nav';
 
   constructor(titleService: Title) {
     titleService.setTitle(this.title);
