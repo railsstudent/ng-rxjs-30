@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { StickyNavService } from '../services/sticky-nav.service';
 
 @Component({
-  selector: 'app-stick-nav-content',
+  selector: 'app-sticky-nav-content',
   template: `
     <div class="site-wrap" [ngClass]="{ 'fixed-nav': shouldIncludeClass$ | async }">
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempore tempora rerum, est autem cupiditate, corporis a qui libero ipsum delectus quidem dolor at nulla, adipisci veniam in reiciendis aut asperiores omnis blanditiis quod quas laborum nam! Fuga ad tempora in aspernatur pariatur fugit quibusdam dolores sunt esse magni, ut, dignissimos.</p>

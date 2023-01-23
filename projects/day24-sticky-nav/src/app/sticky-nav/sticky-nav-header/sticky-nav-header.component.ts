@@ -4,7 +4,7 @@ import { WINDOW } from '../../core';
 import { StickyNavService } from '../services/sticky-nav.service';
 
 @Component({
-  selector: 'app-stick-nav-header',
+  selector: 'app-sticky-nav-header',
   template: `
     <header>
       <h1>A story about getting lost.</h1>
