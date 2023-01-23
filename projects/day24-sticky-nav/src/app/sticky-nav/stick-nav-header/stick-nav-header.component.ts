@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { Observable, fromEvent, map, startWith, tap } from 'rxjs';
 import { WINDOW } from '../../core';
 import { StickyNavService } from '../services/sticky-nav.service';
@@ -104,7 +104,7 @@ export class StickNavHeaderComponent implements OnInit {
 
   shouldFixNav$!: Observable<boolean>;
 
-  constructor(@Inject(WINDOW) private window: Window, private cdr: ChangeDetectorRef, private service: StickyNavService) { }
+  constructor(@Inject(WINDOW) private window: Window, private service: StickyNavService) { }
 
   ngOnInit(): void {
     const navNative = this.nav.nativeElement;
