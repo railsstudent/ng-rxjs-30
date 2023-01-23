@@ -53,7 +53,7 @@ import { StickyNavService } from '../services/sticky-nav.service';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StickNavContentComponent {
+export class StickyNavContentComponent {
   shouldIncludeClass$ = this.service.shouldIncludeClass$;
 
   constructor(private service: StickyNavService) { }

@@ -98,7 +98,7 @@ import { StickyNavService } from '../services/sticky-nav.service';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StickNavHeaderComponent implements OnInit {
+export class StickyNavHeaderComponent implements OnInit {
   @ViewChild('menu', { static: true, read: ElementRef })
   nav!: ElementRef<HTMLElement>;
 
