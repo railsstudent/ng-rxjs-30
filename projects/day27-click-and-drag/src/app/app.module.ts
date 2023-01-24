@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { SliderModule } from './slider/slider.module';
+import { SliderModule } from './slider';
 
 @NgModule({
   declarations: [
