@@ -2,7 +2,14 @@ import { ChangeDetectionStrategy, Component, Input, OnInit, TemplateRef } from '
 
 @Component({
   selector: 'app-stripe-card',
-  templateUrl: './stripe-card.component.html',
+  template: `
+    <ng-container>
+      <div class="dropdownBackground">
+          <span class="arrow"></span>
+      </div>
+      <ng-container *ngTemplateOutlet="content"></ng-container>
+    </ng-container>
+  `,
   styleUrls: ['./stripe-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
