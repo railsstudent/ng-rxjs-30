@@ -12,5 +12,4 @@ export class StripeNavPageComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 }

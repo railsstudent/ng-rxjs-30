@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, TemplateRef } from '@angular/core';
 
 @Component({
   selector: 'app-stripe-card',
@@ -7,6 +7,9 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StripeCardComponent implements OnInit {
+
+  @Input()
+  content!: TemplateRef<any>;
 
   constructor() { }
 
