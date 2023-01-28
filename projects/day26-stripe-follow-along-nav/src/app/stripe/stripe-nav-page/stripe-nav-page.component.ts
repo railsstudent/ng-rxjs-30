@@ -1,4 +1,5 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { concatMap, fromEvent, Subscription, tap, timer } from 'rxjs';
 import { CoolLinkDirective } from '../directives/cool-link.directive';
 import { StripeService } from '../services/stripe.service';
 
@@ -9,15 +10,15 @@ import { StripeService } from '../services/stripe.service';
       <h2>Cool</h2>
       <nav class="top" #top>
         <ul class="cool">
-          <li #cool>
+          <li class="link">
             <a href="#">About Me</a>
             <app-stripe-card [content]="aboutMe"></app-stripe-card>
           </li>
-          <li #cool>
+          <li class="link">
             <a href="#">Courses</a>
             <app-stripe-card [content]="courses"></app-stripe-card>
           </li>
-          <li #cool>
+          <li class="link">
             <a href="#">Other Links</a>
             <app-stripe-card [content]="social"></app-stripe-card>
           </li>
@@ -58,7 +59,7 @@ import { StripeService } from '../services/stripe.service';
   styleUrls: ['./stripe-nav-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StripeNavPageComponent implements OnInit, AfterViewInit {
+export class StripeNavPageComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('top', { static: true, read: ElementRef })
   nav!: ElementRef<HTMLElement>;
@@ -68,17 +69,39 @@ export class StripeNavPageComponent implements OnInit, AfterViewInit {
 
   socialAccounts$ = this.stripeService.getSocial();
   coursesTaught$ = this.stripeService.getCourses();
+  subscriptions = new Subscription();
 
   constructor(private stripeService: StripeService) { }
 
   ngAfterViewInit(): void {
-    console.log(this.links);
-  }
+    this.links.forEach(({ nativeElement }) => {
+      const mouseEnterSubscription = fromEvent(nativeElement, 'mouseenter')
+        .pipe(
+          tap(() => nativeElement.classList.add('trigger-enter')),
+          concatMap(() => {
+            return timer(150)
+              .pipe(tap(() => nativeElement.classList.add('trigger-enter-active')));
+          })
+        ).subscribe();
 
-  ngOnInit(): void {
+      const mouseLeaveSubscription = fromEvent(nativeElement, 'mouseleave')
+        .pipe(
+          tap(() => {
+            nativeElement.classList.remove('trigger-enter');
+            nativeElement.classList.remove('trigger-enter-active');
+          })
+        ).subscribe();
+
+      this.subscriptions.add(mouseEnterSubscription);
+      this.subscriptions.add(mouseLeaveSubscription);
+    });
   }
 
   trackByIndex(index: number) {
     return index;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }

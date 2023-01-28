@@ -1,19 +1,12 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, timer } from 'rxjs';
+import { map, timer } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StripeService {
-  private readonly shouldFixNavSub = new BehaviorSubject<boolean>(false);
-  readonly shouldFixNav$ = this.shouldFixNavSub.asObservable();
-
-  addClass(value: boolean) {
-    this.shouldFixNavSub.next(value);
-  }
-
   getSocial() {
-    return timer(500)
+    return timer(300)
       .pipe(
         map(() => ([
           {
@@ -38,7 +31,7 @@ export class StripeService {
   }
 
   getCourses() {
-    return timer(500)
+    return timer(250)
       .pipe(
         map(() => ([
           {
