@@ -1,7 +1,8 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { concatMap, fromEvent, Subscription, tap, timer } from 'rxjs';
 import { CoolLinkDirective } from '../directives/cool-link.directive';
 import { StripeService } from '../services/stripe.service';
+import { StripeCardComponent } from '../stripe-card/stripe-card.component';
 
 @Component({
   selector: 'app-stripe-nav-page',
@@ -59,7 +60,7 @@ import { StripeService } from '../services/stripe.service';
   styleUrls: ['./stripe-nav-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StripeNavPageComponent implements AfterViewInit, OnDestroy {
+export class StripeNavPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('top', { static: true, read: ElementRef })
   nav!: ElementRef<HTMLElement>;
@@ -67,28 +68,49 @@ export class StripeNavPageComponent implements AfterViewInit, OnDestroy {
   @ViewChildren(CoolLinkDirective)
   links!: QueryList<CoolLinkDirective>;
 
+  @ViewChildren(StripeCardComponent)
+  cards!: QueryList<StripeCardComponent>;
+
   socialAccounts$ = this.stripeService.getSocial();
   coursesTaught$ = this.stripeService.getCourses();
   subscriptions = new Subscription();
 
   constructor(private stripeService: StripeService) { }
 
+  ngOnInit(): void {
+    this.stripeService.navCoords = this.nav.nativeElement.getBoundingClientRect();
+  }
+
   ngAfterViewInit(): void {
-    this.links.forEach(({ nativeElement }) => {
+    this.links.forEach(({ nativeElement }, index) => {
       const mouseEnterSubscription = fromEvent(nativeElement, 'mouseenter')
         .pipe(
           tap(() => nativeElement.classList.add('trigger-enter')),
           concatMap(() => {
             return timer(150)
               .pipe(tap(() => nativeElement.classList.add('trigger-enter-active')));
+          }),
+          tap(() => {
+            const component = this.cards.get(index);
+            if (component) {
+              console.log('cardComponent', component);
+            }
+
+            // const background = nativeElement.querySelector('.dropdownBackground');
+            // const dropdown = nativeElement.querySelector('.dropdown');
+            // const dropdownCoords = dropdown?.getBoundingClientRect();
+
+            // if (background) {
+            //   background.classList.add('open');
+            // }
+            // console.log(dropdownCoords);
           })
         ).subscribe();
 
       const mouseLeaveSubscription = fromEvent(nativeElement, 'mouseleave')
         .pipe(
           tap(() => {
-            nativeElement.classList.remove('trigger-enter');
-            nativeElement.classList.remove('trigger-enter-active');
+            nativeElement.classList.remove('trigger-enter-active', 'trigger-enter');
           })
         ).subscribe();
 
