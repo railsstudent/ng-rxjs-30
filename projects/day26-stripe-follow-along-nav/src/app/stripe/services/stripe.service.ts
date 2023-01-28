@@ -7,14 +7,14 @@ import { map, Subject, timer } from 'rxjs';
 })
 export class StripeService {
   navCoords: DOMRect | null = null;
-  private readonly showCardComponentSub = new Subject<StripeCardComponent>();
+  private readonly showCardComponentSub = new Subject<{ component: StripeCardComponent; dropdownCoords: DOMRect }>();
   readonly showCardComponent$ = this.showCardComponentSub.asObservable();
 
   private readonly hideCardComponentSub = new Subject<StripeCardComponent>();
   readonly hideCardComponent$ = this.hideCardComponentSub.asObservable();
 
-  updateShowCardComponent(component: StripeCardComponent) {
-    this.showCardComponentSub.next(component);
+  updateShowCardComponent(component: StripeCardComponent, dropdownCoords: DOMRect) {
+    this.showCardComponentSub.next({ component, dropdownCoords });
   }
 
   updateHideCardComponent(component: StripeCardComponent) {
