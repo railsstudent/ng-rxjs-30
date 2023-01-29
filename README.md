@@ -3,7 +3,7 @@
 This project repeats Wes Bos's JavaScript 30 challenges (https://github.com/wesbos/JavaScript30) in Angular and RxJS.
 
 Challenges:
-- Day 1: JavaScript Drum Kit
+- Day 1: JavaScript Drum Kit (code: https://github.com/railsstudent/ng-rxjs-30/tree/main/projects/day1-javascript-drum-kit, demo: https://railsstudent.github.io/ng-rxjs-30/day1-javascript-drum-kit/)
 - Day 2: Ng and CSS Clock
 - Day 3: CSS Variables
 - Day 4: Array Cardio Part 1
