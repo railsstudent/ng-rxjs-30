@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { concatMap, fromEvent, Subscription, tap, timer } from 'rxjs';
 import { CoolLinkDirective } from '../directives/cool-link.directive';
 import { StripeService } from '../services/stripe.service';
@@ -62,7 +62,7 @@ import { StripeService } from '../services/stripe.service';
   styleUrls: ['./stripe-nav-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StripeNavPageComponent implements OnInit, AfterViewInit, OnDestroy {
+export class StripeNavPageComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('top', { static: true, read: ElementRef })
   nav!: ElementRef<HTMLElement>;
@@ -79,12 +79,10 @@ export class StripeNavPageComponent implements OnInit, AfterViewInit, OnDestroy 
 
   constructor(private stripeService: StripeService) { }
 
-  ngOnInit(): void {}
-
   ngAfterViewInit(): void {
     const navCoords = this.nav.nativeElement.getBoundingClientRect();
 
-    this.links.forEach(({ nativeElement }, index) => {
+    this.links.forEach(({ nativeElement }) => {
       const mouseEnterSubscription = fromEvent(nativeElement, 'mouseenter')
         .pipe(
           tap(() => nativeElement.classList.add('trigger-enter')),

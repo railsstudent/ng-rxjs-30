@@ -5,8 +5,6 @@ import { map, timer } from 'rxjs';
   providedIn: 'root'
 })
 export class StripeService {
-  navCoords: DOMRect | null = null;
-
   getSocial() {
     return timer(300)
       .pipe(
