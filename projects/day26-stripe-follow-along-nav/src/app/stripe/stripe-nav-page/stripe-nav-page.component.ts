@@ -95,20 +95,14 @@ export class StripeNavPageComponent implements AfterViewInit, OnDestroy {
           tap(() => {
             const dropdown = nativeElement.querySelector('.dropdown') as Element;
             const dropdownCoords = dropdown.getBoundingClientRect();
-            const coords = {
-              height: dropdownCoords.height,
-              width: dropdownCoords.width,
-              top: dropdownCoords.top - navCoords.top,
-              left: dropdownCoords.left - navCoords.left,
-            };
-
-            console.log('navCoords', navCoords, 'dropdownCoords', dropdownCoords, 'coords', coords);
+            const top = dropdownCoords.top - navCoords.top;
+            const left = dropdownCoords.left - navCoords.left;
 
             const backgroundNativeElement = this.background.nativeElement;
             backgroundNativeElement.classList.add('open');
-            backgroundNativeElement.style.width = `${coords.width}px`;
-            backgroundNativeElement.style.height = `${coords.height}px`;
-            backgroundNativeElement.style.transform = `translate(${coords.left}px, ${coords.top}px)`;
+            backgroundNativeElement.style.width = `${dropdownCoords.width}px`;
+            backgroundNativeElement.style.height = `${dropdownCoords.height}px`;
+            backgroundNativeElement.style.transform = `translate(${left}px, ${top}px)`;
           })
         ).subscribe();
 
