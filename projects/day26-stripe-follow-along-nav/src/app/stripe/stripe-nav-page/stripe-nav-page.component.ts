@@ -80,7 +80,7 @@ export class StripeNavPageComponent implements AfterViewInit, OnDestroy {
   constructor(private stripeService: StripeService) { }
 
   ngAfterViewInit(): void {
-    const navCoords = this.nav.nativeElement.getBoundingClientRect();
+    const translateBackground = this.navBarClosure(this.nav.nativeElement.getBoundingClientRect());
 
     this.links.forEach(({ nativeElement }) => {
       const mouseEnterSubscription = fromEvent(nativeElement, 'mouseenter')
@@ -92,31 +92,34 @@ export class StripeNavPageComponent implements AfterViewInit, OnDestroy {
               }
             }))
           ),
-          tap(() => {
-            const dropdown = nativeElement.querySelector('.dropdown') as Element;
-            const dropdownCoords = dropdown.getBoundingClientRect();
-            const top = dropdownCoords.top - navCoords.top;
-            const left = dropdownCoords.left - navCoords.left;
-
-            const backgroundNativeElement = this.background.nativeElement;
-            backgroundNativeElement.style.width = `${dropdownCoords.width}px`;
-            backgroundNativeElement.style.height = `${dropdownCoords.height}px`;
-            backgroundNativeElement.style.transform = `translate(${left}px, ${top}px)`;
-            backgroundNativeElement.classList.add('open');
-          })
-        ).subscribe();
+        ).subscribe(() => {
+          const dropdown = nativeElement.querySelector('.dropdown') as Element;
+          const dropdownCoords = dropdown.getBoundingClientRect();
+          translateBackground(dropdownCoords);
+        });
 
       const mouseLeaveSubscription = fromEvent(nativeElement, 'mouseleave')
-        .pipe(
-          tap(() => {
-            nativeElement.classList.remove('trigger-enter-active', 'trigger-enter');
-            this.background.nativeElement.classList.remove('open');
-          })
-        ).subscribe();
+        .subscribe(() => {
+          nativeElement.classList.remove('trigger-enter-active', 'trigger-enter');
+          this.background.nativeElement.classList.remove('open');
+        });
 
       this.subscriptions.add(mouseEnterSubscription);
       this.subscriptions.add(mouseLeaveSubscription);
     });
+  }
+
+  private navBarClosure(navCoords: DOMRect) {
+    return (dropdownCoords: DOMRect) => {
+      const top = dropdownCoords.top - navCoords.top;
+      const left = dropdownCoords.left - navCoords.left;
+
+      const backgroundNativeElement = this.background.nativeElement;
+      backgroundNativeElement.style.width = `${dropdownCoords.width}px`;
+      backgroundNativeElement.style.height = `${dropdownCoords.height}px`;
+      backgroundNativeElement.style.transform = `translate(${left}px, ${top}px)`;
+      backgroundNativeElement.classList.add('open');
+    }
   }
 
   trackByIndex(index: number) {
