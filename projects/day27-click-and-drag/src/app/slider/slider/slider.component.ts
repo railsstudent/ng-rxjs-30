@@ -17,7 +17,7 @@ export class SliderComponent implements OnInit, OnDestroy {
   slider!: ElementRef<HTMLDivElement>;
 
   active$!: Observable<boolean>;
-  subscription = new Subscription();
+  subscription!: Subscription;
 
   panels = [...Array(25).keys()].map(i => i < 9 ? `0${i + 1}` : `${i + 1}`);
 
@@ -32,8 +32,7 @@ export class SliderComponent implements OnInit, OnDestroy {
     this.active$ = merge(mouseDown$.pipe(map(() => true)), stop$.pipe(map(() => false)))
       .pipe(startWith(false));
 
-    this.subscription.add(
-      mouseDown$.pipe(
+    this.subscription = mouseDown$.pipe(
         filter((moveDownEvent) => moveDownEvent instanceof MouseEvent),
         map((moveDownEvent) => moveDownEvent as MouseEvent),
         concatMap((moveDownEvent) => {
@@ -51,8 +50,7 @@ export class SliderComponent implements OnInit, OnDestroy {
             takeUntil(stop$)
           );
         }),
-      ).subscribe()
-    );
+      ).subscribe();
   }
 
   ngOnDestroy(): void {
