@@ -15,17 +15,14 @@ import { StripeService } from '../services/stripe.service';
         <ul class="cool">
           <li class="link">
             <a href="#">About Me</a>
-            <!-- <app-stripe-card [content]="aboutMe"></app-stripe-card> -->
             <ng-template *ngTemplateOutlet="aboutMe"></ng-template>
           </li>
           <li class="link">
             <a href="#">Courses</a>
-            <!-- <app-stripe-card [content]="courses"></app-stripe-card> -->
             <ng-template *ngTemplateOutlet="courses"></ng-template>
           </li>
           <li class="link">
             <a href="#">Other Links</a>
-            <!-- <app-stripe-card [content]="social"></app-stripe-card> -->
             <ng-template *ngTemplateOutlet="social"></ng-template>
           </li>
         </ul>
@@ -76,18 +73,13 @@ export class StripeNavPageComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChildren(CoolLinkDirective)
   links!: QueryList<CoolLinkDirective>;
 
-  // @ViewChildren(StripeCardComponent)
-  // cards!: QueryList<StripeCardComponent>;
-
   socialAccounts$ = this.stripeService.getSocial();
   coursesTaught$ = this.stripeService.getCourses();
   subscriptions = new Subscription();
 
   constructor(private stripeService: StripeService) { }
 
-  ngOnInit(): void {
-    this.stripeService.navCoords = this.nav.nativeElement.getBoundingClientRect();
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     const navCoords = this.nav.nativeElement.getBoundingClientRect();
@@ -118,7 +110,7 @@ export class StripeNavPageComponent implements OnInit, AfterViewInit, OnDestroy 
             backgroundNativeElement.classList.add('open');
             backgroundNativeElement.style.width = `${coords.width}px`;
             backgroundNativeElement.style.height = `${coords.height}px`;
-            backgroundNativeElement.style.transform = `translate(${coords.left}px, ${coords.top}p)`;
+            backgroundNativeElement.style.transform = `translate(${coords.left}px, ${coords.top}px)`;
           })
         ).subscribe();
 

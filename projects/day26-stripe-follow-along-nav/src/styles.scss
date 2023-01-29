@@ -1,16 +1,76 @@
 /* You can add global styles to this file, and also import other style files */
 *, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+    box-sizing: inherit;
 }
 
 body {
+    margin: 0;
     width: 100vw;
     min-height: 100vh;
+    background:
+      linear-gradient(45deg, hsla(340, 100%, 55%, 1) 0%, hsla(340, 100%, 55%, 0) 70%),
+      linear-gradient(135deg, hsla(225, 95%, 50%, 1) 10%, hsla(225, 95%, 50%, 0) 80%),
+      linear-gradient(225deg, hsla(140, 90%, 50%, 1) 10%, hsla(140, 90%, 50%, 0) 80%),
+      linear-gradient(315deg, hsla(35, 95%, 55%, 1) 100%, hsla(35, 95%, 55%, 0) 70%);
 }
 
 html {
     box-sizing: border-box;
     font-family: "Arial Rounded MT Bold", "Helvetica Rounded", Arial, sans-serif;
+}
+
+nav {
+  position: relative;
+  perspective: 600px;
+}
+
+.cool > li > a {
+  color: yellow;
+  text-decoration: none;
+  font-size: 20px;
+  background: rgba(0,0,0,0.2);
+  padding: 10px 20px;
+  display: inline-block;
+  margin: 20px;
+  border-radius: 5px;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.cool > li {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.dropdown {
+  opacity: 0;
+  position: absolute;
+  overflow: hidden;
+  padding: 20px;
+  top: -20px;
+  border-radius: 2px;
+  transition: all 0.5s;
+  transform: translateY(100px);
+  will-change: opacity;
+  display: none;
+}
+
+.trigger-enter .dropdown {
+  display: block;
+}
+
+.trigger-enter-active .dropdown {
+  opacity: 1;
+}
+
+.dropdown a {
+  text-decoration: none;
+  color: #ffc600;
 }

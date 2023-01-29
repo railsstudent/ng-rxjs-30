@@ -1,25 +1,11 @@
-import { StripeCardComponent } from './../stripe-card/stripe-card.component';
 import { Injectable } from '@angular/core';
-import { map, Subject, timer } from 'rxjs';
+import { map, timer } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StripeService {
   navCoords: DOMRect | null = null;
-  private readonly showCardComponentSub = new Subject<{ component: StripeCardComponent; dropdownCoords: DOMRect }>();
-  readonly showCardComponent$ = this.showCardComponentSub.asObservable();
-
-  private readonly hideCardComponentSub = new Subject<StripeCardComponent>();
-  readonly hideCardComponent$ = this.hideCardComponentSub.asObservable();
-
-  updateShowCardComponent(component: StripeCardComponent, dropdownCoords: DOMRect) {
-    this.showCardComponentSub.next({ component, dropdownCoords });
-  }
-
-  updateHideCardComponent(component: StripeCardComponent) {
-    this.hideCardComponentSub.next(component);
-  }
 
   getSocial() {
     return timer(300)
