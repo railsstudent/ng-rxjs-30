@@ -15,15 +15,15 @@ import { StripeService } from '../services/stripe.service';
         <ul class="cool">
           <li class="link">
             <a href="#">About Me</a>
-            <ng-template *ngTemplateOutlet="aboutMe"></ng-template>
+            <ng-container *ngTemplateOutlet="aboutMe"></ng-container>
           </li>
           <li class="link">
             <a href="#">Courses</a>
-            <ng-template *ngTemplateOutlet="courses"></ng-template>
+            <ng-container *ngTemplateOutlet="courses"></ng-container>
           </li>
           <li class="link">
             <a href="#">Other Links</a>
-            <ng-template *ngTemplateOutlet="social"></ng-template>
+            <ng-container *ngTemplateOutlet="social"></ng-container>
           </li>
         </ul>
       </nav>
@@ -99,10 +99,10 @@ export class StripeNavPageComponent implements AfterViewInit, OnDestroy {
             const left = dropdownCoords.left - navCoords.left;
 
             const backgroundNativeElement = this.background.nativeElement;
-            backgroundNativeElement.classList.add('open');
             backgroundNativeElement.style.width = `${dropdownCoords.width}px`;
             backgroundNativeElement.style.height = `${dropdownCoords.height}px`;
             backgroundNativeElement.style.transform = `translate(${left}px, ${top}px)`;
+            backgroundNativeElement.classList.add('open');
           })
         ).subscribe();
 
