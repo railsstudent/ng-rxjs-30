@@ -1,26 +1,44 @@
 # NgRxjs30
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.2.
+This project repeats Wes Bos's JavaScript 30 challenges (https://github.com/wesbos/JavaScript30) in Angular and RxJS.
+
+Challenges:
+- Day 1: JavaScript Drum Kit
+- Day 2: Ng and CSS Clock
+- Day 3: CSS Variables
+- Day 4: Array Cardio Part 1
+- Day 5: Flex panel gallery
+- Day 6: Ng Type Ahead
+- Day 7: Array Cardio Part 2
+- Day 8: Ng HTML Canvas
+- Day 10: Hold Shift And Check Checkboxes
+- Day 11: Custom Video Player
+- Day 12: Key Sequence Detection
+- Day 13:
+- Day 15:
+- Day 16:
+- Day 17:
+- Day 18:
+- Day 19:
+- Day 20:
+- Day 22:
+- Day 23:
+- Day 24:
+- Day 26:
+- Day 27:
+- Day 28:
+- Day 29:
+- Day 30:
 
 ## Development server
 
 Run `ng serve --project=<project name>` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+- Check out gh-pages branch
+- Run `./build-doc.sh <project name>` to build the project. The build artifacts will be stored in the `dist/` directory.
+- git commit and push gh-pages branch to deploy the project to github page
 
 ## Generate module in projects
 ```bash
