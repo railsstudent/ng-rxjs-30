@@ -86,11 +86,14 @@ export class StripeNavPageComponent implements AfterViewInit, OnDestroy {
       const mouseEnterSubscription = fromEvent(nativeElement, 'mouseenter')
         .pipe(
           tap(() => nativeElement.classList.add('trigger-enter')),
-          concatMap(() => timer(150).pipe(tap(() => {
-              if (nativeElement.classList.contains('trigger-enter')) {
-                nativeElement.classList.add('trigger-enter-active');
-              }
-            }))
+          concatMap(() => timer(150)
+            .pipe(
+              tap(() => {
+                if (nativeElement.classList.contains('trigger-enter')) {
+                  nativeElement.classList.add('trigger-enter-active');
+                }
+              })
+            )
           ),
         ).subscribe(() => {
           const dropdown = nativeElement.querySelector('.dropdown') as Element;
