@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Day1-JavaScript-Drum-Kit": {
+    "day1-javascript-drum-kit": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -73,10 +73,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "Day1-JavaScript-Drum-Kit:build:production"
+              "browserTarget": "day1-javascript-drum-kit:build:production"
             },
             "development": {
-              "browserTarget": "Day1-JavaScript-Drum-Kit:build:development"
+              "browserTarget": "day1-javascript-drum-kit:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -84,7 +84,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Day1-JavaScript-Drum-Kit:build"
+            "browserTarget": "day1-javascript-drum-kit:build"
           }
         },
         "test": {

@@ -14,6 +14,7 @@ import { Title } from '@angular/platform-browser';
 })
 export class AppComponent {
   title = 'Day 3 CSS Variables';
+
   constructor (titleService: Title) {
     titleService.setTitle(this.title);
   }

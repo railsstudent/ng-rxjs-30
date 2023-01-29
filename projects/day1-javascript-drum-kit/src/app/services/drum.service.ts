@@ -5,8 +5,8 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class DrumService {
-  private playDrumKey = new Subject<string>();
-  playDrumKey$ = this.playDrumKey.asObservable();
+  private readonly playDrumKey = new Subject<string>();
+  readonly playDrumKey$ = this.playDrumKey.asObservable();
 
   playSound(key: string) {
     this.playDrumKey.next(key);
