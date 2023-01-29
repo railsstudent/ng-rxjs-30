@@ -1,36 +1,36 @@
 :host {
-    display: block;
+  display: block;
 
-    text-align: center;
-    background: #193549;
-    color: white;
-    font-family: 'helvetica neue', sans-serif;
-    font-weight: 100;
-    font-size: 50px;
-    min-height: 100vh;
+  text-align: center;
+  background: #193549;
+  color: white;
+  font-family: 'helvetica neue', sans-serif;
+  font-weight: 100;
+  font-size: 50px;
+  min-height: 100vh;
 
-    --base: #ffc600;
-    --spacing: 10px;
-    --blur: 10px;
+  --base: #ffc600;
+  --spacing: 10px;
+  --blur: 10px;
 }
 
 img {
-    padding: var(--spacing);
-    background: var(--base);
-    filter: blur(var(--blur));
+  padding: var(--spacing);
+  background: var(--base);
+  filter: blur(var(--blur));
 }
 
 h2 {
-    padding-top: 50px;
-    padding-bottom: 50px;
+  padding-top: 50px;
+  padding-bottom: 50px;
 }
 
 .hl {
-    color: var(--base);
+  color: var(--base);
 }
 
 .controls {
-    margin-bottom: 50px;
+  margin-bottom: 50px;
 }
 
 input {
