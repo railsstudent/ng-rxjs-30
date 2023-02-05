@@ -1,5 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { concatMap, fromEvent, Subscription, tap, timer } from 'rxjs';
+import { Subscription, fromEvent } from 'rxjs';
+import { hoverLink } from '../custom-operators/hover-link.operator';
 import { CoolLinkDirective } from '../directives/cool-link.directive';
 import { StripeService } from '../services/stripe.service';
 
@@ -84,18 +85,8 @@ export class StripeNavPageComponent implements AfterViewInit, OnDestroy {
 
     this.links.forEach(({ nativeElement }) => {
       const mouseEnterSubscription = fromEvent(nativeElement, 'mouseenter')
-        .pipe(
-          tap(() => nativeElement.classList.add('trigger-enter')),
-          concatMap(() => timer(150)
-            .pipe(
-              tap(() => {
-                if (nativeElement.classList.contains('trigger-enter')) {
-                  nativeElement.classList.add('trigger-enter-active');
-                }
-              })
-            )
-          ),
-        ).subscribe(() => {
+        .pipe(hoverLink(nativeElement))
+        .subscribe(() => {
           const dropdown = nativeElement.querySelector('.dropdown');
           if (dropdown) {
             translateBackground(dropdown.getBoundingClientRect());
