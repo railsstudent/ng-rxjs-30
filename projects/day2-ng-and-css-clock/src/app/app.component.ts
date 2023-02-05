@@ -4,7 +4,11 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-root',
   template: '<app-clock></app-clock>',
-  styleUrls: ['./app.component.scss']
+  styles: [`
+    :host {
+      display: block;
+    }
+  `]
 })
 export class AppComponent {
   constructor(titleService: Title) {

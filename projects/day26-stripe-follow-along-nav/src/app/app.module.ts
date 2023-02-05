@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { SliderModule } from './slider';
+import { StripeModule } from './stripe';
 
 @NgModule({
   declarations: [
@@ -10,7 +10,7 @@ import { SliderModule } from './slider';
   ],
   imports: [
     BrowserModule,
-    SliderModule,
+    StripeModule
   ],
   providers: [],
   bootstrap: [AppComponent]
