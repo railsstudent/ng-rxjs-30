@@ -12,7 +12,6 @@ import { StripeModule } from './stripe';
     BrowserModule,
     StripeModule
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
