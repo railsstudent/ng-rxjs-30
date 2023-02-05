@@ -96,9 +96,10 @@ export class StripeNavPageComponent implements AfterViewInit, OnDestroy {
             )
           ),
         ).subscribe(() => {
-          const dropdown = nativeElement.querySelector('.dropdown') as Element;
-          const dropdownCoords = dropdown.getBoundingClientRect();
-          translateBackground(dropdownCoords);
+          const dropdown = nativeElement.querySelector('.dropdown');
+          if (dropdown) {
+            translateBackground(dropdown.getBoundingClientRect());
+          }
         });
 
       const mouseLeaveSubscription = fromEvent(nativeElement, 'mouseleave')
