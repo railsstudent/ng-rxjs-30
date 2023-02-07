@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, Subject, filter, fromEvent, map, scan, takeUntil, tap } from 'rxjs';
+import { Observable, Subscription, filter, fromEvent, map, scan, tap } from 'rxjs';
 import { SpeechRecognitionInfo, Transcript } from '../interfaces/speech-recognition.interface';
 
 declare var webkitSpeechRecognition: any;
@@ -51,35 +51,36 @@ export class SpeechDetectionComponent implements OnInit, OnDestroy {
   @ViewChild('words', { static: true, read: ElementRef })
   words!: ElementRef<HTMLDivElement>;
 
-  destroy$ = new Subject<void>();
-  wordList$!: Observable<Transcript[]>
+  wordList$!: Observable<Transcript[]>;
+  subscription = new Subscription();
 
   ngOnInit(): void {
     const recognition = new webkitSpeechRecognition() || new SpeechRecognition();
     recognition.interimResults = true;
     recognition.lang = 'en-US';
 
-    fromEvent(recognition, 'end').pipe(
-      tap(() => recognition.start()),
-      takeUntil(this.destroy$)
-    ).subscribe();
+    this.subscription.add(
+      fromEvent(recognition, 'end').pipe(tap(() => recognition.start())).subscribe()
+    );
 
+    const percent = 100;
     this.wordList$ = fromEvent(recognition, 'result').pipe(
         map((e: any): SpeechRecognitionInfo =>  { 
           const transcript = Array.from(e.results).map((result: any) => result[0].transcript).join('');
           const poopScript = transcript.replace(/poop|poo|shit|dump/gi, '💩');
+          const firstResult = e.results[0];
 
           return {
             transcript: poopScript,
-            confidence: e.results[0][0].confidence,
-            isFinal: e.results[0].isFinal
+            confidence: firstResult[0].confidence,
+            isFinal: firstResult.isFinal
           }
         }),
-        filter((result) => result.isFinal),
-        scan((acc: Transcript[], speech) => 
+        filter(({ isFinal }) => isFinal),
+        scan((acc: Transcript[], { transcript, confidence } ) => 
           acc.concat({ 
-            transcript: speech.transcript,
-            confidencePercentage: (speech.confidence * 100).toFixed(2),
+            transcript,
+            confidencePercentage: (confidence * percent).toFixed(2),
           }), []),
       );
 
@@ -87,7 +88,6 @@ export class SpeechDetectionComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.subscription.unsubscribe();
   }
 }
