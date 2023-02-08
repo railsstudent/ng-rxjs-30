@@ -1,5 +1,5 @@
-import { APP_BASE_HREF, CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit } from '@angular/core';
+import { APP_BASE_HREF, NgFor } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subscription, filter, fromEvent, map } from 'rxjs';
 import { WINDOW } from '../core';
 import { DrumKeyComponent } from '../drum-key/drum-key.component';
@@ -8,7 +8,7 @@ import { ENTRIES } from './drum.constant';
 
 @Component({
   imports: [
-    CommonModule,
+    NgFor,
     DrumKeyComponent,
   ],
   selector: 'app-drum',
@@ -45,12 +45,10 @@ import { ENTRIES } from './drum.constant';
 export class DrumComponent implements OnInit, OnDestroy {
   subscription!: Subscription;
   entries = ENTRIES;
-
-  constructor(private hostElement: ElementRef<HTMLElement>,
-    private drumService: DrumService,
-    @Inject(APP_BASE_HREF) private baseHref: string,
-    @Inject(WINDOW) private window: Window,
-  ) {}
+  private drumService = inject(DrumService);
+  private baseHref = inject(APP_BASE_HREF);
+  private window = inject<Window>(WINDOW);
+  private hostElement = inject<ElementRef<HTMLElement>>(ElementRef<HTMLElement>);
 
   ngOnInit(): void {
     const allowedKeys = this.entries.map(entry => entry.key)
