@@ -1,11 +1,16 @@
-import { APP_BASE_HREF } from '@angular/common';
+import { APP_BASE_HREF, CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit } from '@angular/core';
-import { filter, fromEvent, map, Subscription } from 'rxjs';
+import { Subscription, filter, fromEvent, map } from 'rxjs';
 import { WINDOW } from '../core';
+import { DrumKeyComponent } from '../drum-key/drum-key.component';
 import { DrumService } from '../services';
 import { ENTRIES } from './drum.constant';
 
 @Component({
+  imports: [
+    CommonModule,
+    DrumKeyComponent,
+  ],
   selector: 'app-drum',
   template: `
     <div class="keys">
@@ -34,7 +39,8 @@ import { ENTRIES } from './drum.constant';
       }
     }
   `],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class DrumComponent implements OnInit, OnDestroy {
   subscription!: Subscription;

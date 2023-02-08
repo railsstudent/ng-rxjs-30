@@ -47,7 +47,8 @@ import { DrumService } from '../services';
       color: #ffc600;
     }
   `],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class DrumKeyComponent implements OnInit, OnDestroy {
   @Input()
