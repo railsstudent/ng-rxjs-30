@@ -14,21 +14,21 @@ Challenges:
 - Day 10: Hold Shift And Check Checkboxes
 - Day 11: Custom Video Player
 - Day 12: Key Sequence Detection
-- Day 13:
-- Day 15:
-- Day 16:
-- Day 17:
-- Day 18:
-- Day 19:
-- Day 20:
-- Day 22:
-- Day 23:
-- Day 24:
-- Day 26:
-- Day 27:
-- Day 28:
-- Day 29:
-- Day 30:
+- Day 13: Slide in on scroll
+- Day 15: Local Storage
+- Day 16: Mouse Move
+- Day 17: Sorted without articles
+- Day 18: Adding up times
+- Day 19: Webcam fun
+- Day 20: Speech detection
+- Day 22: Follow along link highlighter
+- Day 23: Speech synthesis
+- Day 24: Sticky Nav
+- Day 26: Stripe follow along navigation
+- Day 27: Click and drag
+- Day 28: Video speed controller
+- Day 29: Countdown timer
+- Day 30: Whack a mole
 
 ## Development server
 
