@@ -11,6 +11,7 @@ import { ENTRIES } from './drum.constant';
     NgFor,
     DrumKeyComponent,
   ],
+  standalone: true,
   selector: 'app-drum',
   template: `
     <div class="keys">
@@ -40,10 +41,9 @@ import { ENTRIES } from './drum.constant';
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class DrumComponent implements OnInit, OnDestroy {
-  subscription!: Subscription;
+  subscription = new Subscription();
   entries = ENTRIES;
   private drumService = inject(DrumService);
   private baseHref = inject(APP_BASE_HREF);
@@ -52,14 +52,15 @@ export class DrumComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const allowedKeys = this.entries.map(entry => entry.key)
-    this.subscription = fromEvent(this.window, 'keydown')
+    this.subscription.add(fromEvent(this.window, 'keydown')
       .pipe(
         filter(evt => evt instanceof KeyboardEvent),
         map(evt => evt as KeyboardEvent),
         map(({ key }) => key.toUpperCase()),
         filter(key => allowedKeys.includes(key)),
       )
-      .subscribe((key) => this.drumService.playSound(key));
+      .subscribe((key) => this.drumService.playSound(key))
+    );
 
     this.hostElement.nativeElement.style.backgroundImage = this.imageUrl;
   }

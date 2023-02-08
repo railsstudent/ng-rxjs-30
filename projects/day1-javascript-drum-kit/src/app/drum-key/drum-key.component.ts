@@ -5,6 +5,7 @@ import { Key } from '../interfaces';
 import { DrumService } from '../services';
 
 @Component({
+  standalone: true,
   selector: 'app-drum-key',
   template: `
     <ng-container>
@@ -48,7 +49,6 @@ import { DrumService } from '../services';
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class DrumKeyComponent implements OnInit, OnDestroy {
   @Input()
@@ -77,11 +77,9 @@ export class DrumKeyComponent implements OnInit, OnDestroy {
         .pipe(
           filter(evt => evt instanceof TransitionEvent),
           map(evt => evt as TransitionEvent),
+          filter(evt => evt.propertyName === 'transform')
         )
-        .subscribe((evt) => {
-          if (evt.propertyName !== 'transform') {
-            return;
-          }
+        .subscribe(() => {
           this.isPlaying = false;
           this.cdr.markForCheck();
         })
