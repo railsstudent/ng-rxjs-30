@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscription, filter, fromEvent, map, scan, tap } from 'rxjs';
 import { SpeechRecognitionInfo, Transcript } from '../interfaces/speech-recognition.interface';
 
@@ -7,7 +7,8 @@ declare var SpeechRecognition: any;
 
 @Component({
   selector: 'app-speech-detection',
-  template: `<div class="words" contenteditable #words>
+  template: `
+    <div class="words" contenteditable>
       <ng-container *ngIf="wordList$ | async as wordList">
         <p *ngFor="let word of wordList">{{ word.transcript }}, confidence: {{ word.confidencePercentage }}%</p>
       </ng-container>
@@ -48,9 +49,6 @@ declare var SpeechRecognition: any;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SpeechDetectionComponent implements OnInit, OnDestroy {
-  @ViewChild('words', { static: true, read: ElementRef })
-  words!: ElementRef<HTMLDivElement>;
-
   wordList$!: Observable<Transcript[]>;
   subscription = new Subscription();
 
