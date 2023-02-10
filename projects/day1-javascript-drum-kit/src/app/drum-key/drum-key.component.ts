@@ -4,6 +4,16 @@ import { Subscription, filter, fromEvent, map } from 'rxjs';
 import { Key } from '../interfaces';
 import { DrumService } from '../services';
 
+const transitionEnd = () => {
+  const hostElement = inject<ElementRef<HTMLElement>>(ElementRef<HTMLElement>).nativeElement;
+  return fromEvent(hostElement, 'transitionend')
+    .pipe(
+      filter(evt => evt instanceof TransitionEvent),
+      map(evt => evt as TransitionEvent),
+      filter(evt => evt.propertyName === 'transform')
+    );
+}
+
 @Component({
   standalone: true,
   selector: 'app-drum-key',
@@ -62,8 +72,9 @@ export class DrumKeyComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
   private drumService = inject(DrumService);
   private baseHref = inject(APP_BASE_HREF);
-  private hostElement = inject<ElementRef<HTMLElement>>(ElementRef<HTMLElement>).nativeElement;
   private cdr = inject(ChangeDetectorRef);
+
+  transitionEnd$ = transitionEnd();
 
   ngOnInit(): void {
     this.subscription.add(
@@ -74,17 +85,11 @@ export class DrumKeyComponent implements OnInit, OnDestroy {
     );
 
     this.subscription.add(
-      fromEvent(this.hostElement, 'transitionend')
-        .pipe(
-          filter(evt => evt instanceof TransitionEvent),
-          map(evt => evt as TransitionEvent),
-          filter(evt => evt.propertyName === 'transform')
-        )
-        .subscribe(() => {
-          this.isPlaying = false;
-          this.cdr.markForCheck();
-        })
-    )
+      this.transitionEnd$.subscribe(() => {
+        this.isPlaying = false;
+        this.cdr.markForCheck();
+      })
+    );
   }
 
   get soundFile() {
