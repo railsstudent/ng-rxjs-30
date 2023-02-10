@@ -1,4 +1,4 @@
-import { enableProdMode } from '@angular/core';
+import { enableProdMode, inject } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 
 import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
@@ -10,12 +10,16 @@ if (environment.production) {
   enableProdMode();
 }
 
+function getAppBaseHref() {
+  return inject(PlatformLocation).getBaseHrefFromDOM()
+}
+
+
 bootstrapApplication(AppComponent, {
   providers: [
     {
       provide: APP_BASE_HREF,
-      useFactory: (platformLocation: PlatformLocation) => platformLocation.getBaseHrefFromDOM(),
-      deps: [PlatformLocation]
+      useFactory: getAppBaseHref,
     },
     browserWindowProvider,
     windowProvider,

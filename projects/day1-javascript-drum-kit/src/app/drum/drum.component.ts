@@ -48,7 +48,7 @@ export class DrumComponent implements OnInit, OnDestroy {
   private drumService = inject(DrumService);
   private baseHref = inject(APP_BASE_HREF);
   private window = inject<Window>(WINDOW);
-  private hostElement = inject<ElementRef<HTMLElement>>(ElementRef<HTMLElement>);
+  private hostElement = inject<ElementRef<HTMLElement>>(ElementRef<HTMLElement>).nativeElement;
 
   ngOnInit(): void {
     const allowedKeys = this.entries.map(entry => entry.key)
@@ -62,7 +62,7 @@ export class DrumComponent implements OnInit, OnDestroy {
       .subscribe((key) => this.drumService.playSound(key))
     );
 
-    this.hostElement.nativeElement.style.backgroundImage = this.imageUrl;
+    this.hostElement.style.backgroundImage = this.imageUrl;
   }
 
   get imageUrl() {

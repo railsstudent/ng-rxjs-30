@@ -62,7 +62,7 @@ export class DrumKeyComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
   private drumService = inject(DrumService);
   private baseHref = inject(APP_BASE_HREF);
-  private hostElement = inject(ElementRef);
+  private hostElement = inject<ElementRef<HTMLElement>>(ElementRef<HTMLElement>).nativeElement;
   private cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
@@ -74,7 +74,7 @@ export class DrumKeyComponent implements OnInit, OnDestroy {
     );
 
     this.subscription.add(
-      fromEvent(this.hostElement.nativeElement, 'transitionend')
+      fromEvent(this.hostElement, 'transitionend')
         .pipe(
           filter(evt => evt instanceof TransitionEvent),
           map(evt => evt as TransitionEvent),
