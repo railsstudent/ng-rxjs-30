@@ -1,6 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { filter, fromEvent, map, Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Subscription, filter, fromEvent, map } from 'rxjs';
 import { Key } from '../interfaces';
 import { DrumService } from '../services';
 
@@ -60,9 +60,10 @@ export class DrumKeyComponent implements OnInit, OnDestroy {
   @HostBinding('class.playing') isPlaying = false;
 
   subscription = new Subscription();
-
-  constructor(private drumService: DrumService, private cdr: ChangeDetectorRef, @Inject(APP_BASE_HREF) private baseHref: string,
-    private hostElement: ElementRef) {}
+  private drumService = inject(DrumService);
+  private baseHref = inject(APP_BASE_HREF);
+  private hostElement = inject(ElementRef);
+  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     this.subscription.add(

@@ -3,7 +3,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
 
 import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
 import { AppComponent } from './app/app.component';
-import { WINDOW_PROVIDERS } from './app/core';
+import { browserWindowProvider, windowProvider } from './app/core';
 import { environment } from './environments/environment';
 
 if (environment.production) {
@@ -17,7 +17,8 @@ bootstrapApplication(AppComponent, {
       useFactory: (platformLocation: PlatformLocation) => platformLocation.getBaseHrefFromDOM(),
       deps: [PlatformLocation]
     },
-    ...WINDOW_PROVIDERS,
+    browserWindowProvider,
+    windowProvider,
   ]
 })
   .catch(err => console.error(err));
