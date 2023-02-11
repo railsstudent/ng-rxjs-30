@@ -1,18 +1,24 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { Subscription, filter, fromEvent, map } from 'rxjs';
+import { getHostNativeElement } from '../get-host-native-element';
 import { Key } from '../interfaces';
 import { DrumService } from '../services';
 
-const transitionEnd = () => {
-  const hostElement = inject<ElementRef<HTMLElement>>(ElementRef<HTMLElement>).nativeElement;
-  return fromEvent(hostElement, 'transitionend')
+const getAppBaseRefFn = () => {
+  const appBaseHref = inject(APP_BASE_HREF);
+  const isEndWithSlash = appBaseHref.endsWith('/');
+  const baseHref = `${appBaseHref}${ isEndWithSlash ? '' : '/' }`;
+  return (description: string) => `${baseHref}assets/sounds/${description}.wav`;
+}
+
+const drumKeyTranstionEnd = () => 
+  fromEvent(getHostNativeElement(), 'transitionend')
     .pipe(
       filter(evt => evt instanceof TransitionEvent),
       map(evt => evt as TransitionEvent),
       filter(evt => evt.propertyName === 'transform')
     );
-}
 
 @Component({
   standalone: true,
@@ -61,7 +67,7 @@ const transitionEnd = () => {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DrumKeyComponent implements OnInit, OnDestroy {
-  @Input()
+  @Input() 
   entry!: Key;
 
   @ViewChild('audio', { static: true })
@@ -70,19 +76,13 @@ export class DrumKeyComponent implements OnInit, OnDestroy {
   @HostBinding('class.playing') isPlaying = false;
 
   subscription = new Subscription();
-  private drumService = inject(DrumService);
-  private baseHref = inject(APP_BASE_HREF);
-  private cdr = inject(ChangeDetectorRef);
-
-  transitionEnd$ = transitionEnd();
+  cdr = inject(ChangeDetectorRef);
+  transitionEnd$ = drumKeyTranstionEnd();
+  playKey$ = inject(DrumService).playDrumKey$.pipe(filter(key => key === this.entry.key));
+  getAppBaseRef = getAppBaseRefFn();
 
   ngOnInit(): void {
-    this.subscription.add(
-      this.drumService.playDrumKey$.pipe(
-        filter(key => key === this.entry.key),
-      )
-      .subscribe(() => this.playSound())
-    );
+    this.subscription.add(this.playKey$.subscribe(() => this.playSound()));
 
     this.subscription.add(
       this.transitionEnd$.subscribe(() => {
@@ -93,8 +93,7 @@ export class DrumKeyComponent implements OnInit, OnDestroy {
   }
 
   get soundFile() {
-    const isEndWithSlash = this.baseHref.endsWith('/');
-    return `${this.baseHref}${ isEndWithSlash ? '' : '/' }assets/sounds/${this.entry.description}.wav`;
+    return this.getAppBaseRef(this.entry.description);
   }
 
   playSound() {

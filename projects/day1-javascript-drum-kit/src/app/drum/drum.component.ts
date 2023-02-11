@@ -1,8 +1,9 @@
 import { APP_BASE_HREF, NgFor } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, inject } from '@angular/core';
-import { Subscription, filter, fromEvent, map } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { filter, fromEvent, map } from 'rxjs';
 import { WINDOW } from '../core/services';
 import { DrumKeyComponent } from '../drum-key/drum-key.component';
+import { getHostNativeElement } from '../get-host-native-element';
 import { DrumService } from '../services';
 import { ENTRIES } from './drum.constant';
 
@@ -13,19 +14,17 @@ const getImageUrl = () => {
   return `url('${image}')`;
 }
 
-const windowKeydown = () => {
+const windowKeydownSubscription = () => {
   const allowedKeys = ENTRIES.map(entry => entry.key);
-  const window = inject<Window>(WINDOW);
-  return fromEvent(window, 'keydown')
+  const drumService = inject(DrumService);
+  return fromEvent(inject<Window>(WINDOW), 'keydown')
     .pipe(
       filter(evt => evt instanceof KeyboardEvent),
       map(evt => evt as KeyboardEvent),
       map(({ key }) => key.toUpperCase()),
       filter(key => allowedKeys.includes(key)),
-    );
+    ).subscribe((key) => drumService.playSound(key));
 }
-
-const getHostNativeElement = () => inject<ElementRef<HTMLElement>>(ElementRef<HTMLElement>).nativeElement;
 
 @Component({
   imports: [
@@ -65,14 +64,12 @@ const getHostNativeElement = () => inject<ElementRef<HTMLElement>>(ElementRef<HT
 })
 export class DrumComponent implements OnInit, OnDestroy {
   entries = ENTRIES;
-  drumService = inject(DrumService);
   hostElement = getHostNativeElement();
-  keydown$ = windowKeydown();
+  keydown$ = windowKeydownSubscription();
   imageUrl = getImageUrl();
-  subscription!: Subscription;
+  subscription = windowKeydownSubscription();
 
   ngOnInit(): void {
-    this.subscription = this.keydown$.subscribe((key) => this.drumService.playSound(key));
     this.hostElement.style.backgroundImage = this.imageUrl;
   }
 
