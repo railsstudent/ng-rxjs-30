@@ -65,7 +65,6 @@ const windowKeydownSubscription = () => {
 export class DrumComponent implements OnInit, OnDestroy {
   entries = ENTRIES;
   hostElement = getHostNativeElement();
-  keydown$ = windowKeydownSubscription();
   imageUrl = getImageUrl();
   subscription = windowKeydownSubscription();
 

@@ -1,6 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { Subscription, filter, fromEvent, map } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnDestroy, ViewChild, inject } from '@angular/core';
+import { filter, fromEvent, map } from 'rxjs';
 import { getHostNativeElement } from '../get-host-native-element';
 import { Key } from '../interfaces';
 import { DrumService } from '../services';
@@ -66,7 +66,7 @@ const drumKeyTranstionEnd = () =>
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DrumKeyComponent implements OnInit, OnDestroy {
+export class DrumKeyComponent implements OnDestroy {
   @Input() 
   entry!: Key;
 
@@ -75,22 +75,16 @@ export class DrumKeyComponent implements OnInit, OnDestroy {
 
   @HostBinding('class.playing') isPlaying = false;
 
-  subscription = new Subscription();
   cdr = inject(ChangeDetectorRef);
-  transitionEnd$ = drumKeyTranstionEnd();
-  playKey$ = inject(DrumService).playDrumKey$.pipe(filter(key => key === this.entry.key));
+  playSoundSubscription = inject(DrumService).playDrumKey$
+    .pipe(filter(key => key === this.entry.key))
+    .subscribe(() => this.playSound());
+  transiationSubscription = drumKeyTranstionEnd()
+    .subscribe(() => {
+      this.isPlaying = false;
+      this.cdr.markForCheck();
+    });
   getAppBaseRef = getAppBaseRefFn();
-
-  ngOnInit(): void {
-    this.subscription.add(this.playKey$.subscribe(() => this.playSound()));
-
-    this.subscription.add(
-      this.transitionEnd$.subscribe(() => {
-        this.isPlaying = false;
-        this.cdr.markForCheck();
-      })
-    );
-  }
 
   get soundFile() {
     return this.getAppBaseRef(this.entry.description);
@@ -109,6 +103,7 @@ export class DrumKeyComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.playSoundSubscription.unsubscribe();
+    this.transiationSubscription.unsubscribe();
   }
 }
