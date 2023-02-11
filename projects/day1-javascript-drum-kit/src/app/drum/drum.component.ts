@@ -1,11 +1,37 @@
-import { APP_BASE_HREF } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit } from '@angular/core';
-import { filter, fromEvent, map, Subscription } from 'rxjs';
-import { WINDOW } from '../core';
+import { APP_BASE_HREF, NgFor } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { filter, fromEvent, map } from 'rxjs';
+import { WINDOW } from '../core/services';
+import { DrumKeyComponent } from '../drum-key/drum-key.component';
+import { getHostNativeElement } from '../get-host-native-element';
 import { DrumService } from '../services';
 import { ENTRIES } from './drum.constant';
 
+const getImageUrl = () => {
+  const baseHref = inject(APP_BASE_HREF);
+  const isEndWithSlash = baseHref.endsWith('/');
+  const image =  `${baseHref}${ isEndWithSlash ? '' : '/' }assets/images/background.jpg`;
+  return `url('${image}')`;
+}
+
+const windowKeydownSubscription = () => {
+  const allowedKeys = ENTRIES.map(entry => entry.key);
+  const drumService = inject(DrumService);
+  return fromEvent(inject<Window>(WINDOW), 'keydown')
+    .pipe(
+      filter(evt => evt instanceof KeyboardEvent),
+      map(evt => evt as KeyboardEvent),
+      map(({ key }) => key.toUpperCase()),
+      filter(key => allowedKeys.includes(key)),
+    ).subscribe((key) => drumService.playSound(key));
+}
+
 @Component({
+  imports: [
+    NgFor,
+    DrumKeyComponent,
+  ],
+  standalone: true,
   selector: 'app-drum',
   template: `
     <div class="keys">
@@ -34,36 +60,16 @@ import { ENTRIES } from './drum.constant';
       }
     }
   `],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DrumComponent implements OnInit, OnDestroy {
-  subscription!: Subscription;
   entries = ENTRIES;
-
-  constructor(private hostElement: ElementRef<HTMLElement>,
-    private drumService: DrumService,
-    @Inject(APP_BASE_HREF) private baseHref: string,
-    @Inject(WINDOW) private window: Window,
-  ) {}
+  hostElement = getHostNativeElement();
+  imageUrl = getImageUrl();
+  subscription = windowKeydownSubscription();
 
   ngOnInit(): void {
-    const allowedKeys = this.entries.map(entry => entry.key)
-    this.subscription = fromEvent(this.window, 'keydown')
-      .pipe(
-        filter(evt => evt instanceof KeyboardEvent),
-        map(evt => evt as KeyboardEvent),
-        map(({ key }) => key.toUpperCase()),
-        filter(key => allowedKeys.includes(key)),
-      )
-      .subscribe((key) => this.drumService.playSound(key));
-
-    this.hostElement.nativeElement.style.backgroundImage = this.imageUrl;
-  }
-
-  get imageUrl() {
-    const isEndWithSlash = this.baseHref.endsWith('/');
-    const image =  `${this.baseHref}${ isEndWithSlash ? '' : '/' }assets/images/background.jpg`;
-    return `url('${image}')`;
+    this.hostElement.style.backgroundImage = this.imageUrl;
   }
 
   ngOnDestroy(): void {

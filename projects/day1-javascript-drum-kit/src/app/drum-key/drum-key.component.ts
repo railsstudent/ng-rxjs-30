@@ -1,10 +1,27 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { filter, fromEvent, map, Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnDestroy, ViewChild, inject } from '@angular/core';
+import { filter, fromEvent, map } from 'rxjs';
+import { getHostNativeElement } from '../get-host-native-element';
 import { Key } from '../interfaces';
 import { DrumService } from '../services';
 
+const getAppBaseRefFn = () => {
+  const appBaseHref = inject(APP_BASE_HREF);
+  const isEndWithSlash = appBaseHref.endsWith('/');
+  const baseHref = `${appBaseHref}${ isEndWithSlash ? '' : '/' }`;
+  return (description: string) => `${baseHref}assets/sounds/${description}.wav`;
+}
+
+const drumKeyTranstionEnd = () => 
+  fromEvent(getHostNativeElement(), 'transitionend')
+    .pipe(
+      filter(evt => evt instanceof TransitionEvent),
+      map(evt => evt as TransitionEvent),
+      filter(evt => evt.propertyName === 'transform')
+    );
+
 @Component({
+  standalone: true,
   selector: 'app-drum-key',
   template: `
     <ng-container>
@@ -47,10 +64,10 @@ import { DrumService } from '../services';
       color: #ffc600;
     }
   `],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DrumKeyComponent implements OnInit, OnDestroy {
-  @Input()
+export class DrumKeyComponent implements OnDestroy {
+  @Input() 
   entry!: Key;
 
   @ViewChild('audio', { static: true })
@@ -58,38 +75,19 @@ export class DrumKeyComponent implements OnInit, OnDestroy {
 
   @HostBinding('class.playing') isPlaying = false;
 
-  subscription = new Subscription();
-
-  constructor(private drumService: DrumService, private cdr: ChangeDetectorRef, @Inject(APP_BASE_HREF) private baseHref: string,
-    private hostElement: ElementRef) {}
-
-  ngOnInit(): void {
-    this.subscription.add(
-      this.drumService.playDrumKey$.pipe(
-        filter(key => key === this.entry.key),
-      )
-      .subscribe(() => this.playSound())
-    );
-
-    this.subscription.add(
-      fromEvent(this.hostElement.nativeElement, 'transitionend')
-        .pipe(
-          filter(evt => evt instanceof TransitionEvent),
-          map(evt => evt as TransitionEvent),
-        )
-        .subscribe((evt) => {
-          if (evt.propertyName !== 'transform') {
-            return;
-          }
-          this.isPlaying = false;
-          this.cdr.markForCheck();
-        })
-    )
-  }
+  cdr = inject(ChangeDetectorRef);
+  playSoundSubscription = inject(DrumService).playDrumKey$
+    .pipe(filter(key => key === this.entry.key))
+    .subscribe(() => this.playSound());
+  transiationSubscription = drumKeyTranstionEnd()
+    .subscribe(() => {
+      this.isPlaying = false;
+      this.cdr.markForCheck();
+    });
+  getAppBaseRef = getAppBaseRefFn();
 
   get soundFile() {
-    const isEndWithSlash = this.baseHref.endsWith('/');
-    return `${this.baseHref}${ isEndWithSlash ? '' : '/' }assets/sounds/${this.entry.description}.wav`;
+    return this.getAppBaseRef(this.entry.description);
   }
 
   playSound() {
@@ -105,6 +103,7 @@ export class DrumKeyComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.playSoundSubscription.unsubscribe();
+    this.transiationSubscription.unsubscribe();
   }
 }
