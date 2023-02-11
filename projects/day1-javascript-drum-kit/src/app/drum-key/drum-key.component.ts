@@ -76,7 +76,7 @@ export class DrumKeyComponent implements OnDestroy {
   playSoundSubscription = inject(DrumService).playDrumKey$
     .pipe(filter(key => key === this.entry.key))
     .subscribe(() => this.playSound());
-  transiationSubscription = drumKeyTranstionEnd()
+  transitionSubscription = drumKeyTranstionEnd()
     .subscribe(() => {
       this.isPlaying = false;
       this.cdr.markForCheck();
@@ -101,6 +101,6 @@ export class DrumKeyComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.playSoundSubscription.unsubscribe();
-    this.transiationSubscription.unsubscribe();
+    this.transitionSubscription.unsubscribe();
   }
 }
