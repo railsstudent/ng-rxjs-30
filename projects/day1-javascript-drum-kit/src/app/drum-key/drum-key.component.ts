@@ -1,15 +1,12 @@
-import { APP_BASE_HREF } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnDestroy, ViewChild, inject } from '@angular/core';
 import { filter, fromEvent, map } from 'rxjs';
-import { getHostNativeElement } from '../get-host-native-element';
+import { getFullAssetPath, getHostNativeElement } from '../helpers';
 import { Key } from '../interfaces';
 import { DrumService } from '../services';
 
-const getAppBaseRefFn = () => {
-  const appBaseHref = inject(APP_BASE_HREF);
-  const isEndWithSlash = appBaseHref.endsWith('/');
-  const baseHref = `${appBaseHref}${ isEndWithSlash ? '' : '/' }`;
-  return (description: string) => `${baseHref}assets/sounds/${description}.wav`;
+const getSoundFileFn = () => {
+  const assetPath = getFullAssetPath();
+  return (description: string) => `${assetPath}sounds/${description}.wav`;
 }
 
 const drumKeyTranstionEnd = () => 
@@ -84,10 +81,10 @@ export class DrumKeyComponent implements OnDestroy {
       this.isPlaying = false;
       this.cdr.markForCheck();
     });
-  getAppBaseRef = getAppBaseRefFn();
+  getSoundFile = getSoundFileFn();
 
   get soundFile() {
-    return this.getAppBaseRef(this.entry.description);
+    return this.getSoundFile(this.entry.description);
   }
 
   playSound() {

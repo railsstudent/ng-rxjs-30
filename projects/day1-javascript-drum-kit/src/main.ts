@@ -10,16 +10,11 @@ if (environment.production) {
   enableProdMode();
 }
 
-function getAppBaseHref() {
-  return inject(PlatformLocation).getBaseHrefFromDOM()
-}
-
-
 bootstrapApplication(AppComponent, {
   providers: [
     {
       provide: APP_BASE_HREF,
-      useFactory: getAppBaseHref,
+      useFactory: () => inject(PlatformLocation).getBaseHrefFromDOM(),
     },
     browserWindowProvider,
     windowProvider,
