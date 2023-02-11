@@ -5,16 +5,20 @@ import { WINDOW } from '../core/services';
 import { DrumKeyComponent } from '../drum-key/drum-key.component';
 import { getFullAssetPath, getHostNativeElement } from '../helpers';
 import { DrumService } from '../services';
-import { ENTRIES } from './drum.constant';
 
 const getImageUrl = () => { 
   const imageUrl = `${getFullAssetPath()}images/background.jpg`;
   return `url('${imageUrl}')`;
 }
 
+const getEntryStore = () => { 
+  const getEntryStore = inject(DrumService); 
+  return getEntryStore.getEntryStore();
+};
+
 const windowKeydownSubscription = () => {
-  const allowedKeys = ENTRIES.map(entry => entry.key);
   const drumService = inject(DrumService);
+  const allowedKeys = getEntryStore().allowedKeys;
   return fromEvent(inject<Window>(WINDOW), 'keydown')
     .pipe(
       filter(evt => evt instanceof KeyboardEvent),
@@ -61,7 +65,7 @@ const windowKeydownSubscription = () => {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DrumComponent implements OnInit, OnDestroy {
-  entries = ENTRIES;
+  entries = getEntryStore().entries;
   hostElement = getHostNativeElement();
   imageUrl = getImageUrl();
   subscription = windowKeydownSubscription();
