@@ -1,17 +1,15 @@
-import { APP_BASE_HREF, NgFor } from '@angular/common';
+import { NgFor } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { filter, fromEvent, map } from 'rxjs';
 import { WINDOW } from '../core/services';
 import { DrumKeyComponent } from '../drum-key/drum-key.component';
-import { getHostNativeElement } from '../get-host-native-element';
+import { getFullAssetPath, getHostNativeElement } from '../helpers';
 import { DrumService } from '../services';
 import { ENTRIES } from './drum.constant';
 
-const getImageUrl = () => {
-  const baseHref = inject(APP_BASE_HREF);
-  const isEndWithSlash = baseHref.endsWith('/');
-  const image =  `${baseHref}${ isEndWithSlash ? '' : '/' }assets/images/background.jpg`;
-  return `url('${image}')`;
+const getImageUrl = () => { 
+  const imageUrl = `${getFullAssetPath()}images/background.jpg`;
+  return `url('${imageUrl}')`;
 }
 
 const windowKeydownSubscription = () => {
