@@ -1,8 +1,35 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, QueryList, ViewChildren, inject } from '@angular/core';
 import { fromEvent, map, merge, Observable, Subscription } from 'rxjs';
+
+const cssVariableUpdateFn = () => {
+  const hostStyle = inject<ElementRef<HTMLElement>>(ElementRef<HTMLElement>).nativeElement.style;
+
+  return function(inputElements: QueryList<ElementRef<HTMLInputElement>>) {
+    console.log('inputElements', inputElements);
+    const eventObservables$ = inputElements.reduce((acc, elementRef) => {
+      const inputElement = elementRef.nativeElement;
+      return acc.concat(fromEvent(inputElement, 'change'), fromEvent(inputElement, 'mousemove'));
+    }, [] as Observable<Event>[]);
+
+    return merge(...eventObservables$)
+      .pipe(
+        map(evt => {
+          const target = evt.target as any;
+          const { name, value, dataset } = target;
+          const sizing = dataset?.sizing || ''
+          return {
+            name: `--${name}`,
+            value: `${value}${sizing}`,
+          }
+        }),
+      )
+      .subscribe(({ name, value }) => hostStyle.setProperty(name, value));
+  }
+}
 
 @Component({
   selector: 'app-dynamic-css',
+  standalone: true,
   template: `
     <ng-container>
       <h2>Update CSS Variables with <span class='hl'>JS</span></h2>
@@ -19,7 +46,48 @@ import { fromEvent, map, merge, Observable, Subscription } from 'rxjs';
       <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
     </ng-container>
   `,
-  styleUrls: ['./dynamic-css.component.scss'],
+  styles: [`
+    :host {
+      display: block;
+
+      text-align: center;
+      background: #193549;
+      color: white;
+      font-family: 'helvetica neue', sans-serif;
+      font-weight: 100;
+      font-size: 50px;
+      min-height: 100vh;
+
+      --base: #ffc600;
+      --spacing: 10px;
+      --blur: 10px;
+    }
+
+    img {
+      padding: var(--spacing);
+      background: var(--base);
+      filter: blur(var(--blur));
+    }
+
+    h2 {
+      padding-top: 50px;
+      padding-bottom: 50px;
+    }
+
+    .hl {
+      color: var(--base);
+    }
+
+    .controls {
+      margin-bottom: 50px;
+    }
+
+    input {
+      width: 100px;
+      margin-right: 16px;
+      margin-left: 16px;
+    }  
+  `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DynamicCssComponent implements AfterViewInit, OnDestroy {
@@ -27,28 +95,10 @@ export class DynamicCssComponent implements AfterViewInit, OnDestroy {
   inputElementList!: QueryList<ElementRef<HTMLInputElement>>;
 
   subscription!: Subscription;
-
-  constructor(private hostElement: ElementRef) {}
+  cssVariableUpdater = cssVariableUpdateFn();
 
   ngAfterViewInit(): void {
-    const obsEvents$ = this.inputElementList.reduce((acc, elementRef) => {
-      const inputElement = elementRef.nativeElement;
-      return acc.concat(fromEvent(inputElement, 'change'), fromEvent(inputElement, 'mousemove'));
-    }, [] as Observable<Event>[]);
-
-    this.subscription = merge(...obsEvents$)
-      .pipe(
-        map(evt => {
-          const target = evt.target as any;
-          const { name, value, dataset } = target;
-          const sizing = dataset?.sizing || ''
-          return {
-            name: `--${name}`,
-            value: `${value}${sizing}`,
-          }
-        }),
-      )
-      .subscribe(({ name, value }) => this.hostElement.nativeElement.style.setProperty(name, value));
+    this.subscription = this.cssVariableUpdater(this.inputElementList);
   }
 
   ngOnDestroy(): void {
