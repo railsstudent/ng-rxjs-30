@@ -2,24 +2,21 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestro
 import { fromEvent, map, merge, Observable, Subscription } from 'rxjs';
 
 const cssVariableUpdateFn = () => {
-  const hostStyle = inject<ElementRef<HTMLElement>>(ElementRef<HTMLElement>).nativeElement.style;
+  const hostStyle = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement.style;
 
-  return function(inputElements: QueryList<ElementRef<HTMLInputElement>>) {
-    console.log('inputElements', inputElements);
-    const eventObservables$ = inputElements.reduce((acc, elementRef) => {
-      const inputElement = elementRef.nativeElement;
-      return acc.concat(fromEvent(inputElement, 'change'), fromEvent(inputElement, 'mousemove'));
-    }, [] as Observable<Event>[]);
-
+  return (inputElements: QueryList<ElementRef<HTMLInputElement>>) => {
+    const eventObservables$ = inputElements.reduce((acc, { nativeElement }) => 
+      acc.concat(fromEvent(nativeElement, 'change'), fromEvent(nativeElement, 'mousemove'))
+    , [] as Observable<Event>[]);
+  
     return merge(...eventObservables$)
       .pipe(
         map(evt => {
           const target = evt.target as any;
-          const { name, value, dataset } = target;
-          const sizing = dataset?.sizing || ''
+          const sizing = target.dataset?.sizing || ''
           return {
-            name: `--${name}`,
-            value: `${value}${sizing}`,
+            name: `--${target.name}`,
+            value: `${target.value}${sizing}`,
           }
         }),
       )
