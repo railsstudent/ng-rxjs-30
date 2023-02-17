@@ -14,7 +14,7 @@ function rotateAngle (seconds: number, minutes: number, hours: number): HandTran
 };
 
 export function currentTime() {
-    return  map(() => { 
+    return map(() => { 
         const time = new Date();
         return { 
             seconds: time.getSeconds(),
