@@ -2,26 +2,15 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Observable, debounceTime, distinctUntilChanged, map, shareReplay, skip, startWith, withLatestFrom } from 'rxjs';
-import { City } from '../interfaces';
+import { Observable, shareReplay } from 'rxjs';
+import { findCities } from '../custom-operators/find-cities.operator';
+import { City } from '../interfaces/city.interface';
 import { HighlightSuggestionPipe } from '../pipes/highlight-suggestion.pipe';
 
 const getCities = () => {
   const httpService = inject(HttpClient);
   const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
   return httpService.get<City[]>(endpoint).pipe(shareReplay(1));
-}
-
-const findMatches = (formValue: { searchValue: string }, cities: City[]) => {
-  const wordToMatch = formValue.searchValue;
-
-  if (wordToMatch === '') {
-    return [];
-  }
-
-  const regex = new RegExp(wordToMatch, 'gi');
-    // here we need to figure out if the city or state matches what was searched
-  return cities.filter(place => place.city.match(regex) || place.state.match(regex));
 }
 
 @Component({
@@ -62,17 +51,10 @@ export class TypeAheadComponent implements OnInit {
   searchForm!: NgForm;
 
   searchValue = ''
-  suggestions$!: Observable<City[]>; 
+  suggestions$!: Observable<City[]>;
+  cities$ = getCities();
   
   ngOnInit(): void {
-    const cities$ = getCities();
-    this.suggestions$ = this.searchForm.form.valueChanges.pipe(
-      skip(1),
-      debounceTime(300),
-      distinctUntilChanged(),
-      withLatestFrom(cities$),
-      map(([formValue, cities]) => findMatches(formValue, cities)),
-      startWith([]),
-    )
+    this.suggestions$ = this.searchForm.form.valueChanges.pipe(findCities(this.cities$)); 
   }
 }

@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { City } from '../interfaces';
+import { City } from '../interfaces/city.interface';
 
 @Pipe({
   name: 'highlightSuggestion',
