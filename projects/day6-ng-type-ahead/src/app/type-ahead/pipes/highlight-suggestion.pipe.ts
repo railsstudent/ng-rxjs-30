@@ -3,7 +3,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { City } from '../interfaces';
 
 @Pipe({
-  name: 'highlightSuggestion'
+  name: 'highlightSuggestion',
+  standalone: true,
 })
 export class HighlightSuggestionPipe implements PipeTransform {
 
