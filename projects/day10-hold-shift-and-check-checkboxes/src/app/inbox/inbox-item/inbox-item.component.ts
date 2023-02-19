@@ -28,7 +28,7 @@ export class InboxItemComponent {
     this.checkboxClicked.emit({
       isShiftKeyPressed: event$.shiftKey,
       isChecked,
-      currentItem: this.data.id,
+      lastCheck: this.data.id,
     });
   }
 }

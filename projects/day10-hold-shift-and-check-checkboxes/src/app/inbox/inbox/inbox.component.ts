@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, ViewChildren } from '@angular/core';
-import { Subject, startWith, map } from 'rxjs';
+import { Subject, startWith, map, scan } from 'rxjs';
 import { InboxItemComponent } from '../inbox-item/inbox-item.component';
 import { CheckboxClickState } from '../interfaces/checkbox-click-state.interface';
 import { MessageService } from '../services';
@@ -34,14 +34,19 @@ export class InboxComponent {
   @ViewChildren(InboxItemComponent)
   inboxItems!: InboxItemComponent[];
 
-  lastCheck: number | undefined = undefined;
   checkboxClickedSub$ = new Subject<CheckboxClickState>();
   messages$ = this.checkboxClickedSub$
     .pipe(
-      map(({ currentItem, isShiftKeyPressed, isChecked }) => {
-        this.messageService.updateMessageState(currentItem, isChecked);
-        this.checkBetweenBoxes(currentItem, isShiftKeyPressed, isChecked);
-        this.lastCheck = currentItem;
+      scan((acc, item) =>  ({ ...item, prevCheck: acc.lastCheck }),
+      {
+        isShiftKeyPressed: false,
+        isChecked: false,
+        prevCheck: -1,
+        lastCheck: -1,
+      }),
+      map(({ isShiftKeyPressed, isChecked, prevCheck, lastCheck }) => {
+        this.messageService.updateMessageState(lastCheck, isChecked);
+        this.checkBetweenBoxes(lastCheck, prevCheck, isShiftKeyPressed, isChecked);
         return this.messageService.getMessages();
       }),
       startWith(this.messageService.getMessages())
@@ -49,12 +54,12 @@ export class InboxComponent {
 
   constructor(private messageService: MessageService) { }
 
-  private checkBetweenBoxes(currentItem: number, isShiftKeyPressed: boolean, isChecked: boolean) {
+  private checkBetweenBoxes(currentItem: number, prevCheck: number, isShiftKeyPressed: boolean, isChecked: boolean) {
     if (isShiftKeyPressed && isChecked) {
       let inBetween = false;
       this.inboxItems.forEach(inboxItem => {
         const id = inboxItem.data.id;
-        if (id === currentItem || id === this.lastCheck) {
+        if (id === currentItem || id === prevCheck) {
           inBetween = !inBetween;
         }
         
