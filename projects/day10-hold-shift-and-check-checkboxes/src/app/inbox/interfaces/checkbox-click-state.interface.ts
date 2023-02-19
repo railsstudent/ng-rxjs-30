@@ -3,3 +3,7 @@ export interface CheckboxClickState {
     isChecked: boolean;
     lastCheck: number;
 }
+
+export interface InBetweenCheckboxClicked extends CheckboxClickState {
+    prevCheck: number;
+}

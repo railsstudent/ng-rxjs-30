@@ -1,9 +1,53 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChildren, inject } from '@angular/core';
 import { Subject, map, scan, startWith } from 'rxjs';
 import { InboxItemComponent } from '../inbox-item/inbox-item.component';
-import { CheckboxClickState } from '../interfaces/checkbox-click-state.interface';
+import { CheckboxClickState, InBetweenCheckboxClicked } from '../interfaces';
 import { MessageService } from '../services';
+
+// const createMessageFn = () => {
+//   const messageService = inject(MessageService);
+
+//   return (checkboxClickedSub$: Subject<CheckboxClickState>) => {
+//     return checkboxClickedSub$.pipe(
+//       scan((acc, item) =>  ({ ...item, prevCheck: acc.lastCheck }),
+//       {
+//         isShiftKeyPressed: false,
+//         isChecked: false,
+//         prevCheck: -1,
+//         lastCheck: -1,
+//       }),
+//       map(({ isShiftKeyPressed, isChecked, prevCheck, lastCheck }) => {
+//         messageService.updateMessageState(lastCheck, isChecked);
+//         checkBetweenBoxes(lastCheck, prevCheck, isShiftKeyPressed, isChecked);
+//         return messageService.getMessages();
+//       }),
+//       startWith(messageService.getMessages())
+//     );
+//   }
+// }
+
+const checkBetweenBoxesFn = () => {
+  const messageService = inject(MessageService);
+
+  return (inboxItems: InboxItemComponent[], inBetweenClicked: InBetweenCheckboxClicked) => {
+    const { isShiftKeyPressed, isChecked, lastCheck, prevCheck } = inBetweenClicked;
+    
+    if (isShiftKeyPressed && isChecked) {
+      let inBetween = false;
+      inboxItems.forEach(inboxItem => {
+        const id = inboxItem.data.id;
+        if (id === lastCheck || id === prevCheck) {
+          inBetween = !inBetween;
+        }
+        
+        if (inBetween) {
+          messageService.updateMessageState(id, inBetween);
+        }    
+      });  
+    }
+  }
+}
 
 @Component({
   selector: 'app-inbox',
@@ -42,6 +86,9 @@ export class InboxComponent {
   @ViewChildren(InboxItemComponent)
   inboxItems!: InboxItemComponent[];
 
+  checkBetweenBoxes = checkBetweenBoxesFn();
+  messageService = inject(MessageService);
+
   checkboxClickedSub$ = new Subject<CheckboxClickState>();
   messages$ = this.checkboxClickedSub$
     .pipe(
@@ -51,30 +98,12 @@ export class InboxComponent {
         isChecked: false,
         prevCheck: -1,
         lastCheck: -1,
-      }),
-      map(({ isShiftKeyPressed, isChecked, prevCheck, lastCheck }) => {
-        this.messageService.updateMessageState(lastCheck, isChecked);
-        this.checkBetweenBoxes(lastCheck, prevCheck, isShiftKeyPressed, isChecked);
+      } as InBetweenCheckboxClicked),
+      map((inBetweenClicked) => {
+        this.messageService.updateMessageState(inBetweenClicked.lastCheck, inBetweenClicked.isChecked);
+        this.checkBetweenBoxes(this.inboxItems, inBetweenClicked);
         return this.messageService.getMessages();
       }),
       startWith(this.messageService.getMessages())
     );
-
-  constructor(private messageService: MessageService) { }
-
-  private checkBetweenBoxes(currentItem: number, prevCheck: number, isShiftKeyPressed: boolean, isChecked: boolean) {
-    if (isShiftKeyPressed && isChecked) {
-      let inBetween = false;
-      this.inboxItems.forEach(inboxItem => {
-        const id = inboxItem.data.id;
-        if (id === currentItem || id === prevCheck) {
-          inBetween = !inBetween;
-        }
-        
-        if (inBetween) {
-          this.messageService.updateMessageState(id, inBetween);
-        }    
-      });  
-    }
-  }
 }
