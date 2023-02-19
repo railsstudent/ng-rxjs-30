@@ -1,11 +1,19 @@
-import { Component, ChangeDetectionStrategy, ViewChildren } from '@angular/core';
-import { Subject, startWith, map, scan } from 'rxjs';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ViewChildren } from '@angular/core';
+import { Subject, map, scan, startWith } from 'rxjs';
 import { InboxItemComponent } from '../inbox-item/inbox-item.component';
 import { CheckboxClickState } from '../interfaces/checkbox-click-state.interface';
 import { MessageService } from '../services';
 
 @Component({
   selector: 'app-inbox',
+  standalone: true,
+  imports: [
+    InboxItemComponent,
+    NgIf,
+    NgFor,
+    AsyncPipe,
+  ],
   template: `
     <div class="inbox" *ngIf="messages$ | async as messages">
       <app-inbox-item *ngFor="let message of messages; index as i; last as isLast" [data]="message" [isLast]="isLast" 

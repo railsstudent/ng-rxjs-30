@@ -4,6 +4,7 @@ import { CheckboxClickState } from '../interfaces/checkbox-click-state.interface
 
 @Component({
   selector: 'app-inbox-item',
+  standalone: true,
   template: `
     <div class="item" [class.hide]="isLast">
       <input type="checkbox" [checked]="data.isChecked" (click)="onClicked($event, myCheckbox.checked)" #myCheckbox>
