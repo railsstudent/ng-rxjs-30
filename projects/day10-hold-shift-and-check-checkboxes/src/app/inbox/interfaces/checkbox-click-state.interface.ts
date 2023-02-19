@@ -1,5 +1,9 @@
 export interface CheckboxClickState {
     isShiftKeyPressed: boolean;
     isChecked: boolean;
-    currentItem: number;
+    lastCheck: number;
+}
+
+export interface InBetweenCheckboxClicked extends CheckboxClickState {
+    prevCheck: number;
 }

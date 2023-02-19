@@ -1,8 +1,13 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { InboxComponent } from './inbox/inbox/inbox.component';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [
+    InboxComponent,
+  ],
   template: '<app-inbox></app-inbox>',
   styles: [
     `
