@@ -8,5 +8,4 @@ export interface CheckboxClickState {
 
 export interface InBetweenCheckboxClicked extends CheckboxClickState {
     prevCheck: number;
-    messages: Message[];
 }

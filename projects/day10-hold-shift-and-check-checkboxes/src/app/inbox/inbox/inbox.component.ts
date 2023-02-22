@@ -1,9 +1,9 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewChildren } from '@angular/core';
-import { Subject, merge } from 'rxjs';
+import { merge, scan, Subject } from 'rxjs';
 import { InboxItemComponent } from '../inbox-item/inbox-item.component';
-import { CheckboxClickState } from '../interfaces';
-import { createCheckedMessagesFn, initialMessage } from './message-service.inject';
+import { CheckboxClickState, Message } from '../interfaces';
+import { checkBetweenBoxesFn, createCheckedMessagesFn, initialMessage, updateMessageState } from './message-service.inject';
 
 @Component({
   selector: 'app-inbox',
@@ -16,7 +16,7 @@ import { createCheckedMessagesFn, initialMessage } from './message-service.injec
   ],
   template: `
     <div class="inbox" *ngIf="messages$ | async as messages">
-      <app-inbox-item *ngFor="let message of messages; index as i; last as isLast" [data]="message" [isLast]="isLast" 
+      <app-inbox-item *ngFor="let message of messages; index as i; last as isLast" [data]="message" [isLast]="isLast"
         (checkboxClicked)="checkboxClickedSub$.next($event)">
       </app-inbox-item>
     </div>
@@ -43,7 +43,19 @@ export class InboxComponent  {
   inboxItems!: InboxItemComponent[];
 
   createChckedMessages = createCheckedMessagesFn();
+  checkBetweenBoxes = checkBetweenBoxesFn();
 
   checkboxClickedSub$ = new Subject<CheckboxClickState>();
-  messages$ = merge(initialMessage(), this.createChckedMessages(this.checkboxClickedSub$));
+  messages$ = merge(initialMessage(), this.createChckedMessages(this.checkboxClickedSub$))
+    .pipe(
+      scan((messages, messagesOrClick) => {
+        if (Array.isArray(messagesOrClick) && messages.length <= 0) {
+          return messagesOrClick;
+        } else if (!Array.isArray(messagesOrClick)) {
+          const mutatedMessages = updateMessageState(messagesOrClick.lastCheck, messagesOrClick.isChecked, messages);
+          return this.checkBetweenBoxes(messagesOrClick, mutatedMessages);
+        }
+        return messages;
+      }, [] as Message[])
+    );
 }

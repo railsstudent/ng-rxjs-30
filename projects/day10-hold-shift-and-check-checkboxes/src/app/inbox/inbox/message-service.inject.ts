@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { Subject, firstValueFrom, map, scan } from 'rxjs';
 import { CheckboxClickState, InBetweenCheckboxClicked, Message } from '../interfaces';
 
-const updateMessageState = (id: number, isChecked: boolean, messages: Message[]) => {
+export const updateMessageState = (id: number, isChecked: boolean, messages: Message[]) => {
   return messages.map(message => {
       if (message.id === id) {
         return {
@@ -14,9 +14,9 @@ const updateMessageState = (id: number, isChecked: boolean, messages: Message[])
       return message;
     });
 }
-  
-const checkBetweenBoxesFn = () => (inBetweenClicked: InBetweenCheckboxClicked) => {
-  const { isShiftKeyPressed, isChecked, lastCheck, prevCheck, messages } = inBetweenClicked;
+
+export const checkBetweenBoxesFn = () => (inBetweenClicked: InBetweenCheckboxClicked, messages: Message[]) => {
+  const { isShiftKeyPressed, isChecked, lastCheck, prevCheck } = inBetweenClicked;
   let checkedMessages = [...messages];
 
   if (isShiftKeyPressed && isChecked) {
@@ -25,11 +25,11 @@ const checkBetweenBoxesFn = () => (inBetweenClicked: InBetweenCheckboxClicked) =
       if (id === lastCheck || id === prevCheck) {
         inBetween = !inBetween;
       }
-      
+
       if (inBetween) {
-        checkedMessages = updateMessageState(id, inBetween, messages);
-      }    
-    });  
+        checkedMessages = updateMessageState(id, inBetween, checkedMessages);
+      }
+    });
   }
 
   return checkedMessages;
@@ -41,21 +41,12 @@ export const createCheckedMessagesFn = () => {
     isChecked: false,
     prevCheck: -1,
     lastCheck: -1,
-    messages: [],
   };
-  const checkBetweenBoxes = checkBetweenBoxesFn();
-        
-  return (checkboxClickedSub$: Subject<CheckboxClickState>) => 
+
+  return (checkboxClickedSub$: Subject<CheckboxClickState>) =>
     checkboxClickedSub$
       .pipe(
-        scan((acc, item) =>  { 
-          const mutatedMessages = updateMessageState(item.lastCheck, item.isChecked, acc.messages);
-          const inBetweenClicked = { ...item, prevCheck: acc.lastCheck, messages: mutatedMessages };
-          const checkedMessages = checkBetweenBoxes(inBetweenClicked);
-
-          return ({ ...item, prevCheck: acc.lastCheck, messages: checkedMessages })
-        }, initState),
-        map(({ messages }) => messages),
+        scan((acc, item) =>  ({ ...item, prevCheck: acc.lastCheck }), initState),
       );
 }
 
