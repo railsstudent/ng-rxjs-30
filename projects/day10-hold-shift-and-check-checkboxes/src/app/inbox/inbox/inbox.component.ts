@@ -1,20 +1,9 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChildren, inject } from '@angular/core';
-import { Observable, Subject, firstValueFrom, map, merge } from 'rxjs';
+import { ChangeDetectionStrategy, Component, ViewChildren } from '@angular/core';
+import { Subject, merge } from 'rxjs';
 import { InboxItemComponent } from '../inbox-item/inbox-item.component';
-import { CheckboxClickState, Message } from '../interfaces';
-import { createMessagesFn } from './message-service.inject';
-
-const initialMessage = () => {
-  const httpClient = inject(HttpClient);
-  const url = 'https://gist.githubusercontent.com/railsstudent/ccda9a9d5c0761791d58c7edc3bce406/raw/7469e6c86372bd864a9995603663a719586c1701/messages.json';
-  const messages$ = httpClient.get<{ messages: Message[] }>(url).pipe(
-    map(({ messages }) => messages),
-  );
-
-  return firstValueFrom(messages$);
-}
+import { CheckboxClickState } from '../interfaces';
+import { createCheckedMessagesFn, initialMessage } from './message-service.inject';
 
 @Component({
   selector: 'app-inbox',
@@ -48,19 +37,13 @@ const initialMessage = () => {
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InboxComponent implements AfterViewInit  {
+export class InboxComponent  {
 
   @ViewChildren(InboxItemComponent)
   inboxItems!: InboxItemComponent[];
 
-  createMessages = createMessagesFn();
-  initialMessage$ = initialMessage();
+  createChckedMessages = createCheckedMessagesFn();
 
   checkboxClickedSub$ = new Subject<CheckboxClickState>();
-  messages$ = merge(this.initialMessage$);
-
-  async ngAfterViewInit(): Promise<void> {
-    // const initMessages = await this.initialMessagesPromise();
-    // this.messages$ = this.createMessages(this.checkboxClickedSub$, initMessages);
-  }
+  messages$ = merge(initialMessage(), this.createChckedMessages(this.checkboxClickedSub$));
 }
