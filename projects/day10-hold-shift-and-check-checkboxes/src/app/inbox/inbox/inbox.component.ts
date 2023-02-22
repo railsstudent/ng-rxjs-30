@@ -1,9 +1,9 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewChildren } from '@angular/core';
-import { Subject } from 'rxjs';
+import { merge, scan, Subject } from 'rxjs';
 import { InboxItemComponent } from '../inbox-item/inbox-item.component';
-import { CheckboxClickState } from '../interfaces';
-import { createMessagesFn } from './message-service.inject';
+import { CheckboxClickState, Message } from '../interfaces';
+import { messageStore } from './message.store';
 
 @Component({
   selector: 'app-inbox',
@@ -16,7 +16,7 @@ import { createMessagesFn } from './message-service.inject';
   ],
   template: `
     <div class="inbox" *ngIf="messages$ | async as messages">
-      <app-inbox-item *ngFor="let message of messages; index as i; last as isLast" [data]="message" [isLast]="isLast" 
+      <app-inbox-item *ngFor="let message of messages; index as i; last as isLast" [data]="message" [isLast]="isLast"
         (checkboxClicked)="checkboxClickedSub$.next($event)">
       </app-inbox-item>
     </div>
@@ -37,13 +37,26 @@ import { createMessagesFn } from './message-service.inject';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InboxComponent {
+export class InboxComponent  {
 
   @ViewChildren(InboxItemComponent)
   inboxItems!: InboxItemComponent[];
 
-  createMessages = createMessagesFn();
+  createCheckedMessages = messageStore.createCheckedMessagesFn();
+  checkBetweenBoxes = messageStore.checkBetweenBoxesFn();
 
   checkboxClickedSub$ = new Subject<CheckboxClickState>();
-  messages$ = this.createMessages(this.checkboxClickedSub$);
+  messages$ = merge(messageStore.loadMessages(), this.createCheckedMessages(this.checkboxClickedSub$))
+    .pipe(
+      scan((messages: Message[], messagesOrClick) => {
+        if (Array.isArray(messagesOrClick) && messages.length <= 0) {
+          return messagesOrClick;
+        } else if (!Array.isArray(messagesOrClick)) {
+          const { lastCheck, isChecked } = messagesOrClick
+          const mutatedMessages = messageStore.updateMessageState(lastCheck, isChecked, messages);
+          return this.checkBetweenBoxes(messagesOrClick, mutatedMessages);
+        }
+        return messages;
+      }, [])
+    );
 }

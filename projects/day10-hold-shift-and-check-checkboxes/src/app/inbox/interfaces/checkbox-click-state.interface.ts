@@ -1,3 +1,5 @@
+import { Message } from './message.interface';
+
 export interface CheckboxClickState {
     isShiftKeyPressed: boolean;
     isChecked: boolean;

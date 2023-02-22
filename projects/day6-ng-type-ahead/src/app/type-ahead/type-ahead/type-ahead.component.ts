@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Observable, shareReplay } from 'rxjs';
@@ -19,7 +19,6 @@ const getCities = () => {
   imports: [
     HighlightSuggestionPipe,
     FormsModule,
-    HttpClientModule,
     CommonModule,
   ],
   template: `
@@ -53,8 +52,8 @@ export class TypeAheadComponent implements OnInit {
   searchValue = ''
   suggestions$!: Observable<City[]>;
   cities$ = getCities();
-  
+
   ngOnInit(): void {
-    this.suggestions$ = this.searchForm.form.valueChanges.pipe(findCities(this.cities$)); 
+    this.suggestions$ = this.searchForm.form.valueChanges.pipe(findCities(this.cities$));
   }
 }
