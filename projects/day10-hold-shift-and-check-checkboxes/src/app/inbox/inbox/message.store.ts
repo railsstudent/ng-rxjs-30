@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { Subject, firstValueFrom, map, scan } from 'rxjs';
 import { CheckboxClickState, InBetweenCheckboxClicked, Message } from '../interfaces';
 
-export const updateMessageState = (id: number, isChecked: boolean, messages: Message[]) => {
+const updateMessageState = (id: number, isChecked: boolean, messages: Message[]) => {
   return messages.map(message => {
       if (message.id === id) {
         return {
@@ -15,7 +15,7 @@ export const updateMessageState = (id: number, isChecked: boolean, messages: Mes
     });
 }
 
-export const checkBetweenBoxesFn = () => (inBetweenClicked: InBetweenCheckboxClicked, messages: Message[]) => {
+const checkBetweenBoxesFn = () => (inBetweenClicked: InBetweenCheckboxClicked, messages: Message[]) => {
   const { isShiftKeyPressed, isChecked, lastCheck, prevCheck } = inBetweenClicked;
   let checkedMessages = [...messages];
 
@@ -35,7 +35,7 @@ export const checkBetweenBoxesFn = () => (inBetweenClicked: InBetweenCheckboxCli
   return checkedMessages;
 }
 
-export const createCheckedMessagesFn = () => {
+const createCheckedMessagesFn = () => {
   const initState: InBetweenCheckboxClicked = {
     isShiftKeyPressed: false,
     isChecked: false,
@@ -50,7 +50,7 @@ export const createCheckedMessagesFn = () => {
       );
 }
 
-export const initialMessage = () => {
+const loadMessages = () => {
   const httpClient = inject(HttpClient);
   const url = 'https://gist.githubusercontent.com/railsstudent/ccda9a9d5c0761791d58c7edc3bce406/raw/7469e6c86372bd864a9995603663a719586c1701/messages.json';
   const messages$ = httpClient.get<{ messages: Message[] }>(url).pipe(
@@ -58,4 +58,11 @@ export const initialMessage = () => {
   );
 
   return firstValueFrom(messages$);
+}
+
+export const messageStore = {
+  loadMessages,
+  updateMessageState,
+  checkBetweenBoxesFn,
+  createCheckedMessagesFn,
 }

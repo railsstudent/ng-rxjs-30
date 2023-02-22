@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, ViewChildren } from '@angular/core'
 import { merge, scan, Subject } from 'rxjs';
 import { InboxItemComponent } from '../inbox-item/inbox-item.component';
 import { CheckboxClickState, Message } from '../interfaces';
-import { checkBetweenBoxesFn, createCheckedMessagesFn, initialMessage, updateMessageState } from './message-service.inject';
+import { messageStore } from './message.store';
 
 @Component({
   selector: 'app-inbox',
@@ -42,20 +42,21 @@ export class InboxComponent  {
   @ViewChildren(InboxItemComponent)
   inboxItems!: InboxItemComponent[];
 
-  createChckedMessages = createCheckedMessagesFn();
-  checkBetweenBoxes = checkBetweenBoxesFn();
+  createCheckedMessages = messageStore.createCheckedMessagesFn();
+  checkBetweenBoxes = messageStore.checkBetweenBoxesFn();
 
   checkboxClickedSub$ = new Subject<CheckboxClickState>();
-  messages$ = merge(initialMessage(), this.createChckedMessages(this.checkboxClickedSub$))
+  messages$ = merge(messageStore.loadMessages(), this.createCheckedMessages(this.checkboxClickedSub$))
     .pipe(
-      scan((messages, messagesOrClick) => {
+      scan((messages: Message[], messagesOrClick) => {
         if (Array.isArray(messagesOrClick) && messages.length <= 0) {
           return messagesOrClick;
         } else if (!Array.isArray(messagesOrClick)) {
-          const mutatedMessages = updateMessageState(messagesOrClick.lastCheck, messagesOrClick.isChecked, messages);
+          const { lastCheck, isChecked } = messagesOrClick
+          const mutatedMessages = messageStore.updateMessageState(lastCheck, isChecked, messages);
           return this.checkBetweenBoxes(messagesOrClick, mutatedMessages);
         }
         return messages;
-      }, [] as Message[])
+      }, [])
     );
 }
