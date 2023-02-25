@@ -63,24 +63,24 @@ export class SpeechDetectionComponent implements OnInit, OnDestroy {
 
     const percent = 100;
     this.wordList$ = fromEvent(recognition, 'result').pipe(
-        map((e: any): SpeechRecognitionInfo =>  { 
-          const transcript = Array.from(e.results).map((result: any) => result[0].transcript).join('');
-          const poopScript = transcript.replace(/poop|poo|shit|dump/gi, '💩');
-          const firstResult = e.results[0];
+      map((e: any): SpeechRecognitionInfo =>  { 
+        const transcript = Array.from(e.results).map((result: any) => result[0].transcript).join('');
+        const poopScript = transcript.replace(/poop|poo|shit|dump/gi, '💩');
+        const firstResult = e.results[0];
 
-          return {
-            transcript: poopScript,
-            confidence: firstResult[0].confidence,
-            isFinal: firstResult.isFinal
-          }
-        }),
-        filter(({ isFinal }) => isFinal),
-        scan((acc: Transcript[], { transcript, confidence } ) => 
-          acc.concat({ 
-            transcript,
-            confidencePercentage: (confidence * percent).toFixed(2),
-          }), []),
-      );
+        return {
+          transcript: poopScript,
+          confidence: firstResult[0].confidence,
+          isFinal: firstResult.isFinal
+        }
+      }),
+      filter(({ isFinal }) => isFinal),
+      scan((acc: Transcript[], { transcript, confidence }) => 
+        acc.concat({ 
+          transcript,
+          confidencePercentage: (confidence * percent).toFixed(2),
+        }), []),
+    );
 
     recognition.start();
   }
