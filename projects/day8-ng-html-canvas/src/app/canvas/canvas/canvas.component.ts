@@ -18,7 +18,6 @@ export class CanvasComponent implements OnInit, OnDestroy {
   @ViewChild('draw', { static: true })
   canvas!: ElementRef<HTMLCanvasElement>;
 
-  direction = true;
   subscription!: Subscription;
 
   constructor(@Inject(WINDOW) private window: Window) {}
@@ -61,11 +60,21 @@ export class CanvasComponent implements OnInit, OnDestroy {
             skip(1),
           ),
         ),
-      ).subscribe((line) => this.draw(ctx, line));
+        scan((acc, line) => 
+          ({
+            direction: ctx.lineWidth >= 100 || ctx.lineWidth <= 1 ? !acc.direction : acc.direction,
+            line,
+          })
+        , { direction: true } as { direction: boolean, line: LineInfo | undefined}),
+      ).subscribe(({ line, direction }) => { 
+        if (line) {
+          this.draw(ctx, line, direction);
+        }
+      });
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D, line: LineInfo) {
+  draw(ctx: CanvasRenderingContext2D, line: LineInfo, direction: boolean) {
     const { hue, prev, curr } = line;
     if (!curr || !prev) {
       return;
@@ -79,14 +88,12 @@ export class CanvasComponent implements OnInit, OnDestroy {
     ctx.lineTo(curr.offsetX, curr.offsetY);
     ctx.stroke();
 
-    if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
-      this.direction = !this.direction;
-    }
-
-    ctx.lineWidth = ctx.lineWidth + (this.direction ? 1 : -1);
+    ctx.lineWidth = ctx.lineWidth + (direction ? 1 : -1);
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }
