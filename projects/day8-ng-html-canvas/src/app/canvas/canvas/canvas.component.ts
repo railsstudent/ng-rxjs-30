@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef, OnDestroy, Inject } from '@angular/core';
-import { concatMap, filter, fromEvent, map, merge, scan, skip, Subject, takeUntil, tap } from 'rxjs';
+import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subscription, concatMap, filter, fromEvent, map, merge, scan, skip, takeUntil } from 'rxjs';
 import { WINDOW } from '../../core';
 import { LineInfo } from '../interfaces';
 
@@ -18,8 +18,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
   @ViewChild('draw', { static: true })
   canvas!: ElementRef<HTMLCanvasElement>;
 
-  direction = true;
-  destroy$ = new Subject<void>();
+  subscription!: Subscription;
 
   constructor(@Inject(WINDOW) private window: Window) {}
 
@@ -45,7 +44,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
       const stopDrawing$ = merge(mouseOut$, mouseUp$);
       const drag$ = mouseMove$.pipe(takeUntil(stopDrawing$));
 
-      mouseDown$.pipe(
+      this.subscription = mouseDown$.pipe(
         concatMap(
           () => drag$.pipe(
             filter(value => value instanceof MouseEvent),
@@ -61,13 +60,21 @@ export class CanvasComponent implements OnInit, OnDestroy {
             skip(1),
           ),
         ),
-        tap(line => this.draw(ctx, line)),      
-        takeUntil(this.destroy$)
-      ).subscribe();
+        scan((acc, line) => 
+          ({
+            direction: ctx.lineWidth >= 100 || ctx.lineWidth <= 1 ? !acc.direction : acc.direction,
+            line,
+          })
+        , { direction: true } as { direction: boolean, line: LineInfo | undefined}),
+      ).subscribe(({ line, direction }) => { 
+        if (line) {
+          this.draw(ctx, line, direction);
+        }
+      });
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D, line: LineInfo) {
+  draw(ctx: CanvasRenderingContext2D, line: LineInfo, direction: boolean) {
     const { hue, prev, curr } = line;
     if (!curr || !prev) {
       return;
@@ -81,15 +88,12 @@ export class CanvasComponent implements OnInit, OnDestroy {
     ctx.lineTo(curr.offsetX, curr.offsetY);
     ctx.stroke();
 
-    if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
-      this.direction = !this.direction;
-    }
-
-    ctx.lineWidth = ctx.lineWidth + (this.direction ? 1 : -1);
+    ctx.lineWidth = ctx.lineWidth + (direction ? 1 : -1);
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }
