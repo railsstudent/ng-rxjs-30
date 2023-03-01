@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { map, of, shareReplay, switchMap, take, tap, timer, withLatestFrom } from 'rxjs';
+import { map, shareReplay, switchMap, take, tap, timer, withLatestFrom } from 'rxjs';
 import { TimerService } from '../services/timer.service';
 
 @Component({
