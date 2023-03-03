@@ -1,8 +1,6 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { map, shareReplay, switchMap, take, tap, timer, withLatestFrom } from 'rxjs';
-import { TimerService } from '../services/timer.service';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { displayEndTimeFn, displayTimeLeftFn, nowToFn } from '../helpers/timer-pane.helper';
 
 @Component({
   selector: 'app-timer-pane',
@@ -39,36 +37,7 @@ import { TimerService } from '../services/timer.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimerPaneComponent {
-  timerService = inject(TimerService);
-  titleService = inject(Title);
-
-  oneSecond = 1000;
-  nowTo$ = this.timerService.seconds$.pipe(shareReplay(1));
-  
-  displayEndTime$ = this.nowTo$.pipe(map((seconds) => this.displayEndTime(Date.now(), seconds)));
-
-  displayTimeLeft$ = this.nowTo$.pipe(switchMap((seconds) => timer(0, this.oneSecond).pipe(take(seconds + 1))))
-    .pipe(
-      withLatestFrom(this.nowTo$),
-      map(([countdown, secondsLeft]) => secondsLeft - countdown),
-      map((secondsLeft) => this.displayTimeLeft(secondsLeft)),
-      tap((strTimeLeft) => this.titleService.setTitle(strTimeLeft))
-    );
-
-  private displayTimeLeft(seconds: number) {
-    const minutes = Math.floor(seconds / 60);
-    const remainderSeconds = seconds % 60;
-    return `${minutes}:${remainderSeconds < 10 ? '0' : '' }${remainderSeconds}`;
-  }
-  
-  private displayEndTime(now: number, seconds: number): string {
-    const timestamp = now + seconds * this.oneSecond;
-
-    const end = new Date(timestamp);
-    const hour = end.getHours();
-    const amPm = hour >= 12 ? 'PM': 'AM';
-    const adjustedHour = hour > 12 ? hour - 12 : hour;
-    const minutes = end.getMinutes();
-    return `Be Back At ${adjustedHour}:${minutes < 10 ? '0' : ''}${minutes} ${amPm}`;
-  }
+  nowTo$ = nowToFn();
+  displayEndTime$ = displayEndTimeFn(this.nowTo$);
+  displayTimeLeft$ = displayTimeLeftFn(this.nowTo$); 
 }
