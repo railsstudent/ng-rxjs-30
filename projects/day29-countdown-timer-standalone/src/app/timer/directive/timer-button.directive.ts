@@ -9,5 +9,5 @@ export class TimerButtonDirective {
 
   constructor(el: ElementRef<HTMLButtonElement>) {
     this.nativeElement = el.nativeElement;
-   }
+  }
 }
