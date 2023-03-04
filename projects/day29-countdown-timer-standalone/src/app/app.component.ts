@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { TimerComponent } from './timer/timer/timer.component';
@@ -6,8 +5,7 @@ import { TimerComponent } from './timer/timer/timer.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    CommonModule, 
+  imports: [ 
     TimerComponent
   ],
   template: '<app-timer></app-timer>',
