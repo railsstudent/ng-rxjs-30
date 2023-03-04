@@ -1,5 +1,5 @@
-import { ElementRef, inject } from '@angular/core';
-import { fromEvent, map, Observable, merge } from 'rxjs';
+import { inject } from '@angular/core';
+import { Observable, fromEvent, map, merge } from 'rxjs';
 import { TimerService } from '../services/timer.service';
   
 export const createButtonObservablesFn = () => {
