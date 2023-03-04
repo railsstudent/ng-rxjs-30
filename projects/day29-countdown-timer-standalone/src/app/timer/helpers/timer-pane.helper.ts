@@ -33,8 +33,11 @@ const displayTimeLeft = (seconds: number) => {
   
 export const displayTimeLeftFn = (nowTo$: Observable<number>) => {
     const titleService = inject(Title);
+    const countDown$ = nowTo$.pipe(switchMap((seconds) => 
+        timer(0, oneSecond).pipe(take(seconds + 1))
+    ));
    
-    return nowTo$.pipe(switchMap((seconds) => timer(0, oneSecond).pipe(take(seconds + 1))))
+    return countDown$
       .pipe(
         withLatestFrom(nowTo$),
         map(([countdown, secondsLeft]) => secondsLeft - countdown),
