@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, AfterViewInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subscription, filter, fromEvent, map, tap } from 'rxjs';
 import { TimerButtonDirective } from '../directive/timer-button.directive';
 import { createButtonObservablesFn, timerInputSubscriptionFn } from '../helpers/timer-controls.helper';
-import { HtmlParser } from '@angular/compiler';
 
 @Component({
   selector: 'app-timer-controls',
