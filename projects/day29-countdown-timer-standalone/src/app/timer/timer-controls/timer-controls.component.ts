@@ -1,21 +1,24 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subscription, filter, fromEvent, map, tap } from 'rxjs';
+import { TimerButtonDirective } from '../directive/timer-button.directive';
 import { createButtonObservablesFn, timerInputSubscriptionFn } from '../helpers/timer-controls.helper';
+import { HtmlParser } from '@angular/compiler';
 
 @Component({
   selector: 'app-timer-controls',
   standalone: true,
   imports: [
-    FormsModule
+    FormsModule,
+    TimerButtonDirective,
   ],
   template: `
     <div class="timer__controls">
-      <button class="timer__button" #timer1 data-seconds="20">20 Secs</button>
-      <button class="timer__button" #timer2 data-seconds="300">Work 5</button>
-      <button class="timer__button" #timer3 data-seconds="900">Quick 15</button>
-      <button class="timer__button" #timer4 data-seconds="1200">Snack 20</button>
-      <button class="timer__button" #timer5 data-seconds="3600">Lunch Break</button>
+      <button class="timer__button" #timer1 data-seconds="20" appTimerButton>20 Secs</button>
+      <button class="timer__button" #timer2 data-seconds="300" appTimerButton>Work 5</button>
+      <button class="timer__button" #timer3 data-seconds="900" appTimerButton>Quick 15</button>
+      <button class="timer__button" #timer4 data-seconds="1200" appTimerButton>Snack 20</button>
+      <button class="timer__button" #timer5 data-seconds="3600" appTimerButton>Lunch Break</button>
       <form name="customForm" id="custom" #myForm="ngForm">
         <input type="text" name="minutes" placeholder="Enter Minutes" [(ngModel)]="customMinutes">
       </form>
@@ -67,24 +70,12 @@ import { createButtonObservablesFn, timerInputSubscriptionFn } from '../helpers/
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimerControlsComponent implements OnInit, OnDestroy {
-  @ViewChild('timer1', { static: true, read: ElementRef })
-  timer1!: ElementRef<HTMLButtonElement>;
-
-  @ViewChild('timer2', { static: true, read: ElementRef })
-  timer2!: ElementRef<HTMLButtonElement>;
-
-  @ViewChild('timer3', { static: true, read: ElementRef })
-  timer3!: ElementRef<HTMLButtonElement>;
-
-  @ViewChild('timer4', { static: true, read: ElementRef })
-  timer4!: ElementRef<HTMLButtonElement>;
-
-  @ViewChild('timer5', { static: true, read: ElementRef })
-  timer5!: ElementRef<HTMLButtonElement>;
-
+export class TimerControlsComponent implements OnDestroy, AfterViewInit {
   @ViewChild('myForm', { static: true, read: ElementRef })
   myForm!: ElementRef<HTMLFormElement>;
+
+  @ViewChildren(TimerButtonDirective)
+  timers!: QueryList<ElementRef<HTMLButtonElement>>;
 
   customMinutes = '';
   subscriptions!: Subscription;
@@ -92,8 +83,8 @@ export class TimerControlsComponent implements OnInit, OnDestroy {
   createTimerObservables = createButtonObservablesFn();
   timerInputSubscription = timerInputSubscriptionFn();
 
-  ngOnInit(): void {
-    const timers$ = this.createTimerObservables([this.timer1, this.timer2, this.timer3, this.timer4, this.timer5]);
+  ngAfterViewInit(): void {
+    const timers$ = this.createTimerObservables(this.timers.map(({ nativeElement }) => nativeElement));
     const myForm$ = fromEvent(this.myForm.nativeElement, 'submit')
       .pipe(
         filter(() => !!this.customMinutes),

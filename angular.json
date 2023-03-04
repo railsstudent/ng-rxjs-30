@@ -2735,7 +2735,7 @@
                 }
               ],
               "outputHashing": "all",
-              "baseHref": "https://railsstudent.github.io/ng-rxjs-30/day29-countdown-timer-standalone"
+              "baseHref": "https://railsstudent.github.io/ng-rxjs-30/day29-countdown-timer-standalone/"
             },
             "development": {
               "buildOptimizer": false,

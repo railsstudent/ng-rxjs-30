@@ -3,8 +3,8 @@ import { fromEvent, map, Observable, merge } from 'rxjs';
 import { TimerService } from '../services/timer.service';
   
 export const createButtonObservablesFn = () => {
-    return (timers: ElementRef<HTMLButtonElement>[]) => {
-        return timers.map(({ nativeElement }, i) => { 
+    return (timers: HTMLButtonElement[]) => {
+        return timers.map((nativeElement) => { 
             const totalSeconds = +(nativeElement.dataset['seconds'] || '0');
             return fromEvent(nativeElement, 'click').pipe(map(() => totalSeconds))
         });
