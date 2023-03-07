@@ -2832,7 +2832,8 @@
                   "maximumError": "4kb"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "baseHref": "https://railsstudent.github.io/ng-rxjs-30/day20-speech-detection-standalone/"
             },
             "development": {
               "buildOptimizer": false,
