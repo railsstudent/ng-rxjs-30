@@ -4,7 +4,7 @@ import { SpeechRecognitionInfo, Transcript } from '../interfaces/speech-recognit
 declare var webkitSpeechRecognition: any;
 declare var SpeechRecognition: any;
 
-const createRecognition = () => {
+export const createRecognition = () => {
   const recognition = new webkitSpeechRecognition() || new SpeechRecognition();
   recognition.interimResults = true;
   recognition.lang = 'en-US';
@@ -12,13 +12,13 @@ const createRecognition = () => {
   return recognition;
 }
 
-export const recognition = createRecognition();
+// export const recognition = createRecognition();
 
-export const createRecognitionSubscription = () => 
+export const createRecognitionSubscription = (recognition: any) => 
   fromEvent(recognition, 'end').pipe(tap(() => recognition.start())).subscribe();
 
 
-export const createWordListObservable = () => {
+export const createWordListObservable = (recognition: any) => {
   const percent = 100;
   return fromEvent(recognition, 'result').pipe(
     map((e: any): SpeechRecognitionInfo =>  { 

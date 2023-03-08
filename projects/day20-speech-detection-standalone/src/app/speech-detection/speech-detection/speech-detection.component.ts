@@ -1,6 +1,6 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { createRecognitionSubscription, createWordListObservable, recognition } from '../helpers/speech-detection.helper';
+import { createRecognition, createRecognitionSubscription, createWordListObservable } from '../helpers/speech-detection.helper';
 
 @Component({
   selector: 'app-speech-detection',
@@ -52,11 +52,12 @@ import { createRecognitionSubscription, createWordListObservable, recognition } 
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SpeechDetectionComponent implements OnInit, OnDestroy {
-  subscription = createRecognitionSubscription();
-  wordList$ = createWordListObservable();
+  recognition = createRecognition(); 
+  subscription = createRecognitionSubscription(this.recognition);
+  wordList$ = createWordListObservable(this.recognition);
 
   ngOnInit(): void {
-    recognition.start();
+    this.recognition.start();
   }
 
   ngOnDestroy(): void {
