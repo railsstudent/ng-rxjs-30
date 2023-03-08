@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { TimerComponent } from './timer/timer/timer.component';
+import { SpeechDetectionComponent } from './speech-detection/speech-detection/speech-detection.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ 
-    TimerComponent
+  imports: [
+    SpeechDetectionComponent
   ],
-  template: '<app-timer></app-timer>',
+  template: '<app-speech-detection></app-speech-detection>',
   styles: [`
     :host {
       display: block;
@@ -16,7 +16,7 @@ import { TimerComponent } from './timer/timer/timer.component';
   `]
 })
 export class AppComponent {
-  title = 'Day 29 Standalone Countdown Timer';
+  title = 'Day20 Speech Detection Standalone';
 
   constructor(titleService: Title) {
     titleService.setTitle(this.title);
