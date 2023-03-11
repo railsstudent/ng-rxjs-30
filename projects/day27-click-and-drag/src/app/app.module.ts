@@ -5,14 +5,9 @@ import { AppComponent } from './app.component';
 import { SliderModule } from './slider';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    SliderModule,
-  ],
+  declarations: [AppComponent],
+  imports: [BrowserModule, SliderModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

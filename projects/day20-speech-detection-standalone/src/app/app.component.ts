@@ -5,15 +5,15 @@ import { SpeechDetectionComponent } from './speech-detection/speech-detection/sp
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    SpeechDetectionComponent
-  ],
+  imports: [SpeechDetectionComponent],
   template: '<app-speech-detection></app-speech-detection>',
-  styles: [`
-    :host {
-      display: block;
-    }
-  `]
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
 })
 export class AppComponent {
   title = 'Day20 Speech Detection Standalone';

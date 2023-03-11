@@ -8,9 +8,8 @@ describe('StripeNavPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StripeNavPageComponent ]
-    })
-    .compileComponents();
+      declarations: [StripeNavPageComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(StripeNavPageComponent);
     component = fixture.componentInstance;

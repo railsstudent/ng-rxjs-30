@@ -4,15 +4,8 @@ import { PanelsComponent } from './panels/panels.component';
 import { PanelComponent } from './panel/panel.component';
 
 @NgModule({
-  declarations: [
-    PanelsComponent,
-    PanelComponent
-  ],
-  imports: [
-    CommonModule
-  ],
-  exports: [
-    PanelsComponent
-  ]
+  declarations: [PanelsComponent, PanelComponent],
+  imports: [CommonModule],
+  exports: [PanelsComponent],
 })
-export class PanelsModule { }
+export class PanelsModule {}

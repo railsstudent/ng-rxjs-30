@@ -6,17 +6,8 @@ import { SpeechTextComponent } from './speech-text/speech-text.component';
 import { SpeechVoiceComponent } from './speech-voice/speech-voice.component';
 
 @NgModule({
-  declarations: [
-    SpeechSynthesisComponent,
-    SpeechVoiceComponent,
-    SpeechTextComponent
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-  ],
-  exports: [
-    SpeechSynthesisComponent
-  ]
+  declarations: [SpeechSynthesisComponent, SpeechVoiceComponent, SpeechTextComponent],
+  imports: [CommonModule, FormsModule],
+  exports: [SpeechSynthesisComponent],
 })
-export class SpeechModule { }
+export class SpeechModule {}

@@ -3,14 +3,8 @@ import { CommonModule } from '@angular/common';
 import { CanvasComponent } from './canvas/canvas.component';
 
 @NgModule({
-  declarations: [
-    CanvasComponent
-  ],
-  imports: [
-    CommonModule
-  ],
-  exports: [
-    CanvasComponent
-  ]
+  declarations: [CanvasComponent],
+  imports: [CommonModule],
+  exports: [CanvasComponent],
 })
-export class CanvasModule { }
+export class CanvasModule {}

@@ -1,8 +1,8 @@
 export interface Videos {
-    videos: VideoTime[];
+  videos: VideoTime[];
 }
 
 export interface VideoTime {
-    name: string;
-    time: string;
+  name: string;
+  time: string;
 }

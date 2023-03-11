@@ -8,9 +8,8 @@ describe('SpeechDetectionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ SpeechDetectionComponent ]
-    })
-    .compileComponents();
+      imports: [SpeechDetectionComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SpeechDetectionComponent);
     component = fixture.componentInstance;

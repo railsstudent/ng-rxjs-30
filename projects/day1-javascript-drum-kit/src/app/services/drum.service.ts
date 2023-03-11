@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { Key } from '../interfaces';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DrumService {
   private readonly playDrumKey = new Subject<string>();
@@ -17,45 +17,45 @@ export class DrumService {
     const entries: Key[] = [
       {
         key: 'A',
-        description: 'clap'
+        description: 'clap',
       },
       {
         key: 'S',
-        description: 'hihat'
+        description: 'hihat',
       },
       {
         key: 'D',
-        description: 'kick'
+        description: 'kick',
       },
       {
         key: 'F',
-        description: 'openhat'
+        description: 'openhat',
       },
       {
         key: 'G',
-        description: 'boom'
+        description: 'boom',
       },
       {
         key: 'H',
-        description: 'ride'
+        description: 'ride',
       },
       {
         key: 'J',
-        description: 'snare'
+        description: 'snare',
       },
       {
         key: 'K',
-        description: 'tom'
+        description: 'tom',
       },
       {
         key: 'L',
-        description: 'tink'
-      }
+        description: 'tink',
+      },
     ];
 
     return {
       entries,
-      allowedKeys: entries.map(entry => entry.key),
-    }
+      allowedKeys: entries.map((entry) => entry.key),
+    };
   }
 }

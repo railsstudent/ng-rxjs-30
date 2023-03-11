@@ -8,9 +8,8 @@ describe('SpeechSynthesisComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SpeechSynthesisComponent ]
-    })
-    .compileComponents();
+      declarations: [SpeechSynthesisComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SpeechSynthesisComponent);
     component = fixture.componentInstance;

@@ -8,9 +8,8 @@ describe('ScrollComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ScrollComponent ]
-    })
-    .compileComponents();
+      declarations: [ScrollComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

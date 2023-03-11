@@ -6,15 +6,9 @@ import { KeySequenceDetectionModule } from './key-sequence-detection';
 import { CoreModule } from './core';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    KeySequenceDetectionModule,
-    CoreModule
-  ],
+  declarations: [AppComponent],
+  imports: [BrowserModule, KeySequenceDetectionModule, CoreModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

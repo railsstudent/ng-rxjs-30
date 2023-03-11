@@ -4,6 +4,6 @@ import { VideoPlayerRangeInput } from './video-player.interface';
 export type ActionValue = number | VideoPlayerRangeInput | undefined;
 
 export interface VideoAction {
-    action: VideoActionEnum,
-    arg: ActionValue,
+  action: VideoActionEnum;
+  arg: ActionValue;
 }

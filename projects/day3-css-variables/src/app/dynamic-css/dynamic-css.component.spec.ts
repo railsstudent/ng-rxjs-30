@@ -8,9 +8,8 @@ describe('DynamicCssComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DynamicCssComponent ]
-    })
-    .compileComponents();
+      declarations: [DynamicCssComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

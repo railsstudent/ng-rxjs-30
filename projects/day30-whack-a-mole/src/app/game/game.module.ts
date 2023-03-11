@@ -4,16 +4,8 @@ import { MoleComponent } from './mole/mole.component';
 import { RemainingTimePipe, WhackAMoleMessagePipe } from './pipes';
 
 @NgModule({
-  declarations: [
-    MoleComponent,
-    WhackAMoleMessagePipe,
-    RemainingTimePipe
-  ],
-  imports: [
-    CommonModule
-  ],
-  exports: [
-    MoleComponent
-  ]
+  declarations: [MoleComponent, WhackAMoleMessagePipe, RemainingTimePipe],
+  imports: [CommonModule],
+  exports: [MoleComponent],
 })
-export class GameModule { }
+export class GameModule {}

@@ -5,15 +5,15 @@ import { TimerComponent } from './timer/timer/timer.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ 
-    TimerComponent
-  ],
+  imports: [TimerComponent],
   template: '<app-timer></app-timer>',
-  styles: [`
-    :host {
-      display: block;
-    }
-  `]
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
 })
 export class AppComponent {
   title = 'Day 29 Standalone Countdown Timer';

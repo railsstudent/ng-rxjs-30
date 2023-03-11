@@ -2,7 +2,7 @@ import { Directive, ElementRef } from '@angular/core';
 
 @Directive({
   selector: '[appTimerButton]',
-  standalone: true
+  standalone: true,
 })
 export class TimerButtonDirective {
   nativeElement!: HTMLButtonElement;

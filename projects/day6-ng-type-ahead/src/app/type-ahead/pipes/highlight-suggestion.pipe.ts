@@ -7,11 +7,10 @@ import { City } from '../interfaces/city.interface';
   standalone: true,
 })
 export class HighlightSuggestionPipe implements PipeTransform {
-
   constructor(private sanitizer: DomSanitizer) {}
 
   transform(suggestion: City, value: string): unknown {
-    const { state, city } = suggestion
+    const { state, city } = suggestion;
     const regex = new RegExp(value, 'gi');
     const cityName = city.replace(regex, `<span class="hl">${value}</span>`);
     const stateName = state.replace(regex, `<span class="hl">${value}</span>`);

@@ -9,7 +9,7 @@ import { Title } from '@angular/platform-browser';
       :host {
         display: block;
       }
-    `
+    `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

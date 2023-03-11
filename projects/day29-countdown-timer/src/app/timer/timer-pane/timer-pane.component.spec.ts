@@ -8,9 +8,8 @@ describe('TimerPaneComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TimerPaneComponent ]
-    })
-    .compileComponents();
+      declarations: [TimerPaneComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

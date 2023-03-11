@@ -6,15 +6,9 @@ import { CoreModule } from './core';
 import { HighlighterModule } from './highlighter';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    HighlighterModule,
-    CoreModule,
-  ],
+  declarations: [AppComponent],
+  imports: [BrowserModule, HighlighterModule, CoreModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

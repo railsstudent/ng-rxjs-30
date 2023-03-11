@@ -8,9 +8,8 @@ describe('PhotoStripeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PhotoStripeComponent ]
-    })
-    .compileComponents();
+      declarations: [PhotoStripeComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

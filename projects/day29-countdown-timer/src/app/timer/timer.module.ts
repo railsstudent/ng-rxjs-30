@@ -6,17 +6,8 @@ import { TimerPaneComponent } from './timer-pane/timer-pane.component';
 import { TimerComponent } from './timer/timer.component';
 
 @NgModule({
-  declarations: [
-    TimerComponent,
-    TimerControlsComponent,
-    TimerPaneComponent,
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-  ],
-  exports: [
-    TimerComponent
-  ]
+  declarations: [TimerComponent, TimerControlsComponent, TimerPaneComponent],
+  imports: [CommonModule, FormsModule],
+  exports: [TimerComponent],
 })
-export class TimerModule { }
+export class TimerModule {}

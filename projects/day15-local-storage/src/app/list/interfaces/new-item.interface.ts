@@ -1,4 +1,4 @@
-export interface NewItem { 
-    done: boolean; 
-    text: string;
+export interface NewItem {
+  done: boolean;
+  text: string;
 }

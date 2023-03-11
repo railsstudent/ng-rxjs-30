@@ -13,63 +13,66 @@ import { map, of } from 'rxjs';
       </ul>
     </div>
   `,
-  styles:[`
-    :host {
-      display: block;
-    }
+  styles: [
+    `
+      :host {
+        display: block;
+      }
 
-    div {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+      div {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 2rem;
-      flex-basis: 100%;
-    }
+      h1 {
+        text-align: center;
+        margin-bottom: 2rem;
+        flex-basis: 100%;
+      }
 
-    #bands {
-      list-style: inside square;
-      font-size: 20px;
-      background: white;
-      width: 500px;
-      padding: 0;
-      box-shadow: 0 0 0 20px rgba(0, 0, 0, 0.05);
-    }
-    
-    #bands li {
-      border-bottom: 1px solid #efefef;
-      padding: 20px;
-    }
-    
-    #bands li:last-child {
-      border-bottom: 0;
-    }
+      #bands {
+        list-style: inside square;
+        font-size: 20px;
+        background: white;
+        width: 500px;
+        padding: 0;
+        box-shadow: 0 0 0 20px rgba(0, 0, 0, 0.05);
+      }
 
-    a {
-      color: #ffc600;
-      text-decoration: none;
-    }
-  `],
-  changeDetection: ChangeDetectionStrategy.OnPush
+      #bands li {
+        border-bottom: 1px solid #efefef;
+        padding: 20px;
+      }
+
+      #bands li:last-child {
+        border-bottom: 0;
+      }
+
+      a {
+        color: #ffc600;
+        text-decoration: none;
+      }
+    `,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SortedListComponent {
-
-  sortedBands$ = of(['The Plot in You', 'The Devil Wears Prada', 
-    'Pierce the Veil', 
-    'Norma Jean', 'The Bled', 
-    'Say Anything', 
-    'The Midway State', 
-    'We Came as Romans', 
-    'Counterparts', 
-    'Oh, Sleeper', 
-    'A Skylit Drive', 
-    'Anywhere But Here', 
-    'An Old Dog'
-  ])
-  .pipe(map(bands => ([...bands].sort((a, b) => this.strip(a) > this.strip(b) ? 1 : -1))));
+  sortedBands$ = of([
+    'The Plot in You',
+    'The Devil Wears Prada',
+    'Pierce the Veil',
+    'Norma Jean',
+    'The Bled',
+    'Say Anything',
+    'The Midway State',
+    'We Came as Romans',
+    'Counterparts',
+    'Oh, Sleeper',
+    'A Skylit Drive',
+    'Anywhere But Here',
+    'An Old Dog',
+  ]).pipe(map((bands) => [...bands].sort((a, b) => (this.strip(a) > this.strip(b) ? 1 : -1))));
 
   private strip(bandName: string) {
     return bandName.replace(/^(a |the |an )/i, '').trim();

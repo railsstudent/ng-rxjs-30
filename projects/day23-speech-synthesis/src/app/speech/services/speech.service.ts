@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SpeechProperties } from '../interfaces/speech.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SpeechService {
   private voices: SpeechSynthesisVoice[] = [];
@@ -23,7 +23,7 @@ export class SpeechService {
   }
 
   private findVoice(voiceName: string): SpeechSynthesisVoice | null {
-    const voice = this.voices.find(v => v.name === voiceName);
+    const voice = this.voices.find((v) => v.name === voiceName);
     return voice ? voice : null;
   }
 

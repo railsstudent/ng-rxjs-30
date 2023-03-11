@@ -4,11 +4,13 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-root',
   template: '<app-video-player></app-video-player>',
-  styles: [`
-  :host {
-    display: block;
-  }
-  `]
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
 })
 export class AppComponent {
   title = 'Day28 Video Speed Controller';

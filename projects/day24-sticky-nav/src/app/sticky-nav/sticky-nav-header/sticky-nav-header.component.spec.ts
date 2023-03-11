@@ -8,9 +8,8 @@ describe('StickNavHeaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StickyNavHeaderComponent ]
-    })
-    .compileComponents();
+      declarations: [StickyNavHeaderComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(StickyNavHeaderComponent);
     component = fixture.componentInstance;
