@@ -13,6 +13,7 @@ const createScoreObservable = (startButtonClicked$: Observable<SCORE_ACTION>, mo
     const molesClickedArray$ = moles.map(
         ({ nativeElement }) => fromEvent(nativeElement, 'click').pipe(whackAMole(nativeElement))
     );
+    
     return merge(...molesClickedArray$, startButtonClicked$)
         .pipe(
             scan((score, action) => action === SCORE_ACTION.RESET ? 0 : score + 1, 0),

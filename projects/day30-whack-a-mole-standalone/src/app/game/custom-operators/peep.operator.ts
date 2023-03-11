@@ -18,7 +18,7 @@ function randomHole(holes: ElementRef<HTMLDivElement>[], lastHole: number): numb
 }
 
 export function peep<T extends number>(holes: ElementRef<HTMLDivElement>[], minUpTime: number, maxUpTime: number) {
-    return function(source: Observable<T>) {
+    return function(source: Observable<T>): Observable<number> {
         return source.pipe(
             map((lastHole) => ({
                 upTime: randomTime(minUpTime, maxUpTime),

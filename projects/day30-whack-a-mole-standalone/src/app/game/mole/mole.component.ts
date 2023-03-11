@@ -1,8 +1,9 @@
 import { AsyncPipe, NgIf, NgStyle } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { holeSrc, moleSrc } from '../helpers/image-url.helper';
 import { createGameObservablesFn } from '../helpers/mole.observable';
+import { GameObservables } from '../interfaces/game.interface';
 import { RemainingTimePipe, WhackAMoleMessagePipe } from '../pipes';
 
 @Component({
@@ -10,14 +11,10 @@ import { RemainingTimePipe, WhackAMoleMessagePipe } from '../pipes';
   standalone: true,
   imports: [AsyncPipe, NgIf, NgStyle, WhackAMoleMessagePipe, RemainingTimePipe],
   template: `
-    <h1>Whack-a-mole! <span class="score">{{ score$ | async }}</span></h1>
+    <h1>Whack-a-mole! <span class="score">{{ observables.score$ | async }}</span></h1>
     <button #start class="start">Start!</button>
-    <ng-container *ngIf="{ timeLeft: timeLeft$ | async } as data">
-      <span class="duration">{{ data.timeLeft | remainingTime }}</span>
-    </ng-container>
-    <ng-container *ngIf="{ delayGameMsg: delayGameMsg$ | async } as data">
-      <span class="message">{{ data.delayGameMsg | whackAMoleMessage }}</span>
-    </ng-container>
+    <span class="duration">{{ observables.timeLeft$ | async | remainingTime }}</span>
+    <span class="message">{{ observables.delayGameMsg$ | async | whackAMoleMessage }}</span>
     <div class="game">
       <div class="hole" [ngStyle]="holeImage" #hole1>
         <div class="mole" [ngStyle]="moleImage" #mole1></div>
@@ -82,9 +79,7 @@ export class MoleComponent implements OnInit, OnDestroy {
   @ViewChild('mole6', { static: true, read: ElementRef })
   mole6!: ElementRef<HTMLDivElement>;
 
-  score$!: Observable<number>;
-  timeLeft$!: Observable<number>;
-  delayGameMsg$!: Observable<number>
+  observables!: GameObservables;
   subscription!: Subscription;
   holeImage = { '--hole-image': holeSrc() };
   moleImage = { '--mole-image': moleSrc() };
@@ -94,11 +89,8 @@ export class MoleComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const moles = [this.mole1, this.mole2, this.mole3, this.mole4, this.mole5, this.mole6];
     const holes = [this.hole1, this.hole2, this.hole3, this.hole4, this.hole5, this.hole6];
-    const observables = this.createDelayGameObservables(this.startButton.nativeElement, moles, holes);
-    this.delayGameMsg$ = observables.delayGameMsg$;
-    this.timeLeft$ = observables.timeLeft$;
-    this.score$ = observables.score$;
-    this.subscription = observables.createGame$.subscribe();
+    this.observables = this.createDelayGameObservables(this.startButton.nativeElement, moles, holes);
+    this.subscription = this.observables.createGame$.subscribe();
   }
 
   ngOnDestroy(): void {
