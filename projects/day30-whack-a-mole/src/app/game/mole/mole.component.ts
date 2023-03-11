@@ -16,23 +16,23 @@ import { SCORE_ACTION } from './mole.enum';
       <span class="message">{{ data.delayGameMsg | whackAMoleMessage }}</span>
     </ng-container>
     <div class="game">
-      <div class="hole hole1" [style]="'--hole-image:' + holeSrc" #hole1>
-        <div class="mole" [style]="'--mole-image:' + moleSrc" #mole1></div>
+      <div class="hole" [ngStyle]="holeImage" #hole1>
+        <div class="mole" [ngStyle]="moleImage" #mole1></div>
       </div>
-      <div class="hole hole2" [style]="'--hole-image:' + holeSrc" #hole2>
-        <div class="mole" [style]="'--mole-image:' + moleSrc" #mole2></div>
+      <div class="hole" [ngStyle]="holeImage" #hole2>
+        <div class="mole" [ngStyle]="moleImage" #mole2></div>
       </div>
-      <div class="hole hole3" [style]="'--hole-image:' + holeSrc" #hole3>
-        <div class="mole" [style]="'--mole-image:' + moleSrc" #mole3></div>
+      <div class="hole" [ngStyle]="holeImage" #hole3>
+        <div class="mole" [ngStyle]="moleImage" #mole3></div>
       </div>
-      <div class="hole hole4" [style]="'--hole-image:' + holeSrc" #hole4>
-        <div class="mole" [style]="'--mole-image:' + moleSrc" #mole4></div>
+      <div class="hole" [ngStyle]="holeImage" #hole4>
+        <div class="mole" [ngStyle]="moleImage" #mole4></div>
       </div>
-      <div class="hole hole5" [style]="'--hole-image:' + holeSrc" #hole5>
-        <div class="mole" [style]="'--mole-image:' + moleSrc" #mole5></div>
+      <div class="hole" [ngStyle]="holeImage" #hole5>
+        <div class="mole" [ngStyle]="moleImage" #mole5></div>
       </div>
-      <div class="hole hole6" [style]="'--hole-image:' + holeSrc" #hole6>
-        <div class="mole" [style]="'--mole-image:' + moleSrc" #mole6></div>
+      <div class="hole" [ngStyle]="holeImage" #hole6>
+        <div class="mole" [ngStyle]="moleImage" #mole6></div>
       </div>
     </div>`,
   styleUrls: ['mole.component.scss'],
@@ -84,6 +84,9 @@ export class MoleComponent implements OnInit, OnDestroy {
   delayGameMsg$!: Observable<number>
   subscription = new Subscription();
   lastHoleUpdated = new BehaviorSubject<number>(-1);
+
+  holeImage = { '--hole-image': this.holeSrc };
+  moleImage = { '--mole-image': this.moleSrc };
 
   constructor(@Inject(APP_BASE_HREF) private baseHref: string) { }
 
