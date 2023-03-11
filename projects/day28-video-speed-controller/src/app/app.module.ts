@@ -3,23 +3,19 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { VideoModule } from './video'
+import { VideoModule } from './video';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    VideoModule
-  ],
+  declarations: [AppComponent],
+  imports: [BrowserModule, VideoModule],
   providers: [
     {
       provide: APP_BASE_HREF,
-      useFactory: (platformLocation: PlatformLocation) => platformLocation.getBaseHrefFromDOM(),
-      deps: [PlatformLocation]
-    }
+      useFactory: (platformLocation: PlatformLocation) =>
+        platformLocation.getBaseHrefFromDOM(),
+      deps: [PlatformLocation],
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -4,15 +4,8 @@ import { VideoListComponent } from './video-list/video-list.component';
 import { FormatTotalSecondsPipe } from './pipes/format-total-seconds.pipe';
 
 @NgModule({
-  declarations: [
-    VideoListComponent,
-    FormatTotalSecondsPipe
-  ],
-  imports: [
-    CommonModule
-  ],
-  exports: [
-    VideoListComponent
-  ]
+  declarations: [VideoListComponent, FormatTotalSecondsPipe],
+  imports: [CommonModule],
+  exports: [VideoListComponent],
 })
-export class VideosModule { }
+export class VideosModule {}

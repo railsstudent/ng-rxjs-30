@@ -9,6 +9,5 @@ if (environment.production) {
 }
 
 bootstrapApplication(AppComponent, {
-  providers: [provideHttpClient()]
-})
-  .catch(err => console.error(err));
+  providers: [provideHttpClient()],
+}).catch((err) => console.error(err));

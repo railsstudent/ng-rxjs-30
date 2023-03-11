@@ -3,14 +3,8 @@ import { CommonModule } from '@angular/common';
 import { SpeechDetectionComponent } from './speech-detection/speech-detection.component';
 
 @NgModule({
-  declarations: [
-    SpeechDetectionComponent,
-  ],
-  imports: [
-    CommonModule
-  ],
-  exports: [
-    SpeechDetectionComponent,
-  ]
+  declarations: [SpeechDetectionComponent],
+  imports: [CommonModule],
+  exports: [SpeechDetectionComponent],
 })
-export class SpeechDetectionModule { }
+export class SpeechDetectionModule {}

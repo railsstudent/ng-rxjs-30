@@ -9,14 +9,9 @@ import { SpeechVoiceComponent } from './speech-voice/speech-voice.component';
   declarations: [
     SpeechSynthesisComponent,
     SpeechVoiceComponent,
-    SpeechTextComponent
+    SpeechTextComponent,
   ],
-  imports: [
-    CommonModule,
-    FormsModule,
-  ],
-  exports: [
-    SpeechSynthesisComponent
-  ]
+  imports: [CommonModule, FormsModule],
+  exports: [SpeechSynthesisComponent],
 })
-export class SpeechModule { }
+export class SpeechModule {}

@@ -4,15 +4,8 @@ import { CoolLinkDirective } from './directives/cool-link.directive';
 import { StripeNavPageComponent } from './stripe-nav-page/stripe-nav-page.component';
 
 @NgModule({
-  declarations: [
-    StripeNavPageComponent,
-    CoolLinkDirective
-  ],
-  imports: [
-    CommonModule
-  ],
-  exports: [
-    StripeNavPageComponent
-  ]
+  declarations: [StripeNavPageComponent, CoolLinkDirective],
+  imports: [CommonModule],
+  exports: [StripeNavPageComponent],
 })
-export class StripeModule { }
+export class StripeModule {}

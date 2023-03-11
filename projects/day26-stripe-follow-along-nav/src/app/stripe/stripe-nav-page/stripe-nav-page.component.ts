@@ -1,4 +1,13 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import { Subscription, fromEvent } from 'rxjs';
 import { hoverLink } from '../custom-operators/hover-link.operator';
 import { CoolLinkDirective } from '../directives/cool-link.directive';
@@ -33,8 +42,12 @@ import { StripeService } from '../services/stripe.service';
     <ng-template #aboutMe>
       <div class="dropdown">
         <div class="bio">
-          <img src="https://logo.clearbit.com/wesbos.com">
-          <p>Wes Bos sure does love web development. He teaches things like JavaScript, CSS and BBQ. Wait. BBQ isn't part of web development. It should be though!</p>
+          <img src="https://logo.clearbit.com/wesbos.com" />
+          <p>
+            Wes Bos sure does love web development. He teaches things like
+            JavaScript, CSS and BBQ. Wait. BBQ isn't part of web development. It
+            should be though!
+          </p>
         </div>
       </div>
     </ng-template>
@@ -54,17 +67,18 @@ import { StripeService } from '../services/stripe.service';
       <ul class="dropdown">
         <ng-container *ngIf="socialAccounts$ | async as socialAccounts">
           <li *ngFor="let account of socialAccounts; trackBy: trackByIndex">
-            <a class="button" [href]="account.link">{{ account.description }}</a>
+            <a class="button" [href]="account.link">{{
+              account.description
+            }}</a>
           </li>
         </ng-container>
       </ul>
     </ng-template>
   `,
   styleUrls: ['./stripe-nav-page.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StripeNavPageComponent implements AfterViewInit, OnDestroy {
-
   @ViewChild('top', { static: true, read: ElementRef })
   nav!: ElementRef<HTMLElement>;
 
@@ -78,10 +92,12 @@ export class StripeNavPageComponent implements AfterViewInit, OnDestroy {
   coursesTaught$ = this.stripeService.getCourses();
   subscriptions = new Subscription();
 
-  constructor(private stripeService: StripeService) { }
+  constructor(private stripeService: StripeService) {}
 
   ngAfterViewInit(): void {
-    const translateBackground = this.navBarClosure(this.nav.nativeElement.getBoundingClientRect());
+    const translateBackground = this.navBarClosure(
+      this.nav.nativeElement.getBoundingClientRect()
+    );
 
     this.links.forEach(({ nativeElement }) => {
       const mouseEnterSubscription = fromEvent(nativeElement, 'mouseenter')
@@ -93,11 +109,13 @@ export class StripeNavPageComponent implements AfterViewInit, OnDestroy {
           }
         });
 
-      const mouseLeaveSubscription = fromEvent(nativeElement, 'mouseleave')
-        .subscribe(() => {
-          nativeElement.classList.remove('trigger-enter-active', 'trigger-enter');
-          this.background.nativeElement.classList.remove('open');
-        });
+      const mouseLeaveSubscription = fromEvent(
+        nativeElement,
+        'mouseleave'
+      ).subscribe(() => {
+        nativeElement.classList.remove('trigger-enter-active', 'trigger-enter');
+        this.background.nativeElement.classList.remove('open');
+      });
 
       this.subscriptions.add(mouseEnterSubscription);
       this.subscriptions.add(mouseLeaveSubscription);
@@ -114,7 +132,7 @@ export class StripeNavPageComponent implements AfterViewInit, OnDestroy {
       backgroundNativeElement.style.height = `${dropdownCoords.height}px`;
       backgroundNativeElement.style.transform = `translate(${left}px, ${top}px)`;
       backgroundNativeElement.classList.add('open');
-    }
+    };
   }
 
   trackByIndex(index: number) {

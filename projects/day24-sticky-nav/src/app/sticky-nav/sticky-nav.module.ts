@@ -8,13 +8,9 @@ import { StickyNavPageComponent } from './sticky-nav-page/sticky-nav-page.compon
   declarations: [
     StickyNavPageComponent,
     StickyNavHeaderComponent,
-    StickyNavContentComponent
+    StickyNavContentComponent,
   ],
-  imports: [
-    CommonModule
-  ],
-  exports: [
-    StickyNavPageComponent
-  ]
+  imports: [CommonModule],
+  exports: [StickyNavPageComponent],
 })
-export class StickyNavModule { }
+export class StickyNavModule {}

@@ -6,15 +6,9 @@ import { CoreModule } from './core';
 import { StickyNavModule } from './sticky-nav';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    StickyNavModule,
-    CoreModule
-  ],
+  declarations: [AppComponent],
+  imports: [BrowserModule, StickyNavModule, CoreModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

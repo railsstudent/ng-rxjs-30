@@ -4,9 +4,7 @@ import { WINDOW_PROVIDERS } from './services/window.service';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule
-  ],
-  providers: [WINDOW_PROVIDERS]
+  imports: [CommonModule],
+  providers: [WINDOW_PROVIDERS],
 })
-export class CoreModule { }
+export class CoreModule {}

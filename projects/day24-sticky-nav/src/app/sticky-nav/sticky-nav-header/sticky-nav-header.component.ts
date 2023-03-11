@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Observable, fromEvent, map, startWith, tap } from 'rxjs';
 import { WINDOW } from '../../core';
 import { StickyNavService } from '../services/sticky-nav.service';
@@ -20,83 +27,86 @@ import { StickyNavService } from '../services/sticky-nav.service';
       </ul>
     </nav>
   `,
-  styles: [`
-    :host {
-      display: block;
-    }
+  styles: [
+    `
+      :host {
+        display: block;
+      }
 
-    header {
-      text-align: center;
-      height: 50vh;
-      background: url(https://source.unsplash.com/GKN6rpDr0EI/960x640) bottom center no-repeat;
-      background-size: cover;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+      header {
+        text-align: center;
+        height: 50vh;
+        background: url(https://source.unsplash.com/GKN6rpDr0EI/960x640) bottom
+          center no-repeat;
+        background-size: cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-    h1 {
-      color: white;
-      font-size: 7vw;
-      text-shadow: 3px 4px 0 rgba(0,0,0,0.2);
-    }
+      h1 {
+        color: white;
+        font-size: 7vw;
+        text-shadow: 3px 4px 0 rgba(0, 0, 0, 0.2);
+      }
 
-    nav {
-      background: black;
-      top: 0;
-      width: 100%;
-      transition:all 0.5s;
-      position: relative;
-      z-index: 1;
-    }
+      nav {
+        background: black;
+        top: 0;
+        width: 100%;
+        transition: all 0.5s;
+        position: relative;
+        z-index: 1;
+      }
 
-    nav.fixed-nav {
-      position: fixed;
-      box-shadow: 0 5px 0 rgba(0,0,0,0.1);
-    }
+      nav.fixed-nav {
+        position: fixed;
+        box-shadow: 0 5px 0 rgba(0, 0, 0, 0.1);
+      }
 
-    nav ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: flex;
-    }
-      
-    nav li {
-      flex: 1;
-      text-align: center;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+      nav ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+      }
 
-    li.logo {
-      max-width: 0;
-      overflow: hidden;
-      background: white;
-      transition: all 0.5s;
-      font-weight: 600;
-      font-size: 30px;
-    }
-      
-    li.logo a {
-      color: black;
-    }
-      
-    .fixed-nav li.logo {
-      max-width: 500px;
-    }
+      nav li {
+        flex: 1;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
-    nav a {
-      text-decoration: none;
-      padding: 20px;
-      display: inline-block;
-      color: white;
-      transition: all 0.2s;
-      text-transform: uppercase;
-    }  
-  `],
-  changeDetection: ChangeDetectionStrategy.OnPush
+      li.logo {
+        max-width: 0;
+        overflow: hidden;
+        background: white;
+        transition: all 0.5s;
+        font-weight: 600;
+        font-size: 30px;
+      }
+
+      li.logo a {
+        color: black;
+      }
+
+      .fixed-nav li.logo {
+        max-width: 500px;
+      }
+
+      nav a {
+        text-decoration: none;
+        padding: 20px;
+        display: inline-block;
+        color: white;
+        transition: all 0.2s;
+        text-transform: uppercase;
+      }
+    `,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StickyNavHeaderComponent implements OnInit {
   @ViewChild('menu', { static: true, read: ElementRef })
@@ -104,22 +114,24 @@ export class StickyNavHeaderComponent implements OnInit {
 
   shouldFixNav$!: Observable<boolean>;
 
-  constructor(@Inject(WINDOW) private window: Window, private service: StickyNavService) { }
+  constructor(
+    @Inject(WINDOW) private window: Window,
+    private service: StickyNavService
+  ) {}
 
   ngOnInit(): void {
     const navNative = this.nav.nativeElement;
     const body = navNative.closest('body');
 
-    this.shouldFixNav$ = fromEvent(this.window, 'scroll')
-      .pipe(
-        map(() => this.window.scrollY > navNative.offsetTop),
-        tap((result) => {
-          if (body) {
-            body.style.paddingTop = result ? `${navNative.offsetHeight}px` : '0';
-          }            
-          this.service.addClass(result);
-        }),
-        startWith(false)
-      );
+    this.shouldFixNav$ = fromEvent(this.window, 'scroll').pipe(
+      map(() => this.window.scrollY > navNative.offsetTop),
+      tap((result) => {
+        if (body) {
+          body.style.paddingTop = result ? `${navNative.offsetHeight}px` : '0';
+        }
+        this.service.addClass(result);
+      }),
+      startWith(false)
+    );
   }
 }

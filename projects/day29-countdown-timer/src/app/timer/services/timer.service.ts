@@ -2,11 +2,10 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TimerService {
-
-  private readonly secondsSub = new Subject<number>(); 
+  private readonly secondsSub = new Subject<number>();
   readonly seconds$ = this.secondsSub.asObservable();
 
   updateSeconds(seconds: number) {

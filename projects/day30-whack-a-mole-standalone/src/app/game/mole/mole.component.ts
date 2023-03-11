@@ -1,8 +1,7 @@
 import { AsyncPipe, NgIf, NgStyle } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { holeSrc, moleSrc } from '../helpers/image-url.helper';
-import { createGameObservablesFn } from '../helpers/mole.observable';
+import { createGameObservablesFn, cssHoleImage, cssMoleImage } from '../helpers';
 import { GameObservables } from '../interfaces/game.interface';
 import { RemainingTimePipe, WhackAMoleMessagePipe } from '../pipes';
 
@@ -11,7 +10,9 @@ import { RemainingTimePipe, WhackAMoleMessagePipe } from '../pipes';
   standalone: true,
   imports: [AsyncPipe, NgIf, NgStyle, WhackAMoleMessagePipe, RemainingTimePipe],
   template: `
-    <h1>Whack-a-mole! <span class="score">{{ observables.score$ | async }}</span></h1>
+    <h1>
+      Whack-a-mole! <span class="score">{{ observables.score$ | async }}</span>
+    </h1>
     <button #start class="start">Start!</button>
     <span class="duration">{{ observables.timeLeft$ | async | remainingTime }}</span>
     <span class="message">{{ observables.delayGameMsg$ | async | whackAMoleMessage }}</span>
@@ -36,53 +37,52 @@ import { RemainingTimePipe, WhackAMoleMessagePipe } from '../pipes';
       </div>
     </div>`,
   styleUrls: ['mole.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MoleComponent implements OnInit, OnDestroy {
-
   @ViewChild('start', { static: true, read: ElementRef })
   startButton!: ElementRef<HTMLButtonElement>;
 
   @ViewChild('hole1', { static: true, read: ElementRef })
   hole1!: ElementRef<HTMLDivElement>;
-  
+
   @ViewChild('hole2', { static: true, read: ElementRef })
   hole2!: ElementRef<HTMLDivElement>;
 
   @ViewChild('hole3', { static: true, read: ElementRef })
   hole3!: ElementRef<HTMLDivElement>;
-  
+
   @ViewChild('hole4', { static: true, read: ElementRef })
   hole4!: ElementRef<HTMLDivElement>;
-  
+
   @ViewChild('hole5', { static: true, read: ElementRef })
   hole5!: ElementRef<HTMLDivElement>;
-  
+
   @ViewChild('hole6', { static: true, read: ElementRef })
   hole6!: ElementRef<HTMLDivElement>;
 
   @ViewChild('mole1', { static: true, read: ElementRef })
   mole1!: ElementRef<HTMLDivElement>;
-  
+
   @ViewChild('mole2', { static: true, read: ElementRef })
-  mole2!: ElementRef<HTMLDivElement>;  
-  
+  mole2!: ElementRef<HTMLDivElement>;
+
   @ViewChild('mole3', { static: true, read: ElementRef })
-  mole3!: ElementRef<HTMLDivElement>;  
-  
+  mole3!: ElementRef<HTMLDivElement>;
+
   @ViewChild('mole4', { static: true, read: ElementRef })
-  mole4!: ElementRef<HTMLDivElement>;  
-  
+  mole4!: ElementRef<HTMLDivElement>;
+
   @ViewChild('mole5', { static: true, read: ElementRef })
-  mole5!: ElementRef<HTMLDivElement>;  
-  
+  mole5!: ElementRef<HTMLDivElement>;
+
   @ViewChild('mole6', { static: true, read: ElementRef })
   mole6!: ElementRef<HTMLDivElement>;
 
   observables!: GameObservables;
   subscription!: Subscription;
-  holeImage = { '--hole-image': holeSrc() };
-  moleImage = { '--mole-image': moleSrc() };
+  holeImage = cssHoleImage();
+  moleImage = cssMoleImage();
 
   createDelayGameObservables = createGameObservablesFn();
 

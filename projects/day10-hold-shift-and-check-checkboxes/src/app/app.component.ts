@@ -5,17 +5,15 @@ import { InboxComponent } from './inbox/inbox/inbox.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    InboxComponent,
-  ],
+  imports: [InboxComponent],
   template: '<app-inbox></app-inbox>',
   styles: [
     `
       :host {
         display: block;
       }
-    `
-  ]
+    `,
+  ],
 })
 export class AppComponent {
   title = 'Day 10 Hold shift key and check checkboxes';

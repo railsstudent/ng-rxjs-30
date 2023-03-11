@@ -1,5 +1,5 @@
 export interface City {
-    city: string;
-    population: string;
-    state: string;
+  city: string;
+  population: string;
+  state: string;
 }

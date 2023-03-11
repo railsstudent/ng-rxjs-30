@@ -6,20 +6,16 @@ import { AppComponent } from './app.component';
 import { ListModule } from './list';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    ListModule
-  ],
+  declarations: [AppComponent],
+  imports: [BrowserModule, ListModule],
   providers: [
     {
       provide: APP_BASE_HREF,
-      useFactory: (platformLocation: PlatformLocation) => platformLocation.getBaseHrefFromDOM(),
-      deps: [PlatformLocation]
-    }
+      useFactory: (platformLocation: PlatformLocation) =>
+        platformLocation.getBaseHrefFromDOM(),
+      deps: [PlatformLocation],
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

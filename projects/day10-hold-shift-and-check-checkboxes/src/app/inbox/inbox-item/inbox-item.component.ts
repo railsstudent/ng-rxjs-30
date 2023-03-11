@@ -1,4 +1,10 @@
-import { Component, ChangeDetectionStrategy, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { Message } from '../interfaces';
 import { CheckboxClickState } from '../interfaces/checkbox-click-state.interface';
 
@@ -7,15 +13,19 @@ import { CheckboxClickState } from '../interfaces/checkbox-click-state.interface
   standalone: true,
   template: `
     <div class="item" [class.hide]="isLast">
-      <input type="checkbox" [checked]="data.isChecked" (click)="onClicked($event, myCheckbox.checked)" #myCheckbox>
+      <input
+        type="checkbox"
+        [checked]="data.isChecked"
+        (click)="onClicked($event, myCheckbox.checked)"
+        #myCheckbox
+      />
       <p>{{ data.description }}</p>
     </div>
   `,
   styleUrls: ['./inbox-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InboxItemComponent {
-
   @Input()
   data!: Message;
 

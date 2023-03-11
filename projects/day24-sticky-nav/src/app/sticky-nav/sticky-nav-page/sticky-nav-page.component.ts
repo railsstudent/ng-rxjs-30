@@ -8,11 +8,13 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       <app-sticky-nav-content></app-sticky-nav-content>
     </ng-container>
   `,
-  styles: [`
-    :host {
-      display: block;
-    }
-  `],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StickyNavPageComponent {}

@@ -4,15 +4,8 @@ import { WebCameraComponent } from './web-camera/web-camera.component';
 import { PhotoStripeComponent } from './photo-stripe/photo-stripe.component';
 
 @NgModule({
-  declarations: [
-    WebCameraComponent,
-    PhotoStripeComponent
-  ],
-  imports: [
-    CommonModule
-  ],
-  exports: [
-    WebCameraComponent
-  ]
+  declarations: [WebCameraComponent, PhotoStripeComponent],
+  imports: [CommonModule],
+  exports: [WebCameraComponent],
 })
-export class WebCamModule { }
+export class WebCamModule {}

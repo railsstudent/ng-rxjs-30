@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { VideoAction } from '../interfaces';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class VideoPlayerService {
   private readonly videoButtonIconSub = new Subject<string>();

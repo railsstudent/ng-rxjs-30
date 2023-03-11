@@ -1,20 +1,39 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subscription, concatMap, filter, fromEvent, map, merge, scan, skip, takeUntil } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Inject,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  Subscription,
+  concatMap,
+  filter,
+  fromEvent,
+  map,
+  merge,
+  scan,
+  skip,
+  takeUntil,
+} from 'rxjs';
 import { WINDOW } from '../../core';
 import { LineInfo } from '../interfaces';
 
 @Component({
   selector: 'app-canvas',
   template: `<canvas width="800" height="800" #draw></canvas>`,
-  styles: [`
-    :host {
-      display: block;
-    }
-  `],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CanvasComponent implements OnInit, OnDestroy {
-
   @ViewChild('draw', { static: true })
   canvas!: ElementRef<HTMLCanvasElement>;
 
@@ -24,7 +43,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.canvas && this.canvas.nativeElement) {
-      const nativeCanvas = this.canvas.nativeElement
+      const nativeCanvas = this.canvas.nativeElement;
       const ctx = nativeCanvas.getContext('2d');
       if (!ctx) {
         return;
@@ -44,33 +63,45 @@ export class CanvasComponent implements OnInit, OnDestroy {
       const stopDrawing$ = merge(mouseOut$, mouseUp$);
       const drag$ = mouseMove$.pipe(takeUntil(stopDrawing$));
 
-      this.subscription = mouseDown$.pipe(
-        concatMap(
-          () => drag$.pipe(
-            filter(value => value instanceof MouseEvent),
-            map(value => value as MouseEvent),
-            scan((acc, value) => ({
-              hue: acc.hue >= 360 ? 0 : acc.hue + 1,
-              prev: acc.curr,
-              curr: {
-                offsetX: value.offsetX,
-                offsetY: value.offsetY
-              },
-            }), { prev: undefined, curr: undefined, hue: -2 } as LineInfo),
-            skip(1),
+      this.subscription = mouseDown$
+        .pipe(
+          concatMap(() =>
+            drag$.pipe(
+              filter((value) => value instanceof MouseEvent),
+              map((value) => value as MouseEvent),
+              scan(
+                (acc, value) => ({
+                  hue: acc.hue >= 360 ? 0 : acc.hue + 1,
+                  prev: acc.curr,
+                  curr: {
+                    offsetX: value.offsetX,
+                    offsetY: value.offsetY,
+                  },
+                }),
+                { prev: undefined, curr: undefined, hue: -2 } as LineInfo
+              ),
+              skip(1)
+            )
           ),
-        ),
-        scan((acc, line) => 
-          ({
-            direction: ctx.lineWidth >= 100 || ctx.lineWidth <= 1 ? !acc.direction : acc.direction,
-            line,
-          })
-        , { direction: true } as { direction: boolean, line: LineInfo | undefined}),
-      ).subscribe(({ line, direction }) => { 
-        if (line) {
-          this.draw(ctx, line, direction);
-        }
-      });
+          scan(
+            (acc, line) => ({
+              direction:
+                ctx.lineWidth >= 100 || ctx.lineWidth <= 1
+                  ? !acc.direction
+                  : acc.direction,
+              line,
+            }),
+            { direction: true } as {
+              direction: boolean;
+              line: LineInfo | undefined;
+            }
+          )
+        )
+        .subscribe(({ line, direction }) => {
+          if (line) {
+            this.draw(ctx, line, direction);
+          }
+        });
     }
   }
 
@@ -79,7 +110,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
     if (!curr || !prev) {
       return;
     }
-    
+
     ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
     ctx.beginPath();
     // start from

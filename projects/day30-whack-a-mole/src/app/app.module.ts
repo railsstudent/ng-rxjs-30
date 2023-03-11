@@ -6,20 +6,16 @@ import { AppComponent } from './app.component';
 import { GameModule } from './game';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    GameModule
-  ],
+  declarations: [AppComponent],
+  imports: [BrowserModule, GameModule],
   providers: [
     {
       provide: APP_BASE_HREF,
-      useFactory: (platformLocation: PlatformLocation) => platformLocation.getBaseHrefFromDOM(),
-      deps: [PlatformLocation]
-    }
+      useFactory: (platformLocation: PlatformLocation) =>
+        platformLocation.getBaseHrefFromDOM(),
+      deps: [PlatformLocation],
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
