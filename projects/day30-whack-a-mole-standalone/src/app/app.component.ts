@@ -1,10 +1,21 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  standalone: true,
+  template: '<div>Mole</div>',
+  styles: [`
+    :host {
+      display: block;
+    }
+  `]
 })
 export class AppComponent {
-  title = 'day30-whack-a-mole-standalone';
+
+  constructor(titleService: Title) {
+    const title = 'Day30 Wrack a mole';
+    titleService.setTitle(title);
+  }
 }
