@@ -1,7 +1,7 @@
 
+import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
-import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
 
 bootstrapApplication(AppComponent, {
   providers: [

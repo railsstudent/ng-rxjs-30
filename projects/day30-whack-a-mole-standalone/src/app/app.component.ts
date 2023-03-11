@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { MoleComponent } from './game/mole/mole.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  template: '<div>Mole</div>',
+  imports: [MoleComponent],
+  template: '<app-mole></app-mole>',
   styles: [`
     :host {
       display: block;
