@@ -1,14 +1,14 @@
-import { APP_BASE_HREF, AsyncPipe, CommonModule, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription, concatMap, delay, fromEvent, map, merge, scan, shareReplay, startWith, take, takeUntil, timer } from 'rxjs';
-import { peep, trackGameTime, whackAMole } from '../custom-operators';
-import { SCORE_ACTION } from './mole.enum';
+import { AsyncPipe, NgIf, NgStyle } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
+import { holeSrc, moleSrc } from '../helpers/image-url.helper';
+import { createGameObservablesFn } from '../helpers/mole.observable';
 import { RemainingTimePipe, WhackAMoleMessagePipe } from '../pipes';
 
 @Component({
   selector: 'app-mole',
   standalone: true,
-  imports: [AsyncPipe, NgIf, WhackAMoleMessagePipe, RemainingTimePipe],
+  imports: [AsyncPipe, NgIf, NgStyle, WhackAMoleMessagePipe, RemainingTimePipe],
   template: `
     <h1>Whack-a-mole! <span class="score">{{ score$ | async }}</span></h1>
     <button #start class="start">Start!</button>
@@ -19,23 +19,23 @@ import { RemainingTimePipe, WhackAMoleMessagePipe } from '../pipes';
       <span class="message">{{ data.delayGameMsg | whackAMoleMessage }}</span>
     </ng-container>
     <div class="game">
-      <div class="hole hole1" [style]="'--hole-image:' + holeSrc" #hole1>
-        <div class="mole" [style]="'--mole-image:' + moleSrc" #mole1></div>
+      <div class="hole" [ngStyle]="holeImage" #hole1>
+        <div class="mole" [ngStyle]="moleImage" #mole1></div>
       </div>
-      <div class="hole hole2" [style]="'--hole-image:' + holeSrc" #hole2>
-        <div class="mole" [style]="'--mole-image:' + moleSrc" #mole2></div>
+      <div class="hole" [ngStyle]="holeImage" #hole2>
+        <div class="mole" [ngStyle]="moleImage" #mole2></div>
       </div>
-      <div class="hole hole3" [style]="'--hole-image:' + holeSrc" #hole3>
-        <div class="mole" [style]="'--mole-image:' + moleSrc" #mole3></div>
+      <div class="hole" [ngStyle]="holeImage" #hole3>
+        <div class="mole" [ngStyle]="moleImage" #mole3></div>
       </div>
-      <div class="hole hole4" [style]="'--hole-image:' + holeSrc" #hole4>
-        <div class="mole" [style]="'--mole-image:' + moleSrc" #mole4></div>
+      <div class="hole" [ngStyle]="holeImage" #hole4>
+        <div class="mole" [ngStyle]="moleImage" #mole4></div>
       </div>
-      <div class="hole hole5" [style]="'--hole-image:' + holeSrc" #hole5>
-        <div class="mole" [style]="'--mole-image:' + moleSrc" #mole5></div>
+      <div class="hole" [ngStyle]="holeImage" #hole5>
+        <div class="mole" [ngStyle]="moleImage" #mole5></div>
       </div>
-      <div class="hole hole6" [style]="'--hole-image:' + holeSrc" #hole6>
-        <div class="mole" [style]="'--mole-image:' + moleSrc" #mole6></div>
+      <div class="hole" [ngStyle]="holeImage" #hole6>
+        <div class="mole" [ngStyle]="moleImage" #mole6></div>
       </div>
     </div>`,
   styleUrls: ['mole.component.scss'],
@@ -85,70 +85,20 @@ export class MoleComponent implements OnInit, OnDestroy {
   score$!: Observable<number>;
   timeLeft$!: Observable<number>;
   delayGameMsg$!: Observable<number>
-  subscription = new Subscription();
-  lastHoleUpdated = new BehaviorSubject<number>(-1);
+  subscription!: Subscription;
+  holeImage = { '--hole-image': holeSrc() };
+  moleImage = { '--mole-image': moleSrc() };
 
-  constructor(@Inject(APP_BASE_HREF) private baseHref: string) { }
+  createDelayGameObservables = createGameObservablesFn();
 
   ngOnInit(): void {
-    const molesClickedArray$ = this.createMoleClickedObservables(this.mole1, this.mole2, this.mole3, this.mole4, this.mole5, this.mole6);
-    const startButtonClicked$ = fromEvent(this.startButton.nativeElement, 'click')
-      .pipe(
-        map(() => SCORE_ACTION.RESET),
-        shareReplay(1)
-      );
-
-    this.score$ = merge(...molesClickedArray$, startButtonClicked$)
-      .pipe(
-        scan((score, action) => action === SCORE_ACTION.RESET ? 0 : score + 1, 0),
-        startWith(0),
-      );
-
-    const delayTime = 3;
-    this.delayGameMsg$ = startButtonClicked$.pipe(
-      concatMap(() => timer(0, 1000)
-        .pipe(
-          take(delayTime + 1),
-          map((value) => delayTime - value),
-        ))
-      );
-
-    const delayGameStart$ = startButtonClicked$.pipe(
-      delay(delayTime * 1000),
-      shareReplay(1)
-    );
-
-    const gameDuration = 10;
-    const resetTime$ = startButtonClicked$.pipe(map(() => gameDuration));
-    this.timeLeft$ = merge(resetTime$, delayGameStart$.pipe(trackGameTime(gameDuration)));
-
-    const createGame = delayGameStart$.pipe(concatMap(() => this.lastHoleUpdated
-      .pipe(
-        peep([this.hole1, this.hole2, this.hole3, this.hole4, this.hole5, this.hole6], 350, 1000),
-        takeUntil(timer(gameDuration * 1000))
-      )
-    ))
-    .subscribe();
-
-    this.subscription.add(createGame);
-  }
-
-  get moleSrc(): string {
-    return this.buildImage('mole.svg');
-  }
-
-  get holeSrc(): string {
-    return this.buildImage('dirt.svg');
-  }
-
-  private createMoleClickedObservables(...moles: ElementRef<HTMLDivElement>[]): Observable<SCORE_ACTION>[] {
-    return moles.map(({ nativeElement }) => fromEvent(nativeElement, 'click').pipe(whackAMole(nativeElement)));
-  }
-
-  private buildImage(image: string) {
-    const isEndWithSlash = this.baseHref.endsWith('/');
-    const imagePath = `${this.baseHref}${isEndWithSlash ? '' : '/'}assets/images/${image}`;
-    return `url('${imagePath}')`
+    const moles = [this.mole1, this.mole2, this.mole3, this.mole4, this.mole5, this.mole6];
+    const holes = [this.hole1, this.hole2, this.hole3, this.hole4, this.hole5, this.hole6];
+    const observables = this.createDelayGameObservables(this.startButton.nativeElement, moles, holes);
+    this.delayGameMsg$ = observables.delayGameMsg$;
+    this.timeLeft$ = observables.timeLeft$;
+    this.score$ = observables.score$;
+    this.subscription = observables.createGame$.subscribe();
   }
 
   ngOnDestroy(): void {

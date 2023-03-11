@@ -53,6 +53,13 @@ ng g m src/app/<module name> --project=<project name> --module=src/app/app.modul
  ng g c src/app/<feature module>/<component name> --change-detection=OnPush --project=<project name> --module=src/app/<feature module>.module 
 ```
 
+## Generate directive in a feature module of projects
+
+```bash
+ - change to project directory
+ ng g c src/app/<feature module>/<component name> --change-detection=OnPush --project=<project name> --module=src/app/<feature module>.module 
+```
+
 ## Build project in docs folder
 ```bash
 ./build-doc.sh  <project name>
