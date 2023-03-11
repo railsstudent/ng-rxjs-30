@@ -5,14 +5,9 @@ import { AppComponent } from './app.component';
 import { MouseMoveModule } from './mouse-move';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    MouseMoveModule
-  ],
+  declarations: [AppComponent],
+  imports: [BrowserModule, MouseMoveModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

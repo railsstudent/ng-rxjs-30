@@ -8,9 +8,8 @@ describe('KeySequenceDetectionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ KeySequenceDetectionComponent ]
-    })
-    .compileComponents();
+      declarations: [KeySequenceDetectionComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

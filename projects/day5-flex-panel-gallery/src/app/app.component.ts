@@ -9,8 +9,8 @@ import { Title } from '@angular/platform-browser';
       :host {
         display: block;
       }
-    `
-  ]
+    `,
+  ],
 })
 export class AppComponent {
   title = 'Flex Panels';

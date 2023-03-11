@@ -12,11 +12,7 @@ import { HighlighterPageComponent } from './highlighter-page/highlighter-page.co
     HighlighterMenuComponent,
     HighlighterContentComponent,
   ],
-  imports: [
-    CommonModule
-  ],
-  exports: [
-    HighlighterPageComponent
-  ]
+  imports: [CommonModule],
+  exports: [HighlighterPageComponent],
 })
-export class HighlighterModule { }
+export class HighlighterModule {}

@@ -4,9 +4,7 @@ import { NAVIGATOR_PROVIDERS } from './navigator.service';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule
-  ],
-  providers: [NAVIGATOR_PROVIDERS]
+  imports: [CommonModule],
+  providers: [NAVIGATOR_PROVIDERS],
 })
-export class CoreModule { }
+export class CoreModule {}

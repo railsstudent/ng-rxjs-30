@@ -12,32 +12,28 @@ export abstract class NavigatorRef {
 
 /* Define class that implements the abstract class and returns the native navigator object. */
 export class BrowserNavigatorRef extends NavigatorRef {
-
   constructor() {
     super();
   }
 
   override get nativeNavigator(): Object | Navigator {
-    return navigator;    
+    return navigator;
   }
 }
 
 /* Create a injectable provider for the NavigatorRef token that uses the BrowserNavigatorRef class. */
 const browserNavigatorProvider: ClassProvider = {
   provide: NavigatorRef,
-  useClass: BrowserNavigatorRef
+  useClass: BrowserNavigatorRef,
 };
 
 /* Create an injectable provider that uses the navigatorFactory function for returning the native navigator object. */
 const navigatorProvider: FactoryProvider = {
   provide: NAVIGATOR,
-  useFactory: (browserWindowRef: BrowserNavigatorRef, platformId: Object) => 
+  useFactory: (browserWindowRef: BrowserNavigatorRef, platformId: Object) =>
     isPlatformBrowser(platformId) ? browserWindowRef.nativeNavigator : new Object(),
-  deps: [ NavigatorRef, PLATFORM_ID ]
+  deps: [NavigatorRef, PLATFORM_ID],
 };
 
 /* Create an array of providers. */
-export const NAVIGATOR_PROVIDERS = [
-  browserNavigatorProvider,
-  navigatorProvider
-];
+export const NAVIGATOR_PROVIDERS = [browserNavigatorProvider, navigatorProvider];

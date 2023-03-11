@@ -4,16 +4,16 @@ import { Subject, firstValueFrom, map, scan } from 'rxjs';
 import { CheckboxClickState, InBetweenCheckboxClicked, Message } from '../interfaces';
 
 const updateMessageState = (id: number, isChecked: boolean, messages: Message[]) => {
-  return messages.map(message => {
-      if (message.id === id) {
-        return {
-          ...message,
-          isChecked,
-        }
-      }
-      return message;
-    });
-}
+  return messages.map((message) => {
+    if (message.id === id) {
+      return {
+        ...message,
+        isChecked,
+      };
+    }
+    return message;
+  });
+};
 
 const checkBetweenBoxesFn = () => (inBetweenClicked: InBetweenCheckboxClicked, messages: Message[]) => {
   const { isShiftKeyPressed, isChecked, lastCheck, prevCheck } = inBetweenClicked;
@@ -33,7 +33,7 @@ const checkBetweenBoxesFn = () => (inBetweenClicked: InBetweenCheckboxClicked, m
   }
 
   return checkedMessages;
-}
+};
 
 const createCheckedMessagesFn = () => {
   const initState: InBetweenCheckboxClicked = {
@@ -44,25 +44,21 @@ const createCheckedMessagesFn = () => {
   };
 
   return (checkboxClickedSub$: Subject<CheckboxClickState>) =>
-    checkboxClickedSub$
-      .pipe(
-        scan((acc, item) =>  ({ ...item, prevCheck: acc.lastCheck }), initState),
-      );
-}
+    checkboxClickedSub$.pipe(scan((acc, item) => ({ ...item, prevCheck: acc.lastCheck }), initState));
+};
 
 const loadMessages = () => {
   const httpClient = inject(HttpClient);
-  const url = 'https://gist.githubusercontent.com/railsstudent/ccda9a9d5c0761791d58c7edc3bce406/raw/7469e6c86372bd864a9995603663a719586c1701/messages.json';
-  const messages$ = httpClient.get<{ messages: Message[] }>(url).pipe(
-    map(({ messages }) => messages),
-  );
+  const url =
+    'https://gist.githubusercontent.com/railsstudent/ccda9a9d5c0761791d58c7edc3bce406/raw/7469e6c86372bd864a9995603663a719586c1701/messages.json';
+  const messages$ = httpClient.get<{ messages: Message[] }>(url).pipe(map(({ messages }) => messages));
 
   return firstValueFrom(messages$);
-}
+};
 
 export const messageStore = {
   loadMessages,
   updateMessageState,
   checkBetweenBoxesFn,
   createCheckedMessagesFn,
-}
+};

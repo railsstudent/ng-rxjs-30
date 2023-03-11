@@ -8,8 +8,6 @@ if (environment.production) {
   enableProdMode();
 }
 
-bootstrapApplication(AppComponent, 
-  {
-    providers: [provideHttpClient()]
-  })
-  .catch(err => console.error(err));
+bootstrapApplication(AppComponent, {
+  providers: [provideHttpClient()],
+}).catch((err) => console.error(err));

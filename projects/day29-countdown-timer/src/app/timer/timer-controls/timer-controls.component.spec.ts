@@ -8,9 +8,8 @@ describe('TimerControlsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TimerControlsComponent ]
-    })
-    .compileComponents();
+      declarations: [TimerControlsComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

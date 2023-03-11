@@ -8,9 +8,8 @@ describe('HighlighterPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HighlighterPageComponent ]
-    })
-    .compileComponents();
+      declarations: [HighlighterPageComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(HighlighterPageComponent);
     component = fixture.componentInstance;

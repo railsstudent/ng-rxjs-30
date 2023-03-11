@@ -8,14 +8,15 @@ import { MoleComponent } from './game/mole/mole.component';
   standalone: true,
   imports: [MoleComponent],
   template: '<app-mole></app-mole>',
-  styles: [`
-    :host {
-      display: block;
-    }
-  `]
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
 })
 export class AppComponent {
-
   constructor(titleService: Title) {
     const title = 'Day30 Wrack a mole';
     titleService.setTitle(title);

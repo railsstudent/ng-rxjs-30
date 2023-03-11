@@ -5,15 +5,15 @@ import { TypeAheadComponent } from './type-ahead/type-ahead/type-ahead.component
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    TypeAheadComponent
-  ],
+  imports: [TypeAheadComponent],
   template: '<app-type-ahead></app-type-ahead>',
-  styles: [`
-    :host {
-      display: block;
-    }
-  `]
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
 })
 export class AppComponent {
   title = 'Day 6 NG Type Ahead';

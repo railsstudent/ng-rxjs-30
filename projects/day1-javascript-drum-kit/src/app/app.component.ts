@@ -4,16 +4,16 @@ import { DrumComponent } from './drum';
 
 @Component({
   selector: 'app-root',
-  imports: [
-    DrumComponent,
-  ],
+  imports: [DrumComponent],
   template: '<app-drum></app-drum>',
-  styles: [`
-    :host {
-      display: block;
-      height: 100vh;
-    }
-  `],
+  styles: [
+    `
+      :host {
+        display: block;
+        height: 100vh;
+      }
+    `,
+  ],
   standalone: true,
 })
 export class AppComponent {

@@ -3,14 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ScrollComponent } from './scroll/scroll.component';
 
 @NgModule({
-  declarations: [
-    ScrollComponent
-  ],
-  imports: [
-    CommonModule
-  ],
-  exports: [
-    ScrollComponent
-  ]
+  declarations: [ScrollComponent],
+  imports: [CommonModule],
+  exports: [ScrollComponent],
 })
-export class ScrollModule { }
+export class ScrollModule {}

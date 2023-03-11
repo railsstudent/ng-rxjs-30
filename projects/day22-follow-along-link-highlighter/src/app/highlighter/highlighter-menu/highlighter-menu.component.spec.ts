@@ -8,9 +8,8 @@ describe('HighlighterMenuComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HighlighterMenuComponent ]
-    })
-    .compileComponents();
+      declarations: [HighlighterMenuComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(HighlighterMenuComponent);
     component = fixture.componentInstance;

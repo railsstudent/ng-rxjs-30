@@ -12,32 +12,34 @@ import { displayEndTimeFn, displayTimeLeftFn, nowToFn } from '../helpers/timer-p
       <p class="display__end-time">{{ displayEndTime$ | async }}</p>
     </div>
   `,
-  styles: [`
-    .display {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
+  styles: [
+    `
+      .display {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
 
-    .display__time-left {
-      font-weight: 100;
-      font-size: 20rem;
-      margin: 0;
-      color: white;
-      text-shadow: 4px 4px 0 rgba(0,0,0,0.05);
-    }
-    
-    .display__end-time {
-      font-size: 4rem;
-      color: white;
-    }
-  `],
-  changeDetection: ChangeDetectionStrategy.OnPush
+      .display__time-left {
+        font-weight: 100;
+        font-size: 20rem;
+        margin: 0;
+        color: white;
+        text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.05);
+      }
+
+      .display__end-time {
+        font-size: 4rem;
+        color: white;
+      }
+    `,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimerPaneComponent {
   nowTo$ = nowToFn();
   displayEndTime$ = displayEndTimeFn(this.nowTo$);
-  displayTimeLeft$ = displayTimeLeftFn(this.nowTo$); 
+  displayTimeLeft$ = displayTimeLeftFn(this.nowTo$);
 }

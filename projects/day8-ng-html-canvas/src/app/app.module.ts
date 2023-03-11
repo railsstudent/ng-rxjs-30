@@ -6,15 +6,9 @@ import { CanvasModule } from './canvas';
 import { CoreModule } from './core';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    CanvasModule,
-    CoreModule
-  ],
+  declarations: [AppComponent],
+  imports: [BrowserModule, CanvasModule, CoreModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

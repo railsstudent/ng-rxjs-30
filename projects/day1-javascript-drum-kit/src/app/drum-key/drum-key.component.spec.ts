@@ -8,9 +8,8 @@ describe('DrumkeyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DrumKeyComponent ]
-    })
-    .compileComponents();
+      declarations: [DrumKeyComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

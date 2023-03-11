@@ -10,20 +10,15 @@ function getBaseHref(platformLocation: PlatformLocation): string {
 }
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    VideoPlayerModule
-  ],
+  declarations: [AppComponent],
+  imports: [BrowserModule, VideoPlayerModule],
   providers: [
     {
       provide: APP_BASE_HREF,
       useFactory: getBaseHref,
-      deps: [PlatformLocation]
-    }
+      deps: [PlatformLocation],
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

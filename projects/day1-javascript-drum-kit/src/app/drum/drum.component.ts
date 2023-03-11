@@ -6,13 +6,13 @@ import { DrumKeyComponent } from '../drum-key/drum-key.component';
 import { getFullAssetPath, getHostNativeElement } from '../helpers';
 import { DrumService } from '../services';
 
-const getImageUrl = () => { 
+const getImageUrl = () => {
   const imageUrl = `${getFullAssetPath()}images/background.jpg`;
   return `url('${imageUrl}')`;
-}
+};
 
-const getEntryStore = () => { 
-  const getEntryStore = inject(DrumService); 
+const getEntryStore = () => {
+  const getEntryStore = inject(DrumService);
   return getEntryStore.getEntryStore();
 };
 
@@ -21,18 +21,16 @@ const windowKeydownSubscription = () => {
   const allowedKeys = getEntryStore().allowedKeys;
   return fromEvent(inject<Window>(WINDOW), 'keydown')
     .pipe(
-      filter(evt => evt instanceof KeyboardEvent),
-      map(evt => evt as KeyboardEvent),
+      filter((evt) => evt instanceof KeyboardEvent),
+      map((evt) => evt as KeyboardEvent),
       map(({ key }) => key.toUpperCase()),
-      filter(key => allowedKeys.includes(key)),
-    ).subscribe((key) => drumService.playSound(key));
-}
+      filter((key) => allowedKeys.includes(key)),
+    )
+    .subscribe((key) => drumService.playSound(key));
+};
 
 @Component({
-  imports: [
-    NgFor,
-    DrumKeyComponent,
-  ],
+  imports: [NgFor, DrumKeyComponent],
   standalone: true,
   selector: 'app-drum',
   template: `
@@ -40,28 +38,30 @@ const windowKeydownSubscription = () => {
       <app-drum-key *ngFor="let entry of entries" [entry]="entry" class="key"></app-drum-key>
     </div>
   `,
-  styles: [`
-    :host {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+  styles: [
+    `
+      :host {
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-      height: 100%;
+        height: 100%;
 
-      background-size: cover;
-      background-position-x: center;
-      background-position-y: bottom;
-    }
-
-    div.keys {
-      max-width: 100%;
-      display: inline-flex;
-
-      .key {
-        flex: 1;
+        background-size: cover;
+        background-position-x: center;
+        background-position-y: bottom;
       }
-    }
-  `],
+
+      div.keys {
+        max-width: 100%;
+        display: inline-flex;
+
+        .key {
+          flex: 1;
+        }
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DrumComponent implements OnInit, OnDestroy {

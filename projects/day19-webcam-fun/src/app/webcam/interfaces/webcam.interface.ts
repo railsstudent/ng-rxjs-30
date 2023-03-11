@@ -1,5 +1,5 @@
 export interface Photo {
-    data: string;
-    description: string;
-    download: string;
+  data: string;
+  description: string;
+  download: string;
 }

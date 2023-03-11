@@ -5,11 +5,12 @@ import { Title } from '@angular/platform-browser';
   selector: 'app-root',
   template: '<app-video-list></app-video-list>',
   styles: [
-  `
-    :host {
-      display: block;
-    }
-  `],
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
 })
 export class AppComponent {
   title = 'Day 18 Adding Up Times';

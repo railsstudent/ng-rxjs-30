@@ -5,16 +5,8 @@ import { StickyNavHeaderComponent } from './sticky-nav-header/sticky-nav-header.
 import { StickyNavPageComponent } from './sticky-nav-page/sticky-nav-page.component';
 
 @NgModule({
-  declarations: [
-    StickyNavPageComponent,
-    StickyNavHeaderComponent,
-    StickyNavContentComponent
-  ],
-  imports: [
-    CommonModule
-  ],
-  exports: [
-    StickyNavPageComponent
-  ]
+  declarations: [StickyNavPageComponent, StickyNavHeaderComponent, StickyNavContentComponent],
+  imports: [CommonModule],
+  exports: [StickyNavPageComponent],
 })
-export class StickyNavModule { }
+export class StickyNavModule {}

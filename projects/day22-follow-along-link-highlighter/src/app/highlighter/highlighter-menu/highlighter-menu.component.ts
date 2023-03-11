@@ -17,27 +17,29 @@ import { HighlighterService } from '../services/highlighter.service';
       </ul>
     </nav>
   `,
-  styles: [`
-    :host {
-      display: block;
-    }
+  styles: [
+    `
+      :host {
+        display: block;
+      }
 
-    .menu {
-      padding: 0;
-      display: flex;
-      list-style: none;
-      justify-content: center;
-      margin:100px 0;
-    }
-  
-    .menu a {
-      display: inline-block;
-      padding: 5px;
-      margin: 0 20px;
-      color: black;
-    }
-  `],
-  changeDetection: ChangeDetectionStrategy.OnPush
+      .menu {
+        padding: 0;
+        display: flex;
+        list-style: none;
+        justify-content: center;
+        margin: 100px 0;
+      }
+
+      .menu a {
+        display: inline-block;
+        padding: 5px;
+        margin: 0 20px;
+        color: black;
+      }
+    `,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HighlighterMenuComponent implements OnInit, OnDestroy {
   @ViewChild('home', { static: true, read: ElementRef })
@@ -61,9 +63,9 @@ export class HighlighterMenuComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription = createMouseEnterStream(
-        [this.home, this.order, this.tweet, this.history, this.contact], 
-        this.window
-      ).subscribe((style) => this.highlighterService.updateStyle(style));
+      [this.home, this.order, this.tweet, this.history, this.contact],
+      this.window,
+    ).subscribe((style) => this.highlighterService.updateStyle(style));
   }
 
   ngOnDestroy(): void {

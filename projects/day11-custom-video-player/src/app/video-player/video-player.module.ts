@@ -4,15 +4,8 @@ import { VideoPlayerComponent } from './video-player/video-player.component';
 import { VideoPlayerControlsComponent } from './video-player-controls/video-player-controls.component';
 
 @NgModule({
-  declarations: [
-    VideoPlayerComponent,
-    VideoPlayerControlsComponent
-  ],
-  imports: [
-    CommonModule
-  ],
-  exports: [
-    VideoPlayerComponent
-  ]
+  declarations: [VideoPlayerComponent, VideoPlayerControlsComponent],
+  imports: [CommonModule],
+  exports: [VideoPlayerComponent],
 })
-export class VideoPlayerModule { }
+export class VideoPlayerModule {}

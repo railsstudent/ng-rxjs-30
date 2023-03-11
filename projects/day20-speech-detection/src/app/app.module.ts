@@ -5,14 +5,9 @@ import { AppComponent } from './app.component';
 import { SpeechDetectionModule } from './speech-detection/speech-detection.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
-  imports: [
-    BrowserModule,
-    SpeechDetectionModule,
-  ],
+  declarations: [AppComponent],
+  imports: [BrowserModule, SpeechDetectionModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

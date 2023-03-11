@@ -5,21 +5,20 @@ import { Observable, Subscription, concatMap, filter, fromEvent, map, merge, sta
   selector: 'app-slider',
   template: `
     <div class="items" [ngClass]="{ active: active$ | async }" #items>
-      <div *ngFor="let index of panels" class="item">{{index}}</div>
+      <div *ngFor="let index of panels" class="item">{{ index }}</div>
     </div>
   `,
   styleUrls: ['./slider.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SliderComponent implements OnInit, OnDestroy {
-
   @ViewChild('items', { static: true, read: ElementRef })
   slider!: ElementRef<HTMLDivElement>;
 
   active$!: Observable<boolean>;
   subscription!: Subscription;
 
-  panels = [...Array(25).keys()].map(i => i < 9 ? `0${i + 1}` : `${i + 1}`);
+  panels = [...Array(25).keys()].map((i) => (i < 9 ? `0${i + 1}` : `${i + 1}`));
 
   ngOnInit(): void {
     const sliderNative = this.slider.nativeElement;
@@ -29,15 +28,15 @@ export class SliderComponent implements OnInit, OnDestroy {
     const stop$ = merge(mouseLeave$, mouseUp$);
     const mouseMove$ = fromEvent(sliderNative, 'mousemove');
 
-    this.active$ = merge(mouseDown$.pipe(map(() => true)), stop$.pipe(map(() => false)))
-      .pipe(startWith(false));
+    this.active$ = merge(mouseDown$.pipe(map(() => true)), stop$.pipe(map(() => false))).pipe(startWith(false));
 
-    this.subscription = mouseDown$.pipe(
+    this.subscription = mouseDown$
+      .pipe(
         filter((moveDownEvent) => moveDownEvent instanceof MouseEvent),
         map((moveDownEvent) => moveDownEvent as MouseEvent),
         concatMap((moveDownEvent) => {
           const startX = moveDownEvent.pageX - sliderNative.offsetLeft;
-          const scrollLeft = sliderNative.scrollLeft;          
+          const scrollLeft = sliderNative.scrollLeft;
           return mouseMove$.pipe(
             filter((moveEvent) => moveEvent instanceof MouseEvent),
             map((moveEvent) => moveEvent as MouseEvent),
@@ -47,10 +46,11 @@ export class SliderComponent implements OnInit, OnDestroy {
               const walk = (x - startX) * 3;
               sliderNative.scrollLeft = scrollLeft - walk;
             }),
-            takeUntil(stop$)
+            takeUntil(stop$),
           );
         }),
-      ).subscribe();
+      )
+      .subscribe();
   }
 
   ngOnDestroy(): void {

@@ -5,13 +5,8 @@ import { AppComponent } from './app.component';
 import { TimerModule } from './timer';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    TimerModule
-  ],
-  bootstrap: [AppComponent]
+  declarations: [AppComponent],
+  imports: [BrowserModule, TimerModule],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
