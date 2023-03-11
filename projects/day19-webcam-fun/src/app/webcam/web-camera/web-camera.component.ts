@@ -1,6 +1,26 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { concatMap, filter, fromEvent, map, Observable, scan, startWith, Subject, takeUntil, tap, timer } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Inject,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  concatMap,
+  filter,
+  fromEvent,
+  map,
+  Observable,
+  scan,
+  startWith,
+  Subject,
+  takeUntil,
+  tap,
+  timer,
+} from 'rxjs';
 import { NAVIGATOR } from '../../core/navigator.service';
 import { Photo } from '../interfaces/webcam.interface';
 
@@ -110,7 +130,13 @@ export class WebCameraComponent implements OnInit, OnDestroy {
 
           return timer(0, interval).pipe(
             tap(() => {
-              canvasContext.drawImage(this.video.nativeElement, 0, 0, width, height);
+              canvasContext.drawImage(
+                this.video.nativeElement,
+                0,
+                0,
+                width,
+                height
+              );
               // take the pixels out
               const pixels = canvasContext.getImageData(0, 0, width, height);
 

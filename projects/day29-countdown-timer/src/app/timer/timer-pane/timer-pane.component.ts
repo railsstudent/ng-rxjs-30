@@ -1,6 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { map, shareReplay, switchMap, take, tap, timer, withLatestFrom } from 'rxjs';
+import {
+  map,
+  shareReplay,
+  switchMap,
+  take,
+  tap,
+  timer,
+  withLatestFrom,
+} from 'rxjs';
 import { TimerService } from '../services/timer.service';
 
 @Component({
@@ -66,6 +74,8 @@ export class TimerPaneComponent {
     const amPm = hour >= 12 ? 'PM' : 'AM';
     const adjustedHour = hour > 12 ? hour - 12 : hour;
     const minutes = end.getMinutes();
-    return `Be Back At ${adjustedHour}:${minutes < 10 ? '0' : ''}${minutes} ${amPm}`;
+    return `Be Back At ${adjustedHour}:${
+      minutes < 10 ? '0' : ''
+    }${minutes} ${amPm}`;
   }
 }

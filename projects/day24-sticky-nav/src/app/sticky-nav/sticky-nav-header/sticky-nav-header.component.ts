@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Observable, fromEvent, map, startWith, tap } from 'rxjs';
 import { WINDOW } from '../../core';
 import { StickyNavService } from '../services/sticky-nav.service';

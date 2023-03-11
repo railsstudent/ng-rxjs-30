@@ -66,7 +66,9 @@ import { StripeService } from '../services/stripe.service';
       <ul class="dropdown">
         <ng-container *ngIf="socialAccounts$ | async as socialAccounts">
           <li *ngFor="let account of socialAccounts; trackBy: trackByIndex">
-            <a class="button" [href]="account.link">{{ account.description }}</a>
+            <a class="button" [href]="account.link">{{
+              account.description
+            }}</a>
           </li>
         </ng-container>
       </ul>
@@ -92,7 +94,9 @@ export class StripeNavPageComponent implements AfterViewInit, OnDestroy {
   constructor(private stripeService: StripeService) {}
 
   ngAfterViewInit(): void {
-    const translateBackground = this.navBarClosure(this.nav.nativeElement.getBoundingClientRect());
+    const translateBackground = this.navBarClosure(
+      this.nav.nativeElement.getBoundingClientRect()
+    );
 
     this.links.forEach(({ nativeElement }) => {
       const mouseEnterSubscription = fromEvent(nativeElement, 'mouseenter')

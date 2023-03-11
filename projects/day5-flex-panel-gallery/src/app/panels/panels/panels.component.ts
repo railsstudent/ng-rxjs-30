@@ -5,7 +5,10 @@ import { PanelData } from '../panel/interfaces';
   selector: 'app-panels',
   template: `
     <div class="panels">
-      <app-panel *ngFor="let panelData of data" [panelData]="panelData"></app-panel>
+      <app-panel
+        *ngFor="let panelData of data"
+        [panelData]="panelData"
+      ></app-panel>
     </div>
   `,
   styles: [

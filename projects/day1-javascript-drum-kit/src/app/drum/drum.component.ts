@@ -1,5 +1,11 @@
 import { NgFor } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { filter, fromEvent, map } from 'rxjs';
 import { WINDOW } from '../core/services';
 import { DrumKeyComponent } from '../drum-key/drum-key.component';
@@ -35,7 +41,11 @@ const windowKeydownSubscription = () => {
   selector: 'app-drum',
   template: `
     <div class="keys">
-      <app-drum-key *ngFor="let entry of entries" [entry]="entry" class="key"></app-drum-key>
+      <app-drum-key
+        *ngFor="let entry of entries"
+        [entry]="entry"
+        class="key"
+      ></app-drum-key>
     </div>
   `,
   styles: [

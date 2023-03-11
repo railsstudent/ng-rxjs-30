@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Inject,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { WINDOW } from '../../core';
 import { createMouseEnterStream } from '../helpers/mouseenter-stream.helper';
@@ -59,7 +67,10 @@ export class HighlighterMenuComponent implements OnInit, OnDestroy {
 
   subscription!: Subscription;
 
-  constructor(private highlighterService: HighlighterService, @Inject(WINDOW) private window: Window) {}
+  constructor(
+    private highlighterService: HighlighterService,
+    @Inject(WINDOW) private window: Window
+  ) {}
 
   ngOnInit(): void {
     this.subscription = createMouseEnterStream(

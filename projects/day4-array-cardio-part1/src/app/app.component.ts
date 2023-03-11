@@ -42,7 +42,8 @@ import { sum } from './custom-operators/sum.operator';
         <ul>
           <li *ngFor="let inventory of list; trackby: inventoryTrackBy">
             Name: {{ inventory.first }} {{ inventory.last }}<br />
-            {{ inventory.year }} - {{ inventory.passed }}, Age: {{ inventory.passed - inventory.year }}
+            {{ inventory.year }} - {{ inventory.passed }}, Age:
+            {{ inventory.passed - inventory.year }}
           </li>
         </ul>
       </section>
@@ -51,7 +52,9 @@ import { sum } from './custom-operators/sum.operator';
       <section class="people">
         <h2>{{ title }}</h2>
         <ul>
-          <li *ngFor="let person of list; trackby: peopleTrackBy">{{ person }}</li>
+          <li *ngFor="let person of list; trackby: peopleTrackBy">
+            {{ person }}
+          </li>
         </ul>
       </section>
     </ng-template>

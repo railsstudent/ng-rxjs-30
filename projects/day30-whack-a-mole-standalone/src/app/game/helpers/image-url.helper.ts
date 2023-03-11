@@ -8,5 +8,5 @@ const buildImage = (image: string) => {
   return `url('${imagePath}')`;
 };
 
-export const cssHoleImage = { '--hole-image': buildImage('mole.svg') };
-export const cssMoleImage = { '--mole-image': buildImage('dirt.svg') };
+export const cssHoleImage = () => ({ '--hole-image': buildImage('dirt.svg') });
+export const cssMoleImage = () => ({ '--mole-image': buildImage('mole.svg') });

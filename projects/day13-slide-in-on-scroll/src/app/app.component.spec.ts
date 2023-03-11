@@ -24,6 +24,8 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('day13-slide-in-on-scroll app is running!');
+    expect(compiled.querySelector('.content span')?.textContent).toContain(
+      'day13-slide-in-on-scroll app is running!'
+    );
   });
 });

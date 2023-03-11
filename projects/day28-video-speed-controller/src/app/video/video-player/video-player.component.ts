@@ -1,14 +1,39 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { filter, fromEvent, map, Observable, shareReplay, startWith, tap } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  filter,
+  fromEvent,
+  map,
+  Observable,
+  shareReplay,
+  startWith,
+  tap,
+} from 'rxjs';
 
 @Component({
   selector: 'app-video-player',
   template: `
     <div class="wrapper">
-      <video class="flex" width="765" height="430" [src]="videoSrc" loop controls #video></video>
+      <video
+        class="flex"
+        width="765"
+        height="430"
+        [src]="videoSrc"
+        loop
+        controls
+        #video
+      ></video>
       <div class="speed" #speed>
-        <div class="speed-bar" [style.height]="height$ | async">{{ playbackRate$ | async }}</div>
+        <div class="speed-bar" [style.height]="height$ | async">
+          {{ playbackRate$ | async }}
+        </div>
       </div>
     </div>
   `,

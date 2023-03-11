@@ -1,4 +1,12 @@
-import { Observable, debounceTime, distinctUntilChanged, map, skip, startWith, withLatestFrom } from 'rxjs';
+import {
+  Observable,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  skip,
+  startWith,
+  withLatestFrom,
+} from 'rxjs';
 import { City } from '../interfaces/city.interface';
 
 const findMatches = (formValue: { searchValue: string }, cities: City[]) => {

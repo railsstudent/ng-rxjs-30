@@ -61,7 +61,9 @@ export class ListContainerComponent {
   toggleDone$ = new Subject<ToggleItem>();
   btnCheckAllClicked$ = new Subject<ToggleItems>();
 
-  storedItems = JSON.parse(localStorage.getItem('items') || JSON.stringify([])) as NewItem[];
+  storedItems = JSON.parse(
+    localStorage.getItem('items') || JSON.stringify([])
+  ) as NewItem[];
 
   itemList$ = merge(this.submit$, this.toggleDone$, this.btnCheckAllClicked$).pipe(
     scan((acc, value) => {

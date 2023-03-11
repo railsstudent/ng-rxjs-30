@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Subscription, filter, fromEvent, map, merge, tap } from 'rxjs';
 import { TimerService } from '../services/timer.service';
 

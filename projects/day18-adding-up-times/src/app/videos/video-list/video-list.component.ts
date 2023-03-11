@@ -21,12 +21,18 @@ import { VideoService } from '../services/video.service';
           <p>{{ x.total | formatTotalSeconds }}</p>
           <p>Longest Video</p>
           <ul>
-            <li>custom operator: {{ x.minMaxVideos.max?.name }} - {{ x.minMaxVideos.max?.time }}</li>
+            <li>
+              custom operator: {{ x.minMaxVideos.max?.name }} -
+              {{ x.minMaxVideos.max?.time }}
+            </li>
             <li>max operator: {{ x.maxVideo.name }} - {{ x.maxVideo.time }}</li>
           </ul>
           <p>Shortest Video</p>
           <ul>
-            <li>custom operator: {{ x.minMaxVideos.min?.name }} - {{ x.minMaxVideos.min?.time }}</li>
+            <li>
+              custom operator: {{ x.minMaxVideos.min?.name }} -
+              {{ x.minMaxVideos.min?.time }}
+            </li>
             <li>min operator: {{ x.minVideo.name }} - {{ x.minVideo.time }}</li>
           </ul>
           <p>Average Video Time</p>

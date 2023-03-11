@@ -1,8 +1,7 @@
 import { AsyncPipe, NgIf, NgStyle } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { cssHoleImage, cssMoleImage } from '../helpers/image-url.helper';
-import { createGameObservablesFn } from '../helpers/mole.observable';
+import { createGameObservablesFn, cssHoleImage, cssMoleImage } from '../helpers';
 import { GameObservables } from '../interfaces/game.interface';
 import { RemainingTimePipe, WhackAMoleMessagePipe } from '../pipes';
 
@@ -10,7 +9,8 @@ import { RemainingTimePipe, WhackAMoleMessagePipe } from '../pipes';
   selector: 'app-mole',
   standalone: true,
   imports: [AsyncPipe, NgIf, NgStyle, WhackAMoleMessagePipe, RemainingTimePipe],
-  template: ` <h1>
+  template: `
+    <h1>
       Whack-a-mole! <span class="score">{{ observables.score$ | async }}</span>
     </h1>
     <button #start class="start">Start!</button>
@@ -81,8 +81,8 @@ export class MoleComponent implements OnInit, OnDestroy {
 
   observables!: GameObservables;
   subscription!: Subscription;
-  holeImage = cssHoleImage;
-  moleImage = cssMoleImage;
+  holeImage = cssHoleImage();
+  moleImage = cssMoleImage();
 
   createDelayGameObservables = createGameObservablesFn();
 

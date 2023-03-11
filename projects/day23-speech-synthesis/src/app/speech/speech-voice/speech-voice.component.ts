@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Observable, Subscription, fromEvent, map, merge, tap } from 'rxjs';
 import { PropertyName } from '../interfaces/speech.interface';
 import { SpeechService } from '../services/speech.service';
@@ -65,7 +72,10 @@ export class SpeechVoiceComponent implements OnInit, OnDestroy {
     );
 
     this.subscription.add(
-      merge(fromEvent(this.rate.nativeElement, 'change'), fromEvent(this.pitch.nativeElement, 'change'))
+      merge(
+        fromEvent(this.rate.nativeElement, 'change'),
+        fromEvent(this.pitch.nativeElement, 'change')
+      )
         .pipe(
           map((e) => e.target as HTMLInputElement),
           map((e) => ({ name: e.name as PropertyName, value: e.value })),

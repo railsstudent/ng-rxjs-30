@@ -11,7 +11,8 @@ import {
 import { fromEvent, map, merge, Observable, Subscription } from 'rxjs';
 
 const cssVariableUpdateFn = () => {
-  const hostStyle = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement.style;
+  const hostStyle =
+    inject<ElementRef<HTMLElement>>(ElementRef).nativeElement.style;
 
   return (inputElements: QueryList<ElementRef<HTMLInputElement>>) => {
     const eventObservables$ = inputElements.reduce(

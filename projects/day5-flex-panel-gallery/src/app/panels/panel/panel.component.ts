@@ -31,10 +31,16 @@ export class PanelComponent implements OnInit, OnDestroy {
 
   subscription = new Subscription();
 
-  constructor(private hostElement: ElementRef, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private hostElement: ElementRef,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.hostElement.nativeElement.style.setProperty('background-image', `url(${this.panelData.backgroundImage})`);
+    this.hostElement.nativeElement.style.setProperty(
+      'background-image',
+      `url(${this.panelData.backgroundImage})`
+    );
 
     this.subscription.add(
       fromEvent(this.hostElement.nativeElement, 'click')

@@ -1,7 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Subject, firstValueFrom, map, scan } from 'rxjs';
-import { CheckboxClickState, InBetweenCheckboxClicked, Message } from '../interfaces';
+import {
+  CheckboxClickState,
+  InBetweenCheckboxClicked,
+  Message,
+} from '../interfaces';
 
 const updateMessageState = (id: number, isChecked: boolean, messages: Message[]) => {
   return messages.map((message) => {
@@ -15,22 +19,24 @@ const updateMessageState = (id: number, isChecked: boolean, messages: Message[])
   });
 };
 
-const checkBetweenBoxesFn = () => (inBetweenClicked: InBetweenCheckboxClicked, messages: Message[]) => {
-  const { isShiftKeyPressed, isChecked, lastCheck, prevCheck } = inBetweenClicked;
-  let checkedMessages = [...messages];
+const checkBetweenBoxesFn =
+  () => (inBetweenClicked: InBetweenCheckboxClicked, messages: Message[]) => {
+    const { isShiftKeyPressed, isChecked, lastCheck, prevCheck } =
+      inBetweenClicked;
+    let checkedMessages = [...messages];
 
-  if (isShiftKeyPressed && isChecked) {
-    let inBetween = false;
-    messages.forEach(({ id }) => {
-      if (id === lastCheck || id === prevCheck) {
-        inBetween = !inBetween;
-      }
+    if (isShiftKeyPressed && isChecked) {
+      let inBetween = false;
+      messages.forEach(({ id }) => {
+        if (id === lastCheck || id === prevCheck) {
+          inBetween = !inBetween;
+        }
 
-      if (inBetween) {
-        checkedMessages = updateMessageState(id, inBetween, checkedMessages);
-      }
-    });
-  }
+        if (inBetween) {
+          checkedMessages = updateMessageState(id, inBetween, checkedMessages);
+        }
+      });
+    }
 
   return checkedMessages;
 };

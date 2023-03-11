@@ -1,5 +1,8 @@
 import { fromEvent, tap, map, filter, scan } from 'rxjs';
-import { SpeechRecognitionInfo, Transcript } from '../interfaces/speech-recognition.interface';
+import {
+  SpeechRecognitionInfo,
+  Transcript,
+} from '../interfaces/speech-recognition.interface';
 
 declare var webkitSpeechRecognition: any;
 declare var SpeechRecognition: any;

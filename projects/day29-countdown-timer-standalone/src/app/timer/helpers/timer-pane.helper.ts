@@ -1,6 +1,15 @@
 import { inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { shareReplay, Observable, map, switchMap, timer, take, withLatestFrom, tap } from 'rxjs';
+import {
+  shareReplay,
+  Observable,
+  map,
+  switchMap,
+  timer,
+  take,
+  withLatestFrom,
+  tap,
+} from 'rxjs';
 import { TimerService } from '../services/timer.service';
 
 const oneSecond = 1000;

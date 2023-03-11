@@ -1,5 +1,13 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { Component, OnInit, ChangeDetectionStrategy, Inject, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  Inject,
+  ViewChild,
+  ElementRef,
+  OnDestroy,
+} from '@angular/core';
 import { fromEvent, map, merge, Subscription, tap } from 'rxjs';
 import { VideoActionEnum } from '../enums';
 import { VideoAction, VideoPlayerRangeInput } from '../interfaces';
@@ -101,7 +109,10 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
     );
   }
 
-  private processAction(videoNativeElement: HTMLVideoElement, nextAction: VideoAction): void {
+  private processAction(
+    videoNativeElement: HTMLVideoElement,
+    nextAction: VideoAction
+  ): void {
     if (nextAction.action === VideoActionEnum.SKIP_BUTTON_CLICKED) {
       const seconds = nextAction.arg as number;
       videoNativeElement.currentTime = videoNativeElement.currentTime + seconds;

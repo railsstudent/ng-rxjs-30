@@ -1,5 +1,23 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subscription, concatMap, filter, fromEvent, map, merge, scan, skip, takeUntil } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Inject,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  Subscription,
+  concatMap,
+  filter,
+  fromEvent,
+  map,
+  merge,
+  scan,
+  skip,
+  takeUntil,
+} from 'rxjs';
 import { WINDOW } from '../../core';
 import { LineInfo } from '../interfaces';
 

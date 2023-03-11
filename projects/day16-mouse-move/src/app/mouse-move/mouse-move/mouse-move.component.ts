@@ -1,4 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { filter, fromEvent, map, Observable, startWith } from 'rxjs';
 import { mapTextShadowStyle } from '../custom-operators/mapTextShadowStyle.operator';
 

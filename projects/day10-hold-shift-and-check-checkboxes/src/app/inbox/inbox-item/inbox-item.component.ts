@@ -1,4 +1,10 @@
-import { Component, ChangeDetectionStrategy, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { Message } from '../interfaces';
 import { CheckboxClickState } from '../interfaces/checkbox-click-state.interface';
 

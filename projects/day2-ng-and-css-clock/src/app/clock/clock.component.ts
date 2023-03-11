@@ -1,18 +1,33 @@
 import { AsyncPipe, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { timer } from 'rxjs';
-import { currentTime, rotateClockHands } from './custom-operators/clock.operator';
+import {
+  currentTime,
+  rotateClockHands,
+} from './custom-operators/clock.operator';
 
 @Component({
   selector: 'app-clock',
   standalone: true,
   imports: [AsyncPipe, NgIf],
   template: `
-    <div class="clock" *ngIf="clockHandsTransform$ | async as clockHandsTransform">
+    <div
+      class="clock"
+      *ngIf="clockHandsTransform$ | async as clockHandsTransform"
+    >
       <div class="clock-face">
-        <div class="hand hour-hand" [style.transform]="clockHandsTransform.hourHandTransform"></div>
-        <div class="hand min-hand" [style.transform]="clockHandsTransform.minuteHandTransform"></div>
-        <div class="hand second-hand" [style.transform]="clockHandsTransform.secondHandTransform"></div>
+        <div
+          class="hand hour-hand"
+          [style.transform]="clockHandsTransform.hourHandTransform"
+        ></div>
+        <div
+          class="hand min-hand"
+          [style.transform]="clockHandsTransform.minuteHandTransform"
+        ></div>
+        <div
+          class="hand second-hand"
+          [style.transform]="clockHandsTransform.secondHandTransform"
+        ></div>
       </div>
     </div>
   `,

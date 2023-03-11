@@ -81,7 +81,7 @@ export class DataListComponent implements OnInit, OnDestroy {
       .pipe(
         filter((e) => (e.target as any).matches('input') || (e.target as any).matches('button')),
         map((e: Event) => this.createToggleItem(e)),
-        takeUntil(this.destroy$),
+        takeUntil(this.destroy$)
       )
       .subscribe((value) => {
         console.log(value);

@@ -1,6 +1,10 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { displayEndTimeFn, displayTimeLeftFn, nowToFn } from '../helpers/timer-pane.helper';
+import {
+  displayEndTimeFn,
+  displayTimeLeftFn,
+  nowToFn,
+} from '../helpers/timer-pane.helper';
 
 @Component({
   selector: 'app-timer-pane',

@@ -1,5 +1,10 @@
 import { isPlatformBrowser } from '@angular/common';
-import { ClassProvider, FactoryProvider, InjectionToken, PLATFORM_ID } from '@angular/core';
+import {
+  ClassProvider,
+  FactoryProvider,
+  InjectionToken,
+  PLATFORM_ID,
+} from '@angular/core';
 
 /* Create a new injection token for injecting the navigator into a component. */
 export const NAVIGATOR = new InjectionToken('NavigatorToken');

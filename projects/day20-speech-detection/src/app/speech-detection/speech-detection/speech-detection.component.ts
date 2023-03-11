@@ -1,6 +1,22 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription, filter, fromEvent, map, scan, tap } from 'rxjs';
-import { SpeechRecognitionInfo, Transcript } from '../interfaces/speech-recognition.interface';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import {
+  Observable,
+  Subscription,
+  filter,
+  fromEvent,
+  map,
+  scan,
+  tap,
+} from 'rxjs';
+import {
+  SpeechRecognitionInfo,
+  Transcript,
+} from '../interfaces/speech-recognition.interface';
 
 declare var webkitSpeechRecognition: any;
 declare var SpeechRecognition: any;
@@ -54,7 +70,8 @@ export class SpeechDetectionComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
 
   ngOnInit(): void {
-    const recognition = new webkitSpeechRecognition() || new SpeechRecognition();
+    const recognition =
+      new webkitSpeechRecognition() || new SpeechRecognition();
     recognition.interimResults = true;
     recognition.lang = 'en-US';
 

@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Observable, shareReplay } from 'rxjs';
 import { findCities } from '../custom-operators/find-cities.operator';
@@ -33,7 +39,11 @@ const getCities = () => {
       <li>or a state</li>
     </ng-template>
 
-    <ng-template #hasSuggestions let-suggestions="suggestions" let-searchValue="searchValue">
+    <ng-template
+      #hasSuggestions
+      let-suggestions="suggestions"
+      let-searchValue="searchValue"
+    >
       <li *ngFor="let suggestion of suggestions">
         <span [innerHtml]="suggestion | highlightSuggestion : searchValue"></span>
         <span class="population">{{ suggestion.population | number }}</span>
@@ -52,6 +62,8 @@ export class TypeAheadComponent implements OnInit {
   cities$ = getCities();
 
   ngOnInit(): void {
-    this.suggestions$ = this.searchForm.form.valueChanges.pipe(findCities(this.cities$));
+    this.suggestions$ = this.searchForm.form.valueChanges.pipe(
+      findCities(this.cities$)
+    );
   }
 }

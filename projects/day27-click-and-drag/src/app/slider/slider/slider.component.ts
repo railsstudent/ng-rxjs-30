@@ -1,5 +1,23 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, Subscription, concatMap, filter, fromEvent, map, merge, startWith, takeUntil, tap } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  Observable,
+  Subscription,
+  concatMap,
+  filter,
+  fromEvent,
+  map,
+  merge,
+  startWith,
+  takeUntil,
+  tap,
+} from 'rxjs';
 
 @Component({
   selector: 'app-slider',

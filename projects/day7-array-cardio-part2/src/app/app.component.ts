@@ -1,6 +1,16 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { every, filter, find, findIndex, from, map, shareReplay, tap, toArray } from 'rxjs';
+import {
+  every,
+  filter,
+  find,
+  findIndex,
+  from,
+  map,
+  shareReplay,
+  tap,
+  toArray,
+} from 'rxjs';
 import { some } from './custom-operators/some.operator';
 import { Comment } from './interfaces/comment.interface';
 import { Person, PersonNoAge } from './interfaces/person.interface';
@@ -18,7 +28,9 @@ import { Person, PersonNoAge } from './interfaces/person.interface';
             Age: {{ p.age }}
           </li>
         </ul>
-        <p>Is Adult (at least one person is 19 or older)? {{ isAdult$ | async }}</p>
+        <p>
+          Is Adult (at least one person is 19 or older)? {{ isAdult$ | async }}
+        </p>
         <p>All Adults (everyone is 19 or older)? {{ allAdults$ | async }}</p>
       </section>
       <section class="people">
@@ -92,7 +104,7 @@ export class AppComponent {
   people$ = from(this.persons).pipe(
     tap((person) => console.log('people$', person)),
     map((person) => this.calculateAge(person)),
-    shareReplay(this.persons.length),
+    shareReplay(this.persons.length)
   );
 
   peopleArray$ = this.people$.pipe(toArray());

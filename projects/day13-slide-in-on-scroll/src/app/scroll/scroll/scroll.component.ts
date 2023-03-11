@@ -1,4 +1,11 @@
-import { Component, ChangeDetectionStrategy, ViewChildren, QueryList, Inject, ElementRef } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ViewChildren,
+  QueryList,
+  Inject,
+  ElementRef,
+} from '@angular/core';
 import { debounceTime, fromEvent, map, startWith } from 'rxjs';
 import { WINDOW } from '../../core';
 

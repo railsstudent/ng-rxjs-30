@@ -138,7 +138,10 @@ export class MoleComponent implements OnInit, OnDestroy {
 
     const gameDuration = 10;
     const resetTime$ = startButtonClicked$.pipe(map(() => gameDuration));
-    this.timeLeft$ = merge(resetTime$, delayGameStart$.pipe(trackGameTime(gameDuration)));
+    this.timeLeft$ = merge(
+      resetTime$,
+      delayGameStart$.pipe(trackGameTime(gameDuration))
+    );
 
     const createGame = delayGameStart$
       .pipe(
@@ -162,8 +165,12 @@ export class MoleComponent implements OnInit, OnDestroy {
     return this.buildImage('dirt.svg');
   }
 
-  private createMoleClickedObservables(...moles: ElementRef<HTMLDivElement>[]): Observable<SCORE_ACTION>[] {
-    return moles.map(({ nativeElement }) => fromEvent(nativeElement, 'click').pipe(whackAMole(nativeElement)));
+  private createMoleClickedObservables(
+    ...moles: ElementRef<HTMLDivElement>[]
+  ): Observable<SCORE_ACTION>[] {
+    return moles.map(({ nativeElement }) =>
+      fromEvent(nativeElement, 'click').pipe(whackAMole(nativeElement))
+    );
   }
 
   private buildImage(image: string) {

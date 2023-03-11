@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { filter, fromEvent, map, scan, Subject, takeUntil } from 'rxjs';
 import { WINDOW } from '../../core';
 
@@ -31,7 +37,10 @@ export class KeySequenceDetectionComponent implements OnInit, OnDestroy {
         map((e) => e as KeyboardEvent),
         scan((acc, e) => {
           acc.push(e.key);
-          acc.splice(-this.secretCode.length - 1, acc.length - this.secretCode.length);
+          acc.splice(
+            -this.secretCode.length - 1,
+            acc.length - this.secretCode.length
+          );
           return acc;
         }, [] as string[]),
         map((acc) => acc.join('')),

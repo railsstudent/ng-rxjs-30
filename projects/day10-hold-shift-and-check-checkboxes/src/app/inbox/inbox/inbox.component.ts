@@ -1,5 +1,9 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewChildren } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewChildren,
+} from '@angular/core';
 import { merge, scan, Subject } from 'rxjs';
 import { InboxItemComponent } from '../inbox-item/inbox-item.component';
 import { CheckboxClickState, Message } from '../interfaces';

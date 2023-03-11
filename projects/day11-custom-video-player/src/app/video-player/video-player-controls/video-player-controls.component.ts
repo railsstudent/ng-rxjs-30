@@ -19,7 +19,10 @@ import { VideoPlayerService } from '../services';
   template: `
     <div class="player__controls">
       <div class="progress" #progress>
-        <div class="progress__filled" [style.flexBasis]="videoProgressBar$ | async"></div>
+        <div
+          class="progress__filled"
+          [style.flexBasis]="videoProgressBar$ | async"
+        ></div>
       </div>
       <button class="player__button toggle" title="Toggle Play" [textContent]="videoButtonIcon$ | async" #toggle>
         ►
@@ -46,7 +49,9 @@ export class VideoPlayerControlsComponent implements OnInit, OnDestroy, AfterVie
   @ViewChild('progress', { static: true })
   progress!: ElementRef<HTMLDivElement>;
 
-  videoButtonIcon$ = this.videoPlayerService.videoButtonIcon$.pipe(startWith('►'));
+  videoButtonIcon$ = this.videoPlayerService.videoButtonIcon$.pipe(
+    startWith('►')
+  );
 
   videoProgressBar$ = this.videoPlayerService.videoProgressBar$;
 
@@ -97,7 +102,10 @@ export class VideoPlayerControlsComponent implements OnInit, OnDestroy, AfterVie
     );
   }
 
-  private createProgressBarAction(action: VideoActionEnum, offsetX: number): VideoAction {
+  private createProgressBarAction(
+    action: VideoActionEnum,
+    offsetX: number
+  ): VideoAction {
     return { action, arg: offsetX / this.progress.nativeElement.offsetWidth };
   }
 
@@ -130,7 +138,10 @@ export class VideoPlayerControlsComponent implements OnInit, OnDestroy, AfterVie
     );
   }
 
-  private addRangeUpdateEvent(rangeInput: ElementRef<HTMLInputElement>, eventName: string): Observable<VideoAction> {
+  private addRangeUpdateEvent(
+    rangeInput: ElementRef<HTMLInputElement>,
+    eventName: string
+  ): Observable<VideoAction> {
     return fromEvent(rangeInput.nativeElement, eventName).pipe(
       map(({ target }) => {
         const { name, value } = target as HTMLInputElement;
