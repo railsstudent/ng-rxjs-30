@@ -19,21 +19,11 @@ import { timerInputSubscriptionFn } from '../helpers/timer-controls.helper';
   imports: [FormsModule, TimerButtonDirective],
   template: `
     <div class="timer__controls">
-      <button class="timer__button" data-seconds="20" appTimerButton>
-        20 Secs
-      </button>
-      <button class="timer__button" data-seconds="300" appTimerButton>
-        Work 5
-      </button>
-      <button class="timer__button" data-seconds="900" appTimerButton>
-        Quick 15
-      </button>
-      <button class="timer__button" data-seconds="1200" appTimerButton>
-        Snack 20
-      </button>
-      <button class="timer__button" data-seconds="3600" appTimerButton>
-        Lunch Break
-      </button>
+      <button class="timer__button" data-seconds="20" appTimerButton>20 Secs</button>
+      <button class="timer__button" data-seconds="300" appTimerButton>Work 5</button>
+      <button class="timer__button" data-seconds="900" appTimerButton>Quick 15</button>
+      <button class="timer__button" data-seconds="1200" appTimerButton>Snack 20</button>
+      <button class="timer__button" data-seconds="3600" appTimerButton>Lunch Break</button>
       <form name="customForm" id="custom" #myForm="ngForm">
         <input type="text" name="minutes" placeholder="Enter Minutes" [(ngModel)]="customMinutes" />
       </form>
