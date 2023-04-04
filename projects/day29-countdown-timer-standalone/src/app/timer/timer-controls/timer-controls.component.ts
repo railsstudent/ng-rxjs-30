@@ -96,7 +96,6 @@ export class TimerControlsComponent implements OnDestroy, AfterViewInit {
 
   customMinutes = '';
   subscriptions!: Subscription;
-
   timerInputSubscription = timerInputSubscriptionFn();
 
   ngAfterViewInit(): void {
