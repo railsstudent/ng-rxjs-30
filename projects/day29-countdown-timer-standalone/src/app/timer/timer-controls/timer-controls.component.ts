@@ -11,10 +11,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { Subscription, filter, fromEvent, map, tap } from 'rxjs';
 import { TimerButtonDirective } from '../directive/timer-button.directive';
-import {
-  createButtonObservablesFn,
-  timerInputSubscriptionFn,
-} from '../helpers/timer-controls.helper';
+import { timerInputSubscriptionFn } from '../helpers/timer-controls.helper';
 
 @Component({
   selector: 'app-timer-controls',
@@ -95,16 +92,15 @@ export class TimerControlsComponent implements OnDestroy, AfterViewInit {
   myForm!: ElementRef<HTMLFormElement>;
 
   @ViewChildren(TimerButtonDirective)
-  timers!: QueryList<ElementRef<HTMLButtonElement>>;
+  timers!: QueryList<TimerButtonDirective>;
 
   customMinutes = '';
   subscriptions!: Subscription;
 
-  createTimerObservables = createButtonObservablesFn();
   timerInputSubscription = timerInputSubscriptionFn();
 
   ngAfterViewInit(): void {
-    const timers$ = this.createTimerObservables(this.timers.map(({ nativeElement }) => nativeElement));
+    const timers$ = this.timers.map((timer) => timer.click$);
     const myForm$ = fromEvent(this.myForm.nativeElement, 'submit').pipe(
       filter(() => !!this.customMinutes),
       map(() => parseFloat(this.customMinutes)),
