@@ -5,8 +5,5 @@ import { TimerService } from '../services/timer.service';
 export const timerInputSubscriptionFn = () => {
   const timerService = inject(TimerService);
   return (observables: Observable<number>[]) =>
-    merge(...observables).subscribe((seconds) => {
-      timerService.updateSeconds(seconds);
-      console.log(`${seconds} seconds`);
-    });
+    merge(...observables).subscribe((seconds) => timerService.updateSeconds(seconds));
 };
