@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { concatMap, from, reduce, shareReplay, tap, forkJoin, max, min, concatAll, mergeAll, count } from 'rxjs';
+import { count, forkJoin, max, mergeAll, min, reduce, shareReplay, tap } from 'rxjs';
 import { averageVideoTime, minMaxVideos } from '../custom-operators';
 import { VideoTime } from '../interfaces/video-time.interface';
 import { VideoService } from '../services/video.service';
