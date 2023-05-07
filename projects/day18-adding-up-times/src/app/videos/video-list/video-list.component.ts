@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { concatMap, from, reduce, shareReplay, tap, forkJoin, max, min } from 'rxjs';
+import { concatMap, from, reduce, shareReplay, tap, forkJoin, max, min, concatAll, mergeAll, count } from 'rxjs';
 import { averageVideoTime, minMaxVideos } from '../custom-operators';
 import { VideoTime } from '../interfaces/video-time.interface';
 import { VideoService } from '../services/video.service';
@@ -37,6 +37,8 @@ import { VideoService } from '../services/video.service';
           </ul>
           <p>Average Video Time</p>
           <p>{{ x.averageVideoTime | formatTotalSeconds }}</p>
+          <p>Number of videos</p>
+          <p>{{ x.numVideos }}
         </div>
       </section>
     </section>
@@ -79,7 +81,8 @@ import { VideoService } from '../services/video.service';
           p:first-of-type,
           p:nth-of-type(3),
           p:nth-of-type(4),
-          p:nth-of-type(5) {
+          p:nth-of-type(5),
+          p:nth-of-type(7) {
             text-decoration: underline;
           }
 
@@ -111,7 +114,7 @@ export class VideoListComponent {
 
   streamVideoList$ = this.videoList$.pipe(
     tap(() => console.log('streamVideoList$ observable')),
-    concatMap((videoTimes) => from(videoTimes)),
+    mergeAll(),
     shareReplay(1),
   );
 
@@ -136,6 +139,7 @@ export class VideoListComponent {
       tap(() => console.log('averageVideoTime$ observable')),
       averageVideoTime((acc: number, videoTime: VideoTime) => acc + this.convertTotalSeconds(videoTime.time)),
     ),
+    numVideos: this.streamVideoList$.pipe(count())
   });
 
   constructor(private videoService: VideoService) {}

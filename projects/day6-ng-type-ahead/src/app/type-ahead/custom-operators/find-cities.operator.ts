@@ -26,7 +26,7 @@ export const findCities = (cities$: Observable<City[]>) => {
     source.pipe(
       skip(1),
       debounceTime(300),
-      distinctUntilChanged(),
+      distinctUntilChanged((prev, curr) => prev.searchValue === curr.searchValue),
       withLatestFrom(cities$),
       map(([formValue, cities]) => findMatches(formValue, cities)),
       startWith([]),
