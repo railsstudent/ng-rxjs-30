@@ -27,7 +27,7 @@ Challenges:
 - Day 26: Stripe follow along navigation (code: https://github.com/railsstudent/ng-rxjs-30/tree/main/projects/day26-stripe-follow-along-nav, demo: https://railsstudent.github.io/ng-rxjs-30/day26-stripe-follow-along-nav/)
 - Day 27: Click and drag (code: https://github.com/railsstudent/ng-rxjs-30/tree/main/projects/day27-click-and-drag, demo: https://railsstudent.github.io/ng-rxjs-30/day27-click-and-drag/)
 - Day 28: Video speed controller (code: https://github.com/railsstudent/ng-rxjs-30/tree/main/projects/day28-video-speed-controller, demo: https://railsstudent.github.io/ng-rxjs-30/day28-video-speed-controller/)
-- Day 29: Countdown timer (code: https://github.com/railsstudent/ng-rxjs-30/tree/main/projects/day29-countdpwn-timer, demo: https://railsstudent.github.io/ng-rxjs-30/day29-countdpwn-timer/)
+- Day 29: Countdown timer (code: https://github.com/railsstudent/ng-rxjs-30/tree/main/projects/day29-countdpwn-timer, demo: https://railsstudent.github.io/ng-rxjs-30/day29-countdown-timer/)
 - Day 30: Whack a mole (code: https://github.com/railsstudent/ng-rxjs-30/tree/main/projects/day30-whack-a-mole, demo: https://railsstudent.github.io/ng-rxjs-30/day30-whack-a-mole/)
 
 ## Development server
