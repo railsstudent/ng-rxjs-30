@@ -14,8 +14,8 @@ import { createMouseEnterStream } from '../helpers/mouseenter-stream.helper';
 import { HighlighterService } from '../services/highlighter.service';
 
 @Component({
-  selector: 'app-highlighter-content',
-  template: `
+    selector: 'app-highlighter-content',
+    template: `
     <div class="wrapper">
       <p>
         Lorem ipsum dolor sit amet, <a href="">consectetur</a> adipisicing elit. Est <a href="">explicabo</a> unde natus
@@ -39,8 +39,8 @@ import { HighlighterService } from '../services/highlighter.service';
       </p>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -60,8 +60,9 @@ import { HighlighterService } from '../services/highlighter.service';
         border-radius: 20px;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class HighlighterContentComponent implements AfterViewInit, OnDestroy {
   @ViewChildren(HighlightAnchorDirective)

@@ -12,14 +12,15 @@ import { filter, fromEvent, map, Subscription, tap } from 'rxjs';
 import { PanelData } from './interfaces';
 
 @Component({
-  selector: 'app-panel',
-  template: `
+    selector: 'app-panel',
+    template: `
     <p>{{ panelData.headline1 }}</p>
     <p>{{ panelData.headline2 }}</p>
     <p>{{ panelData.headline3 }}</p>
   `,
-  styleUrls: ['./panel.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrls: ['./panel.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class PanelComponent implements OnInit, OnDestroy {
   @Input()

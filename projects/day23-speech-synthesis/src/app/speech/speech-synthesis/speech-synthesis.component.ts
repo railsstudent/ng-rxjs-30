@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'app-speech-synthesis',
-  template: ` <div class="voiceinator">
+    selector: 'app-speech-synthesis',
+    template: ` <div class="voiceinator">
     <h1>The Voiceinator 5000</h1>
     <app-speech-voice></app-speech-voice>
     <app-speech-text></app-speech-text>
   </div>`,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         margin: 0;
         padding: 0;
@@ -124,7 +124,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         text-shadow: 3px 3px 0 #f3c010;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class SpeechSynthesisComponent {}

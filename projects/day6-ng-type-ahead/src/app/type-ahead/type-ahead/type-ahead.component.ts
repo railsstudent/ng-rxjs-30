@@ -11,7 +11,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Observable, shareReplay } from 'rxjs';
 import { findCities } from '../custom-operators/find-cities.operator';
 import { City } from '../interfaces/city.interface';
-import { HighlightSuggestionPipe } from '../pipes/highlight-suggestion.pipe';
+import { HighlightSuggestionPipe } from '../pipes';
 
 const getCities = () => {
   const httpService = inject(HttpClient);
@@ -21,10 +21,9 @@ const getCities = () => {
 };
 
 @Component({
-  selector: 'app-type-ahead',
-  standalone: true,
-  imports: [HighlightSuggestionPipe, FormsModule, CommonModule],
-  template: `
+    selector: 'app-type-ahead',
+    imports: [HighlightSuggestionPipe, FormsModule, CommonModule],
+    template: `
     <form class="search-form" #searchForm="ngForm">
       <input type="text" class="search" placeholder="City or State" [(ngModel)]="searchValue" name="searchValue" />
       <ul class="suggestions" *ngIf="suggestions$ | async as suggestions">
@@ -50,8 +49,8 @@ const getCities = () => {
       </li>
     </ng-template>
   `,
-  styleUrls: ['./type-ahead.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrls: ['./type-ahead.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TypeAheadComponent implements OnInit {
   @ViewChild('searchForm', { static: true })

@@ -2,14 +2,14 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Photo } from '../interfaces/webcam.interface';
 
 @Component({
-  selector: 'app-photo-stripe',
-  template: `<div class="strip">
+    selector: 'app-photo-stripe',
+    template: `<div class="strip">
     <a *ngFor="let photo of photoStripe; index as i" [href]="photo.data" download="{{ photo.download }}{{ i + 1 }}">
       <img [src]="photo.data" [alt]="photo.description" />
     </a>
   </div>`,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -42,8 +42,9 @@ import { Photo } from '../interfaces/webcam.interface';
         transform: rotate(12deg);
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class PhotoStripeComponent {
   @Input()

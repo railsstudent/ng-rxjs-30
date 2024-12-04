@@ -13,8 +13,8 @@ import { filter, fromEvent, map, Subject, takeUntil } from 'rxjs';
 import { ItemAction, NewItem, ToggleItem } from '../interfaces';
 
 @Component({
-  selector: 'app-data-list',
-  template: `
+    selector: 'app-data-list',
+    template: `
     <ul class="plates" #plates>
       <li *ngFor="let plate of itemList; index as i">
         <input type="checkbox" [attr.data-index]="i" id="item{{ i }}" [checked]="plate.done" />
@@ -23,8 +23,8 @@ import { ItemAction, NewItem, ToggleItem } from '../interfaces';
       </li>
     </ul>
   `,
-  styles: [
-    `
+    styles: [
+        `
       .plates {
         margin: 0;
         padding: 0;
@@ -61,8 +61,9 @@ import { ItemAction, NewItem, ToggleItem } from '../interfaces';
         padding: 0.25rem;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class DataListComponent implements OnInit, OnDestroy {
   @ViewChild('plates', { static: true, read: ElementRef })

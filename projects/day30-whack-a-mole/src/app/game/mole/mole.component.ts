@@ -20,8 +20,8 @@ import { peep, trackGameTime, whackAMole } from '../custom-operators';
 import { SCORE_ACTION } from './mole.enum';
 
 @Component({
-  selector: 'app-mole',
-  template: ` <h1>
+    selector: 'app-mole',
+    template: ` <h1>
       Whack-a-mole! <span class="score">{{ score$ | async }}</span>
     </h1>
     <button #start class="start">Start!</button>
@@ -51,8 +51,9 @@ import { SCORE_ACTION } from './mole.enum';
         <div class="mole" [ngStyle]="moleImage" #mole6></div>
       </div>
     </div>`,
-  styleUrls: ['mole.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrls: ['mole.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MoleComponent implements OnInit, OnDestroy {
   @ViewChild('start', { static: true, read: ElementRef })

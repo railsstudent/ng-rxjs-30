@@ -25,8 +25,8 @@ import { NAVIGATOR } from '../../core/navigator.service';
 import { Photo } from '../interfaces/webcam.interface';
 
 @Component({
-  selector: 'app-web-camera',
-  template: `
+    selector: 'app-web-camera',
+    template: `
     <ng-container>
       <div class="photobooth">
         <div class="controls">
@@ -41,8 +41,8 @@ import { Photo } from '../interfaces/webcam.interface';
       <audio class="snap" [src]="soundUrl" hidden #snap></audio>
     </ng-container>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -73,8 +73,9 @@ import { Photo } from '../interfaces/webcam.interface';
         width: 200px;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class WebCameraComponent implements OnInit, OnDestroy {
   @ViewChild('btnPhoto', { static: true, read: ElementRef })

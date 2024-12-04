@@ -5,8 +5,8 @@ import { VideoTime } from '../interfaces/video-time.interface';
 import { VideoService } from '../services/video.service';
 
 @Component({
-  selector: 'app-video-list',
-  template: `
+    selector: 'app-video-list',
+    template: `
     <section class="container">
       <h1>Add video times</h1>
       <section class="video-wrapper">
@@ -43,8 +43,8 @@ import { VideoService } from '../services/video.service';
       </section>
     </section>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -103,8 +103,9 @@ import { VideoService } from '../services/video.service';
         }
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class VideoListComponent {
   videoList$ = this.videoService.getAll().pipe(

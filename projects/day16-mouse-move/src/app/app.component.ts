@@ -2,16 +2,17 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-root',
-  template: '<app-mouse-move></app-mouse-move>',
-  styles: [
-    `
+    selector: 'app-root',
+    template: '<app-mouse-move></app-mouse-move>',
+    styles: [
+        `
       :host {
         display: block;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AppComponent {
   title = 'Day16 Mouse Move';

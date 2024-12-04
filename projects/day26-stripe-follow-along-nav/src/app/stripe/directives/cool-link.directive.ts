@@ -1,7 +1,8 @@
 import { Directive, ElementRef } from '@angular/core';
 
 @Directive({
-  selector: '.link',
+    selector: '.link',
+    standalone: false
 })
 export class CoolLinkDirective {
   nativeElement!: HTMLLinkElement;

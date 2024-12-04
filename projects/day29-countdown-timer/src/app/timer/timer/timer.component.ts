@@ -1,15 +1,15 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'app-timer',
-  template: `
+    selector: 'app-timer',
+    template: `
     <div class="timer">
       <app-timer-controls></app-timer-controls>
       <app-timer-pane></app-timer-pane>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -20,7 +20,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
         flex-direction: column;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class TimerComponent {}

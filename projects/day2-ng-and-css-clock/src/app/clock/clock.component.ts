@@ -7,10 +7,9 @@ import {
 } from './custom-operators/clock.operator';
 
 @Component({
-  selector: 'app-clock',
-  standalone: true,
-  imports: [AsyncPipe, NgIf],
-  template: `
+    selector: 'app-clock',
+    imports: [AsyncPipe, NgIf],
+    template: `
     <div
       class="clock"
       *ngIf="clockHandsTransform$ | async as clockHandsTransform"
@@ -31,8 +30,8 @@ import {
       </div>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         background: #018ded url(https://unsplash.it/1500/1000?image=881&blur=5);
         background-size: cover;
@@ -76,8 +75,8 @@ import {
         transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClockComponent {
   readonly oneSecond = 1000;

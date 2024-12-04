@@ -2,15 +2,16 @@ import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-root',
-  template: '<app-speech-detection></app-speech-detection>',
-  styles: [
-    `
+    selector: 'app-root',
+    template: '<app-speech-detection></app-speech-detection>',
+    styles: [
+        `
       :host {
         display: block;
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class AppComponent {
   title = 'Day20 Speech Detection';

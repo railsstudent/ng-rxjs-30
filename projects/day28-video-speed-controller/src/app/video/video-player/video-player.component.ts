@@ -18,8 +18,8 @@ import {
 } from 'rxjs';
 
 @Component({
-  selector: 'app-video-player',
-  template: `
+    selector: 'app-video-player',
+    template: `
     <div class="wrapper">
       <video
         class="flex"
@@ -37,8 +37,8 @@ import {
       </div>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         margin: 0;
         display: flex;
@@ -82,8 +82,9 @@ import {
         height: 16.3%;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class VideoPlayerComponent implements OnInit {
   @ViewChild('video', { static: true, read: ElementRef })

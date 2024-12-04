@@ -10,8 +10,8 @@ import { Subject, Subscription, fromEvent, map, merge, tap } from 'rxjs';
 import { SpeechService } from '../services/speech.service';
 
 @Component({
-  selector: 'app-speech-text',
-  template: `
+    selector: 'app-speech-text',
+    template: `
     <ng-container>
       <textarea
         name="text"
@@ -22,8 +22,8 @@ import { SpeechService } from '../services/speech.service';
       <button id="speak" #speak>Speak</button>
     </ng-container>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -65,8 +65,9 @@ import { SpeechService } from '../services/speech.service';
         margin-right: 2%;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class SpeechTextComponent implements OnInit, OnDestroy {
   @ViewChild('stop', { static: true, read: ElementRef })

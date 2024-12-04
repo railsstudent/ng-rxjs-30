@@ -12,15 +12,15 @@ import {
 import { TimerService } from '../services/timer.service';
 
 @Component({
-  selector: 'app-timer-pane',
-  template: `
+    selector: 'app-timer-pane',
+    template: `
     <div class="display">
       <h1 class="display__time-left">{{ displayTimeLeft$ | async }}</h1>
       <p class="display__end-time">{{ displayEndTime$ | async }}</p>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       .display {
         flex: 1;
         display: flex;
@@ -42,8 +42,9 @@ import { TimerService } from '../services/timer.service';
         color: white;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class TimerPaneComponent {
   oneSecond = 1000;

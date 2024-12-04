@@ -13,8 +13,8 @@ import { createMouseEnterStream } from '../helpers/mouseenter-stream.helper';
 import { HighlighterService } from '../services/highlighter.service';
 
 @Component({
-  selector: 'app-highlighter-menu',
-  template: `
+    selector: 'app-highlighter-menu',
+    template: `
     <nav>
       <ul class="menu">
         <li><a href="" #home>Home</a></li>
@@ -25,8 +25,8 @@ import { HighlighterService } from '../services/highlighter.service';
       </ul>
     </nav>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -46,8 +46,9 @@ import { HighlighterService } from '../services/highlighter.service';
         color: black;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class HighlighterMenuComponent implements OnInit, OnDestroy {
   @ViewChild('home', { static: true, read: ElementRef })

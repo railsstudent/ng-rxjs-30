@@ -22,16 +22,17 @@ import { WINDOW } from '../../core';
 import { LineInfo } from '../interfaces';
 
 @Component({
-  selector: 'app-canvas',
-  template: `<canvas width="800" height="800" #draw></canvas>`,
-  styles: [
-    `
+    selector: 'app-canvas',
+    template: `<canvas width="800" height="800" #draw></canvas>`,
+    styles: [
+        `
       :host {
         display: block;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class CanvasComponent implements OnInit, OnDestroy {
   @ViewChild('draw', { static: true })

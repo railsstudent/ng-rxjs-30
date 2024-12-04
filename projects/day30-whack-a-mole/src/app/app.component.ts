@@ -2,15 +2,16 @@ import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-root',
-  template: '<app-mole></app-mole>',
-  styles: [
-    `
+    selector: 'app-root',
+    template: '<app-mole></app-mole>',
+    styles: [
+        `
       :host {
         display: block;
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class AppComponent {
   title = 'Day30 Wrack a mole';

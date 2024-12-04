@@ -15,8 +15,8 @@ import { VideoAction } from '../interfaces';
 import { VideoPlayerService } from '../services';
 
 @Component({
-  selector: 'app-video-player-controls',
-  template: `
+    selector: 'app-video-player-controls',
+    template: `
     <div class="player__controls">
       <div class="progress" #progress>
         <div
@@ -33,8 +33,9 @@ import { VideoPlayerService } from '../services';
       <button data-skip="25" class="player__button" #skip>25s »</button>
     </div>
   `,
-  styleUrls: ['./video-player-controls.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrls: ['./video-player-controls.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class VideoPlayerControlsComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('toggle', { static: true })

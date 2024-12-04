@@ -14,8 +14,8 @@ import { CoolLinkDirective } from '../directives/cool-link.directive';
 import { StripeService } from '../services/stripe.service';
 
 @Component({
-  selector: 'app-stripe-nav-page',
-  template: `
+    selector: 'app-stripe-nav-page',
+    template: `
     <ng-container>
       <h2>Cool</h2>
       <nav class="top" #top>
@@ -42,7 +42,7 @@ import { StripeService } from '../services/stripe.service';
     <ng-template #aboutMe>
       <div class="dropdown">
         <div class="bio">
-          <img src="https://logo.clearbit.com/wesbos.com" />
+          <img src="https://logo.clearbit.com/wesbos.com" alt="profile pic"/>
           <p>
             Wes Bos sure does love web development. He teaches things like JavaScript, CSS and BBQ. Wait. BBQ isn't part
             of web development. It should be though!
@@ -74,8 +74,9 @@ import { StripeService } from '../services/stripe.service';
       </ul>
     </ng-template>
   `,
-  styleUrls: ['./stripe-nav-page.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrls: ['./stripe-nav-page.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class StripeNavPageComponent implements AfterViewInit, OnDestroy {
   @ViewChild('top', { static: true, read: ElementRef })

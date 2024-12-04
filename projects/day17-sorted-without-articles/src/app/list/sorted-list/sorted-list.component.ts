@@ -1,9 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { map, of } from 'rxjs';
 
 @Component({
-  selector: 'app-sorted-list',
-  template: `
+    selector: 'app-sorted-list',
+    template: `
     <div>
       <h1>Sort bands without articles</h1>
       <ul id="bands">
@@ -13,8 +13,8 @@ import { map, of } from 'rxjs';
       </ul>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -54,8 +54,9 @@ import { map, of } from 'rxjs';
         text-decoration: none;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class SortedListComponent {
   sortedBands$ = of([
