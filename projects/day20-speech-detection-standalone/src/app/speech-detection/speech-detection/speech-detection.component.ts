@@ -7,16 +7,15 @@ import {
 } from '../helpers/speech-detection.helper';
 
 @Component({
-  selector: 'app-speech-detection',
-  standalone: true,
-  imports: [AsyncPipe, NgFor, NgIf],
-  template: ` <div class="words" contenteditable>
+    selector: 'app-speech-detection',
+    imports: [AsyncPipe, NgFor, NgIf],
+    template: ` <div class="words" contenteditable>
     <ng-container *ngIf="wordList$ | async as wordList">
       <p *ngFor="let word of wordList">{{ word.transcript }}, confidence: {{ word.confidencePercentage }}%</p>
     </ng-container>
   </div>`,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -49,8 +48,8 @@ import {
         border-color: transparent #efe4e4;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SpeechDetectionComponent implements OnInit, OnDestroy {
   recognition = createRecognition();

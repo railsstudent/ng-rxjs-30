@@ -2,15 +2,16 @@ import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-root',
-  template: '<app-web-camera></app-web-camera>',
-  styles: [
-    `
+    selector: 'app-root',
+    template: '<app-web-camera></app-web-camera>',
+    styles: [
+        `
       :host {
         display: block;
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class AppComponent {
   title = 'Day 19 Web Cam Fun';

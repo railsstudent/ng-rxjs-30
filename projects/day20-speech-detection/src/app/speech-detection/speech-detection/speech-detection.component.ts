@@ -22,14 +22,14 @@ declare var webkitSpeechRecognition: any;
 declare var SpeechRecognition: any;
 
 @Component({
-  selector: 'app-speech-detection',
-  template: ` <div class="words" contenteditable>
+    selector: 'app-speech-detection',
+    template: ` <div class="words" contenteditable>
     <ng-container *ngIf="wordList$ | async as wordList">
       <p *ngFor="let word of wordList">{{ word.transcript }}, confidence: {{ word.confidencePercentage }}%</p>
     </ng-container>
   </div>`,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -62,8 +62,9 @@ declare var SpeechRecognition: any;
         border-color: transparent #efe4e4;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class SpeechDetectionComponent implements OnInit, OnDestroy {
   wordList$!: Observable<Transcript[]>;

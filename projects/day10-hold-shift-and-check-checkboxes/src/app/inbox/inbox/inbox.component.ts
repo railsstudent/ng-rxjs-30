@@ -10,10 +10,9 @@ import { CheckboxClickState, Message } from '../interfaces';
 import { messageStore } from './message.store';
 
 @Component({
-  selector: 'app-inbox',
-  standalone: true,
-  imports: [InboxItemComponent, NgIf, NgFor, AsyncPipe],
-  template: `
+    selector: 'app-inbox',
+    imports: [InboxItemComponent, NgIf, NgFor, AsyncPipe],
+    template: `
     <div class="inbox" *ngIf="messages$ | async as messages">
       <app-inbox-item
         *ngFor="let message of messages; index as i; last as isLast"
@@ -24,8 +23,8 @@ import { messageStore } from './message.store';
       </app-inbox-item>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -38,8 +37,8 @@ import { messageStore } from './message.store';
         box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InboxComponent {
   @ViewChildren(InboxItemComponent)

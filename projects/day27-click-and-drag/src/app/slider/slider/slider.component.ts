@@ -20,14 +20,15 @@ import {
 } from 'rxjs';
 
 @Component({
-  selector: 'app-slider',
-  template: `
+    selector: 'app-slider',
+    template: `
     <div class="items" [ngClass]="{ active: active$ | async }" #items>
       <div *ngFor="let index of panels" class="item">{{ index }}</div>
     </div>
   `,
-  styleUrls: ['./slider.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrls: ['./slider.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class SliderComponent implements OnInit, OnDestroy {
   @ViewChild('items', { static: true, read: ElementRef })

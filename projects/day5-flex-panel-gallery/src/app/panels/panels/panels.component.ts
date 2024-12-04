@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { PanelData } from '../panel/interfaces';
 
 @Component({
-  selector: 'app-panels',
-  template: `
+    selector: 'app-panels',
+    template: `
     <div class="panels">
       <app-panel
         *ngFor="let panelData of data"
@@ -11,8 +11,8 @@ import { PanelData } from '../panel/interfaces';
       ></app-panel>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -23,8 +23,9 @@ import { PanelData } from '../panel/interfaces';
         display: flex;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class PanelsComponent {
   data: PanelData[] = [

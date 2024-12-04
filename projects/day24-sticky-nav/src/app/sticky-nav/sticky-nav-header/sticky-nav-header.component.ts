@@ -11,8 +11,8 @@ import { WINDOW } from '../../core';
 import { StickyNavService } from '../services/sticky-nav.service';
 
 @Component({
-  selector: 'app-sticky-nav-header',
-  template: `
+    selector: 'app-sticky-nav-header',
+    template: `
     <header>
       <h1>A story about getting lost.</h1>
     </header>
@@ -27,8 +27,8 @@ import { StickyNavService } from '../services/sticky-nav.service';
       </ul>
     </nav>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -104,8 +104,9 @@ import { StickyNavService } from '../services/sticky-nav.service';
         text-transform: uppercase;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class StickyNavHeaderComponent implements OnInit {
   @ViewChild('menu', { static: true, read: ElementRef })

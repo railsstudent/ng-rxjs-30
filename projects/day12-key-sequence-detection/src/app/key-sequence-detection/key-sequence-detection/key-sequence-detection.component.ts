@@ -12,16 +12,17 @@ import { WINDOW } from '../../core';
 declare var cornify_add: any;
 
 @Component({
-  selector: 'app-key-sequence-detection',
-  template: ` <div><p>Type the secret code to display unicorn(s)!</p></div> `,
-  styles: [
-    `
+    selector: 'app-key-sequence-detection',
+    template: ` <div><p>Type the secret code to display unicorn(s)!</p></div> `,
+    styles: [
+        `
       :host {
         display: block;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class KeySequenceDetectionComponent implements OnInit, OnDestroy {
   readonly secretCode = 'wesbos';

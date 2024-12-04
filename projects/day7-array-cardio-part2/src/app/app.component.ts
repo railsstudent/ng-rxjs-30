@@ -16,8 +16,8 @@ import { Comment } from './interfaces/comment.interface';
 import { Person, PersonNoAge } from './interfaces/person.interface';
 
 @Component({
-  selector: 'app-root',
-  template: `
+    selector: 'app-root',
+    template: `
     <div class="container">
       <section class="people">
         <h1>People</h1>
@@ -63,8 +63,8 @@ import { Person, PersonNoAge } from './interfaces/person.interface';
       <p>Comment does not exist</p>
     </ng-template>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -87,7 +87,8 @@ import { Person, PersonNoAge } from './interfaces/person.interface';
         }
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class AppComponent {
   title = 'Day7 Array Cardio Part 2';

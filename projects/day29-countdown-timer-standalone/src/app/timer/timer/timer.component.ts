@@ -3,17 +3,16 @@ import { TimerControlsComponent } from '../timer-controls/timer-controls.compone
 import { TimerPaneComponent } from '../timer-pane/timer-pane.component';
 
 @Component({
-  selector: 'app-timer',
-  standalone: true,
-  imports: [TimerControlsComponent, TimerPaneComponent],
-  template: `
+    selector: 'app-timer',
+    imports: [TimerControlsComponent, TimerPaneComponent],
+    template: `
     <div class="timer">
       <app-timer-controls></app-timer-controls>
       <app-timer-pane></app-timer-pane>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -24,7 +23,7 @@ import { TimerPaneComponent } from '../timer-pane/timer-pane.component';
         flex-direction: column;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimerComponent {}

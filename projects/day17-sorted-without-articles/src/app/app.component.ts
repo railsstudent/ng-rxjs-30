@@ -2,16 +2,17 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-root',
-  template: '<app-sorted-list></app-sorted-list>',
-  styles: [
-    `
+    selector: 'app-root',
+    template: '<app-sorted-list></app-sorted-list>',
+    styles: [
+        `
       :host {
         display: block;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AppComponent {
   title = 'Day17 Sorted Without Articles';

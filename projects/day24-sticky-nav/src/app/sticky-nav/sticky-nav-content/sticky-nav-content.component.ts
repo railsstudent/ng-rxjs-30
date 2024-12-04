@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { StickyNavService } from '../services/sticky-nav.service';
 
 @Component({
-  selector: 'app-sticky-nav-content',
-  template: `
+    selector: 'app-sticky-nav-content',
+    template: `
     <div class="site-wrap" [ngClass]="{ 'fixed-nav': shouldFixNav$ | async }">
       <p>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempore tempora rerum, est autem cupiditate, corporis
@@ -175,8 +175,8 @@ import { StickyNavService } from '../services/sticky-nav.service';
       </p>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -202,8 +202,9 @@ import { StickyNavService } from '../services/sticky-nav.service';
         margin-bottom: 1rem;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class StickyNavContentComponent {
   shouldFixNav$ = this.service.shouldFixNav$;

@@ -7,17 +7,16 @@ import {
 } from '../helpers/timer-pane.helper';
 
 @Component({
-  selector: 'app-timer-pane',
-  standalone: true,
-  imports: [AsyncPipe],
-  template: `
+    selector: 'app-timer-pane',
+    imports: [AsyncPipe],
+    template: `
     <div class="display">
       <h1 class="display__time-left">{{ displayTimeLeft$ | async }}</h1>
       <p class="display__end-time">{{ displayEndTime$ | async }}</p>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       .display {
         flex: 1;
         display: flex;
@@ -39,8 +38,8 @@ import {
         color: white;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimerPaneComponent {
   nowTo$ = nowToFn();

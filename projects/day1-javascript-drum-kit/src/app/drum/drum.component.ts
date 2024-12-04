@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { filter, fromEvent, map } from 'rxjs';
 import { WINDOW } from '../core/services';
-import { DrumKeyComponent } from '../drum-key/drum-key.component';
+import { DrumKeyComponent } from '../drum-key';
 import { getFullAssetPath, getHostNativeElement } from '../helpers';
 import { DrumService } from '../services';
 
@@ -36,10 +36,9 @@ const windowKeydownSubscription = () => {
 };
 
 @Component({
-  imports: [NgFor, DrumKeyComponent],
-  standalone: true,
-  selector: 'app-drum',
-  template: `
+    imports: [NgFor, DrumKeyComponent],
+    selector: 'app-drum',
+    template: `
     <div class="keys">
       <app-drum-key
         *ngFor="let entry of entries"
@@ -48,8 +47,8 @@ const windowKeydownSubscription = () => {
       ></app-drum-key>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: flex;
         justify-content: center;
@@ -71,8 +70,8 @@ const windowKeydownSubscription = () => {
         }
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DrumComponent implements OnInit, OnDestroy {
   entries = getEntryStore().entries;

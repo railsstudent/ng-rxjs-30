@@ -5,8 +5,8 @@ import { sort } from './custom-operators/sort.operator';
 import { sum } from './custom-operators/sum.operator';
 
 @Component({
-  selector: 'app-root',
-  template: `
+    selector: 'app-root',
+    template: `
     <div class="container">
       <ng-container *ngTemplateOutlet="inventors; context: { $implicit: 'Inventors', list: inventorArray$ | async }">
       </ng-container>
@@ -36,31 +36,32 @@ import { sum } from './custom-operators/sum.operator';
       </section>
     </div>
 
-    <ng-template #inventors let-title let-list="list">
-      <section class="inventors">
-        <h2>{{ title }}</h2>
-        <ul>
-          <li *ngFor="let inventory of list; trackby: inventoryTrackBy">
-            Name: {{ inventory.first }} {{ inventory.last }}<br />
-            {{ inventory.year }} - {{ inventory.passed }}, Age:
-            {{ inventory.passed - inventory.year }}
-          </li>
-        </ul>
-      </section>
-    </ng-template>
-    <ng-template #people let-title let-list="list">
-      <section class="people">
-        <h2>{{ title }}</h2>
-        <ul>
-          <li *ngFor="let person of list; trackby: peopleTrackBy">
+    <section class="inventors">
+      <h2>{{ title }}</h2>
+      <ul>
+        @for(inventor of inventors; track inventor) {
+          <li>
+          Name: {{ inventor.first }} {{ inventor.last }}<br />
+          {{ inventor.year }} - {{ inventor.passed }}, Age:
+          {{ inventor.passed - inventor.year }}
+        </li>
+        }
+      </ul>
+    </section>
+
+    <section class="people">
+      <h2>{{ title }}</h2>
+      <ul>
+        @for(person of people; track person) {
+          <li>
             {{ person }}
           </li>
-        </ul>
-      </section>
-    </ng-template>
+        }
+      </ul>
+    </section>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -85,7 +86,8 @@ import { sum } from './custom-operators/sum.operator';
         }
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class AppComponent {
   title = 'Day4 Array Cardio Part 1';

@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'whackAMoleMessage',
+    name: 'whackAMoleMessage',
+    standalone: false
 })
 export class WhackAMoleMessagePipe implements PipeTransform {
   transform(seconds: number | null): string {

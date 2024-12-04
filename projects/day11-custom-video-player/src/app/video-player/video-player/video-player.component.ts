@@ -14,8 +14,8 @@ import { VideoAction, VideoPlayerRangeInput } from '../interfaces';
 import { VideoPlayerService } from '../services';
 
 @Component({
-  selector: 'app-video-player',
-  template: `
+    selector: 'app-video-player',
+    template: `
     <div class="player">
       <video class="player__video viewer" currentTime="10" #video>
         <source [src]="videoSrc" type="video/mp4" />
@@ -23,8 +23,8 @@ import { VideoPlayerService } from '../services';
       <app-video-player-controls></app-video-player-controls>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: flex;
         background: #7a419b;
@@ -59,8 +59,9 @@ import { VideoPlayerService } from '../services';
         width: 100%;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class VideoPlayerComponent implements OnInit, OnDestroy {
   @ViewChild('video', { static: true })

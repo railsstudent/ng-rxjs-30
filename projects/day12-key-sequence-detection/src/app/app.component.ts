@@ -2,15 +2,16 @@ import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-root',
-  template: '<app-key-sequence-detection></app-key-sequence-detection>',
-  styles: [
-    `
+    selector: 'app-root',
+    template: '<app-key-sequence-detection></app-key-sequence-detection>',
+    styles: [
+        `
       :host {
         display: block;
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class AppComponent {
   title = 'Day12 Key Sequence Detection';

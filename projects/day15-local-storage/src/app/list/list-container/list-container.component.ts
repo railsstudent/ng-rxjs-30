@@ -4,8 +4,8 @@ import { NewItem, ToggleItem, ToggleItems } from '../interfaces';
 import { isNewItem, isToggleItems } from './type-guard';
 
 @Component({
-  selector: 'app-list-container',
-  template: `
+    selector: 'app-list-container',
+    template: `
     <div class="wrapper">
       <h2>LOCAL TAPAS</h2>
       <p></p>
@@ -13,7 +13,7 @@ import { isNewItem, isToggleItems } from './type-guard';
         <app-data-list [itemList]="itemList" (toggleDone)="toggleDone$.next($event)"></app-data-list>
       </ng-container>
       <form class="add-items" (ngSubmit)="submit$.next({ text: newItem, done: false })">
-        <input type="text" name="item" placeholder="Item Name" [required]="true" name="newItem" [(ngModel)]="newItem" />
+        <input type="text" placeholder="Item Name" [required]="true" name="newItem" [(ngModel)]="newItem" />
         <input type="submit" value="+ Add Item" />
         <input
           type="button"
@@ -23,8 +23,8 @@ import { isNewItem, isToggleItems } from './type-guard';
       </form>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -52,8 +52,9 @@ import { isNewItem, isToggleItems } from './type-guard';
         border: 1px solid rgba(0, 0, 0, 0.1);
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ListContainerComponent {
   newItem = '';

@@ -11,8 +11,8 @@ import { PropertyName } from '../interfaces/speech.interface';
 import { SpeechService } from '../services/speech.service';
 
 @Component({
-  selector: 'app-speech-voice',
-  template: `
+    selector: 'app-speech-voice',
+    template: `
     <ng-container>
       <select name="voice" id="voices" #voices>
         <option *ngFor="let voice of voices$ | async" [value]="voice.name">{{ voice.name }} ({{ voice.lang }})</option>
@@ -23,8 +23,8 @@ import { SpeechService } from '../services/speech.service';
       <input name="pitch" type="range" min="0" max="2" step="0.1" #pitch value="1" />
     </ng-container>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -41,8 +41,9 @@ import { SpeechService } from '../services/speech.service';
         outline: 0;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class SpeechVoiceComponent implements OnInit, OnDestroy {
   @ViewChild('rate', { static: true, read: ElementRef })

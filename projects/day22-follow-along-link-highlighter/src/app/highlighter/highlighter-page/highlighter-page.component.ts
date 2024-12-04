@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { HighlighterService } from '../services/highlighter.service';
 
 @Component({
-  selector: 'app-highlighter-page',
-  template: `
+    selector: 'app-highlighter-page',
+    template: `
     <ng-container>
       <app-highlighter-menu></app-highlighter-menu>
       <app-highlighter-content></app-highlighter-content>
@@ -12,8 +12,8 @@ import { HighlighterService } from '../services/highlighter.service';
       </ng-container>
     </ng-container>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -31,8 +31,9 @@ import { HighlighterService } from '../services/highlighter.service';
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class HighlighterPageComponent {
   highlightStyle$ = this.highlighterService.highlighterStyle$;

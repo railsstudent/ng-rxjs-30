@@ -1,7 +1,8 @@
 import { Directive, ElementRef } from '@angular/core';
 
 @Directive({
-  selector: 'a',
+    selector: 'a',
+    standalone: false
 })
 export class HighlightAnchorDirective {
   nativeElement!: HTMLAnchorElement;

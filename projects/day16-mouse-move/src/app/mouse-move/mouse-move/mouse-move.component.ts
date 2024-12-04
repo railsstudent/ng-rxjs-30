@@ -9,16 +9,16 @@ import { filter, fromEvent, map, Observable, startWith } from 'rxjs';
 import { mapTextShadowStyle } from '../custom-operators/mapTextShadowStyle.operator';
 
 @Component({
-  selector: 'app-mouse-move',
-  template: `
+    selector: 'app-mouse-move',
+    template: `
     <div class="hero" #hero>
       <ng-container *ngIf="textShadow$ | async as textShadow">
         <h1 contenteditable [style.textShadow]="textShadow">🔥WOAH!</h1>
       </ng-container>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -36,8 +36,9 @@ import { mapTextShadowStyle } from '../custom-operators/mapTextShadowStyle.opera
         font-size: 100px;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MouseMoveComponent implements OnInit {
   @ViewChild('hero', { static: true, read: ElementRef })

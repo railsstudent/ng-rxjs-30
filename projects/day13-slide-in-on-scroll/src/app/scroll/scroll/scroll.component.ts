@@ -10,10 +10,10 @@ import { debounceTime, fromEvent, map, startWith } from 'rxjs';
 import { WINDOW } from '../../core';
 
 @Component({
-  selector: 'app-scroll',
-  templateUrl: './scroll.component.html',
-  styles: [
-    `
+    selector: 'app-scroll',
+    templateUrl: './scroll.component.html',
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -54,8 +54,9 @@ import { WINDOW } from '../../core';
         }
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ScrollComponent {
   @ViewChildren('img')

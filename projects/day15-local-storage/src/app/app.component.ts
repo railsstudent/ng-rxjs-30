@@ -3,8 +3,8 @@ import { Component, ElementRef, Inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-root',
-  template: `
+    selector: 'app-root',
+    template: `
     <svg
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -36,8 +36,8 @@ import { Title } from '@angular/platform-browser';
     </svg>
     <app-list-container></app-list-container>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         min-height: 100vh;
         display: flex;
@@ -59,7 +59,8 @@ import { Title } from '@angular/platform-browser';
         margin-bottom: 50px;
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class AppComponent {
   title = 'Day15 LocalStorage';

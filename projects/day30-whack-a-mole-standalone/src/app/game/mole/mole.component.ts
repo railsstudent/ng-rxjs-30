@@ -6,10 +6,9 @@ import { GameObservables } from '../interfaces/game.interface';
 import { RemainingTimePipe, WhackAMoleMessagePipe } from '../pipes';
 
 @Component({
-  selector: 'app-mole',
-  standalone: true,
-  imports: [AsyncPipe, NgIf, NgStyle, WhackAMoleMessagePipe, RemainingTimePipe],
-  template: `
+    selector: 'app-mole',
+    imports: [AsyncPipe, NgStyle, WhackAMoleMessagePipe, RemainingTimePipe],
+    template: `
     <h1>
       Whack-a-mole! <span class="score">{{ observables.score$ | async }}</span>
     </h1>
@@ -36,8 +35,8 @@ import { RemainingTimePipe, WhackAMoleMessagePipe } from '../pipes';
         <div class="mole" [ngStyle]="moleImage" #mole6></div>
       </div>
     </div>`,
-  styleUrls: ['mole.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrls: ['mole.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MoleComponent implements OnInit, OnDestroy {
   @ViewChild('start', { static: true, read: ElementRef })

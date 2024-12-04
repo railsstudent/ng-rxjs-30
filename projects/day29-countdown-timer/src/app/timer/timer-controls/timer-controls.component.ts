@@ -10,8 +10,8 @@ import { Subscription, filter, fromEvent, map, merge, tap } from 'rxjs';
 import { TimerService } from '../services/timer.service';
 
 @Component({
-  selector: 'app-timer-controls',
-  template: `
+    selector: 'app-timer-controls',
+    template: `
     <div class="timer__controls">
       <button class="timer__button" #timer1>20 Secs</button>
       <button class="timer__button" #timer2>Work 5</button>
@@ -23,8 +23,8 @@ import { TimerService } from '../services/timer.service';
       </form>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -68,8 +68,9 @@ import { TimerService } from '../services/timer.service';
         outline: 0;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class TimerControlsComponent implements OnInit, OnDestroy {
   @ViewChild('timer1', { static: true, read: ElementRef })

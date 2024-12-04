@@ -14,10 +14,9 @@ import { TimerButtonDirective } from '../directive/timer-button.directive';
 import { timerInputSubscriptionFn } from '../helpers/timer-controls.helper';
 
 @Component({
-  selector: 'app-timer-controls',
-  standalone: true,
-  imports: [FormsModule, TimerButtonDirective],
-  template: `
+    selector: 'app-timer-controls',
+    imports: [FormsModule, TimerButtonDirective],
+    template: `
     <div class="timer__controls">
       <button class="timer__button" data-seconds="20" appTimerButton>20 Secs</button>
       <button class="timer__button" data-seconds="300" appTimerButton>Work 5</button>
@@ -29,8 +28,8 @@ import { timerInputSubscriptionFn } from '../helpers/timer-controls.helper';
       </form>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -74,8 +73,8 @@ import { timerInputSubscriptionFn } from '../helpers/timer-controls.helper';
         outline: 0;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimerControlsComponent implements OnDestroy, AfterViewInit {
   @ViewChild('myForm', { static: true, read: ElementRef })
